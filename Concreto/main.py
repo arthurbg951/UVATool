@@ -12,7 +12,7 @@ Passo 1: Criando as matrizes e vetores
 af12 = 0 * (m.pi/180.)
 af23 = 0 * (m.pi/180.)
 af34 = 0 * (m.pi/180.)
-l12, l23, l34 = 1500, 1500, 1500
+l12, l23, l34 = 1.5, 1.5, 1.5
 
 c1 = np.cos(af12)
 c2 = np.cos(af23)
@@ -53,9 +53,9 @@ leqt = np.delete(leqt, [0, 1, 10], 1)
 # Matriz de rigidez do elemento - ( k )
 
 p11, p12, p22, p23, p33, p34 = 0, 0, 0, 0, 0, 0
-e12, e23, e34 = 0, 0, 0
-in12, in23, in34 = 0, 0, 0
-aa12, aa23, aa34 = 0, 0, 0
+e12, e23, e34 = 205e6, 205e6, 205e6
+in12, in23, in34 = 1.7067e-2, 1.7067e-2, 1.7067e-2
+aa12, aa23, aa34 = 0.32, 0.32, 0.32
 
 ft1_1 = (3 * p11 / (4 - p11 * p12)) * (4 * e12 * in12 / l12)
 ft2_1 = (3 * p11 * p12 / (4 - p11 * p12)) * (-2 * e12 * in12 / l12)
@@ -87,19 +87,46 @@ Matriz de Rigidez Global - k_global
         [L * k * L.T]
 '''
 k_global = leq * k_el * leqt
-# print(k_global.shape)
+print(k_global)
+
 
 # Vetor das Cargas Nodais (Cargas Pontuais e Cargas de Momento) - λ
-f1x, f2y, f3m, f4x, f5y, f6m, f7x, f8y, f9m, f10x, f11y, f12m = 0, 0, 0, 0, -10e3, 0, 0, -10e3, 0, 0, 0, 0
-force = np.array([f1x, f2y, f3m, f4x, f5y, f6m, f7x, f8y, f9m, f10x, f11y, f12m])
+f1x, f2y, f3m, f4x, f5y, f6m, f7x, f8y, f9m, f10x, f11y, f12m = 0, 0, 0, 50, -10, 0, 20, -30, 0, 0, 0, 0
+force = np.array([f1x, f2y, f3m, f4x, f5y, f6m,
+                 f7x, f8y, f9m, f10x, f11y, f12m])
 fn = np.transpose(force)  # Transformando em vetor
+
 # Colocando as restrições de apoio em ( delta )
 fn = np.delete(fn, [0, 1, 10], 0)
-# print(fn.shape)
+# print(fn)
+
+# esforcos, residuals, rank, s = np.linalg.lstsq(leq, fn)
+# print(esforcos)
+
+esforcos = np.linalg.solve(leq, fn)
+# print(esforcos)
+convertido = []
+
+convertido.append(f'm1 = {esforcos[1]}')
+convertido.append(f'm2 = {esforcos[2]}')
+convertido.append(f'n1 = {esforcos[0]}')
+
+convertido.append(f'm3 = {esforcos[4]}')
+convertido.append(f'm4 = {esforcos[5]}')
+convertido.append(f'n2 = {esforcos[3]}')
+
+convertido.append(f'm5 = {esforcos[7]}')
+convertido.append(f'm6 = {esforcos[8]}')
+convertido.append(f'n3 = {esforcos[6]}')
+
+for i in range(len(convertido)):
+        print(convertido[i])
+
 
 # Vetor dos Deslocamentos Nodais (Deslocamentos Lineares e Rotacionais) - δ
 dt1x, dt2y, dr3m, dt4x, dt5y, dr6m, dt7x, dt8y, dr9m, dt10x, dt11y, dr12m = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-dt = np.array([dt1x, dt2y, dr3m, dt4x, dt5y, dr6m, dt7x, dt8y, dr9m, dt10x, dt11y, dr12m])
+dt = np.array([dt1x, dt2y, dr3m, dt4x, dt5y, dr6m,
+              dt7x, dt8y, dr9m, dt10x, dt11y, dr12m])
 dlt = np.transpose(dt)  # Transformando em vetor
 # Colocando as restrições de apoio em ( delta )
 dlt = np.delete(dlt, [0, 1, 10], 0)
@@ -107,20 +134,28 @@ dlt = np.delete(dlt, [0, 1, 10], 0)
 
 # Vetor das Deformações Correspondentes (Deformações Lineares e Angulares) - θ
 theta1, theta2, delta1, theta3, theta4, delta2, theta5, theta6, delta3 = 0, 0, 0, 0, 0, 0, 0, 0, 0
-tta = np.array([theta1, theta2, delta1, theta3, theta4, delta2, theta5, theta6, delta3])
+tta = np.array([theta1, theta2, delta1, theta3,
+               theta4, delta2, theta5, theta6, delta3])
 tta = np.transpose(tta)
 # print(tta.shape)
 
 # Vetor dos Esforços Seccionais Internos (Momentos Fletores e Esforços Normais) - m
 m1, m2, n1, m3, m4, n2, m5, m6, n3 = 0, 0, 0, 0, 0, 0, 0, 0, 0
 esf_in = np.array([m1, m2, n1, m3, m4, n2, m5, m6, n3])
-esf_in = np.transpose(esf_in)
+# esf_in = np.linalg.solve(k_global, fn)
+# x, residuals, rank, s = np.linalg.lstsq(k_global, fn)
 # print(esf_in.shape)
+
+# print(k_global)
+# x = vetor solução
+# print(x)
+
 
 '''
 Passo 2: Através da triangularização de Gauss Jordan, encontrar os valores dos Deslocamentos Nodais δ:
 
         {λ} = [L k LT] * {δ}
+
 '''
 
 
