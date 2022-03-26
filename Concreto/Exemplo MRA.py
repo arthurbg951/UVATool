@@ -107,17 +107,17 @@ esforcos = np.linalg.solve(leq, fn)
 # print(esforcos)
 convertido = []
 
-convertido.append(f'm1 = {esforcos[1]}')
-convertido.append(f'm2 = {esforcos[2]}')
-convertido.append(f'n1 = {esforcos[0]}')
+convertido.append(f'm1 = {esforcos[1]:.2f}')
+convertido.append(f'm2 = {esforcos[2]:.2f}')
+convertido.append(f'n1 = {esforcos[0]:.2f}')
 
-convertido.append(f'm3 = {esforcos[4]}')
-convertido.append(f'm4 = {esforcos[5]}')
-convertido.append(f'n2 = {esforcos[3]}')
+convertido.append(f'm3 = {esforcos[4]:.2f}')
+convertido.append(f'm4 = {esforcos[5]:.2f}')
+convertido.append(f'n2 = {esforcos[3]:.2f}')
 
-convertido.append(f'm5 = {esforcos[7]}')
-convertido.append(f'm6 = {esforcos[8]}')
-convertido.append(f'n3 = {esforcos[6]}')
+convertido.append(f'm5 = {esforcos[7]:.2f}')
+convertido.append(f'm6 = {esforcos[8]:.2f}')
+convertido.append(f'n3 = {esforcos[6]:.2f}')
 
 for i in range(len(convertido)):
         print(convertido[i])
