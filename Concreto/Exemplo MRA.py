@@ -1,4 +1,5 @@
 import math as m
+from re import L
 import numpy as np
 
 '''
@@ -87,14 +88,15 @@ k_el = np.array([
 '''
 Matriz de Rigidez Global - k_global
 
-        [L * k * L.T]
+        ([L * k * L.T])
 '''
-k_global = leq * k_el * leqt
-print(k_global)
+k_global = leq @ k_el @ leqt
+# Também pode ser escrito -> k_global = leq.dot(k_el).dot(leqt)
+# print(k_global)
 
 
 # Vetor das Cargas Nodais (Cargas Pontuais e Cargas de Momento) - { λ }
-f1x, f2y, f3m, f4x, f5y, f6m, f7x, f8y, f9m, f10x, f11y, f12m = 0, 0, 0, 50, -10, 0, 20, -30, 0, 0, 0, 0
+f1x, f2y, f3m, f4x, f5y, f6m, f7x, f8y, f9m, f10x, f11y, f12m = 0, 0, 0, 0, -10, 0, 0, -10, 0, 0, 0, 0
 force = np.array([f1x, f2y, f3m, f4x, f5y, f6m,
                  f7x, f8y, f9m, f10x, f11y, f12m])
 fn = np.transpose(force)  # Transformando em vetor
@@ -106,6 +108,9 @@ fn = np.delete(fn, [0, 1, 10], 0)
 # esforcos, residuals, rank, s = np.linalg.lstsq(leq, fn)
 # print(esforcos)
 
+# def_nd, residuals, rank, s = np.linalg.lstsq(k_global, fn)
+# print(def_nd)
+
 '''
         ESTÁTICA
 Relação de Equilíbrio -> {Cargas Nodais} = [Matriz de equilíbrio] * {Esforços Internos}
@@ -115,7 +120,7 @@ Relação de Equilíbrio -> {Cargas Nodais} = [Matriz de equilíbrio] * {Esforç
 
 esforcos = np.linalg.solve(leq, fn)
 # print(esforcos)
-
+'''
 # Organizando o vetor resposta
 convertido = []
 
@@ -135,6 +140,38 @@ convertido.append(f'n3 = {esforcos[6]:.2f}')
 # Vetor dos esforços internos {m} organizado:
 for i in range(len(convertido)):
         print(convertido[i])
+'''
+# Vetor dos Esforços Seccionais Internos (Momentos Fletores e Esforços Normais) - { m }
+m1 = esforcos[1]
+m2 = esforcos[2]
+n1 = esforcos[0]
+m3 = esforcos[4]
+m4 = esforcos[5]
+n2 = esforcos[3]
+m5 = esforcos[7]
+m6 = esforcos[8]
+n3 = esforcos[6]
+esf_in = np.array([m1, m2, n1, m3, m4, n2, m5, m6, n3])
+esf_in = esf_in.transpose()
+for i in range(len(esf_in)):
+    print(esf_in[i])
+
+# esf_in = np.linalg.solve(k_global, fn)
+# x, residuals, rank, s = np.linalg.lstsq(k_global, fn)
+# print(esf_in.shape)
+
+
+'''
+        ESTÁTICA X CINEMÁTICA
+Relação Constitutiva do Material -> {Esforços Internos} = [Matriz de Rigidez] * {Deformações correspondentes}
+
+          {m} = [k] * {θ}
+'''
+
+
+# x, residuals, rank, s = np.linalg.lstsq(k_el, esf_in)
+# def_corresp, residuals, rank, s = np.linalg.lstsq(k_el, esf_in)
+# print(def_corresp)
 
 
 # Vetor dos Deslocamentos Nodais (Deslocamentos Lineares e Rotacionais) - { δ }
@@ -154,8 +191,8 @@ tta = np.transpose(tta)
 # print(tta.shape)
 
 # Vetor dos Esforços Seccionais Internos (Momentos Fletores e Esforços Normais) - { m }
-m1, m2, n1, m3, m4, n2, m5, m6, n3 = 0, 0, 0, 0, 0, 0, 0, 0, 0
-esf_in = np.array([m1, m2, n1, m3, m4, n2, m5, m6, n3])
+# m1, m2, n1, m3, m4, n2, m5, m6, n3 = 0, 0, 0, 0, 0, 0, 0, 0, 0
+# esf_in = np.array([m1, m2, n1, m3, m4, n2, m5, m6, n3])
 # esf_in = np.linalg.solve(k_global, fn)
 # x, residuals, rank, s = np.linalg.lstsq(k_global, fn)
 # print(esf_in.shape)
