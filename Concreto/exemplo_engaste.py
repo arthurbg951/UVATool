@@ -49,7 +49,7 @@ leqt = np.delete(leqt, [0, 1, 2], 1)
 
 # Matriz de rigidez do elemento - [ k ]
 
-p11, p12, p22, p23 = 1, 0, 0, 0
+p11, p12, p22, p23 = 1., 0.000000001, 0.000000001, 0.000000001
 e12, e23 = 205e6, 205e6
 in12, in23 = 1.7067e-2, 1.7067e-2
 aa12, aa23 = 0.32, 0.32
@@ -80,13 +80,15 @@ Matriz de Rigidez Global - k_global
 
         ([L * k * L.T])
 '''
-k_global = leq @ k_el @ leqt
+k_global1 = leq @ k_el @ leqt
 # Também pode ser escrito -> k_global = leq.dot(k_el).dot(leqt)
-# print(k_global)
+print(k_global1)
 
+k_global2 = leq.dot(k_el).dot(leqt)
+print(f'\n\n\n\n\n\n {k_global2}')
 
 # Vetor das Cargas Nodais (Cargas Pontuais e Cargas de Momento) - { λ }
-f1x, f2y, f3m, f4x, f5y, f6m, f7x, f8y, f9m = 0, 0, 0, 0, -80, 0, 0, 0, 0
+f1x, f2y, f3m, f4x, f5y, f6m, f7x, f8y, f9m = 0., 0., 0., 0., -80., 0., 0., 0., 0.
 force = np.array([f1x, f2y, f3m, f4x, f5y, f6m, f7x, f8y, f9m])
 fn = np.transpose(force)  # Transformando em vetor
 # Colocando as restrições de apoio em { λ }
@@ -99,6 +101,8 @@ fn = np.delete(fn, [0, 1, 2], 0)
 # def_nd, residuals, rank, s = np.linalg.lstsq(k_global, fn)
 # print(def_nd)
 
+# deformacoes, residuals, rank, s = np.linalg.lstsq(k_global, fn)
+# print(deformacoes)
 '''
         ESTÁTICA
 Relação de Equilíbrio -> {Cargas Nodais} = [Matriz de equilíbrio] * {Esforços Internos}
