@@ -52,7 +52,7 @@ leqt = np.delete(leqt, [0, 1, 10], 1)
 
 # Matriz de rigidez do elemento - [ k ]
 
-p11, p12, p22, p23, p33, p34 = 0, 0, 0, 0, 0, 0
+p11, p12, p22, p23, p33, p34 = 0, 1, 1, 1, 1, 0
 e12, e23, e34 = 205e6, 205e6, 205e6
 in12, in23, in34 = 1.7067e-2, 1.7067e-2, 1.7067e-2
 aa12, aa23, aa34 = 0.32, 0.32, 0.32
@@ -91,7 +91,7 @@ Matriz de Rigidez Global - k_global
 '''
 k_global = leq @ k_el @ leqt
 # Também pode ser escrito -> k_global = leq.dot(k_el).dot(leqt)
-# print(k_global)
+print(k_global)
 
 
 # Vetor das Cargas Nodais (Cargas Pontuais e Cargas de Momento) - { λ }
