@@ -14,7 +14,7 @@ Passo 1: Criando as matrizes e vetores
 # Matriz de equilibrio - [ L ]
 
 af12 = 0 * (m.pi/180.)  # rad
-l12 = 4500  # mm
+l12 = 4.5  # m
 
 c1 = np.cos(af12)
 
@@ -32,7 +32,7 @@ lo_eq = np.array([
 # Colocando as restrições de apoio em [ L ]
 leq = np.delete(lo_eq, [0, 1, 2], 0)
 # print(leq.shape)
-print(leq)
+# print(leq)
 
 
 # Matriz de equilibrio Transposta - [ L.T ]
@@ -49,10 +49,10 @@ leqt = np.delete(leqt, [0, 1, 2], 1)
 
 # Matriz de rigidez do elemento - [ k ]
 
-p11, p12 = 1, 0.1e-30
-e12 = 205000  # MPa
-in12 = 1.7067e+10  # mm4
-aa12 = 3.2000e+05  # mm²
+p11, p12 = 1, 1
+e12 = 205_000e6  # Pa
+in12 = 1.71E-02  # m4
+aa12 = 0.32  # m²
 
 ft1_1 = (3 * p11 / (4 - p11 * p12)) * (4 * e12 * in12 / l12)
 ft2_1 = (3 * p11 * p12 / (4 - p11 * p12)) * (-2 * e12 * in12 / l12)
@@ -103,7 +103,7 @@ print(f'Vetor das Cargas Nodais - λ: \n\n{fn}\n')
 
 
 # Vetor dos Deslocamentos Nodais (Deslocamentos Lineares e Rotacionais) - { δ }
-dt1x, dt2y, dr3m, dt4x, dt5y, dr6m = None, None, None, 0, -1.324870, 0.000443
+dt1x, dt2y, dr3m, dt4x, dt5y, dr6m = None, None, None, 0, -0.001301, 0.000434
 dt = np.array([dt1x, dt2y, dr3m, dt4x, dt5y, dr6m])
 dlt = np.transpose(dt)  # Transformando em vetor
 # Colocando as restrições de apoio em ( δ 
@@ -129,15 +129,5 @@ Passo 4: Encontrar os valores dos Esforços Seccionais Internos:
         {m} = [k] * {θ}
 '''
 
-# esf_in = k_el @ tta
-# print(f'Vetor dos esforçso internos - m: \n\n{esf_in}\n')
-
-
-"""
-
-Teste Fn = [L] . [m]
-
-"""
-
-esf_in = np.linalg.solve(leq, fn)
+esf_in = k_el @ tta
 print(f'Vetor dos esforçso internos - m: \n\n{esf_in}\n')
