@@ -1,4 +1,8 @@
+import numpy as np
+
 # Função que triangulariza e retorna o vetor resposta
+
+
 def gauss(matriz, vector):
     n = len(matriz[0])
     mab = matriz
@@ -11,7 +15,7 @@ def gauss(matriz, vector):
         aux += 1
         for i in reversed(range(aux, n)):
             m = a[i][j]/a[j][j]
-            
+
             for k in range(0, n):
                 a[i][k] = a[i][k] - m*a[j][k]
             b[i] = b[i]-m*b[j]
@@ -33,11 +37,21 @@ def gauss(matriz, vector):
     return x
 
 # Exemplo vídeo CORRETO
-matriz = [[1, 1, 0, 3],
-          [2, 1, -1, 1],
-          [3, -1, -1, 2],
-          [-1, 2, 3, -1]]
-vector = [4, 1, -3, 4]
+# matriz = [[1, 1, 0, 3],
+#           [2, 1, -1, 1],
+#           [3, -1, -1, 2],
+#           [-1, 2, 3, -1]]
+# vector = [4, 1, -3, 4]
+
+
+matriz = [
+    [   2,     -0.5,     0],
+    [-0.5,    0.625,  0.25],
+    [   0,     0.25,   0.5]
+]
+
+vector = [0, -1, 0]
+
 
 # Exemplo com ERRO
 # matriz = [[6997470,0,4664980,0,0,0,0,0,0],
@@ -63,6 +77,7 @@ vector = [4, 1, -3, 4]
 
 
 resposta = gauss(matriz, vector)
+print(resposta)
 
-for i in resposta:
-    print(i)
+# resposta = np.linalg.solve(matriz, vector)
+# print(resposta)

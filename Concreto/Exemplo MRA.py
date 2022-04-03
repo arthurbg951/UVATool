@@ -90,9 +90,17 @@ Matriz de Rigidez Global - k_global
 
         ([L * k * L.T])
 '''
-k_global = lo_eq @ k_el @ leqt
+# k_global = lo_eq @ k_el @ leqt
+
+aux = lo_eq.dot(k_el)
+k_global = aux.dot(leqt)
+
 # Também pode ser escrito -> k_global = leq.dot(k_el).dot(leqt)
 print(k_global)
+print(k_global.shape)
+k_global = np.delete(k_global, [0, 1, 10], 0)
+k_global = np.delete(k_global, [0, 1, 10], 1)
+print(f'\n\n {k_global}')
 print(k_global.shape)
 
 
@@ -103,14 +111,14 @@ force = np.array([f1x, f2y, f3m, f4x, f5y, f6m,
 fn = np.transpose(force)  # Transformando em vetor
 
 # Colocando as restrições de apoio em { λ }
-# fn = np.delete(fn, [0, 1, 10], 0)
+fn = np.delete(fn, [0, 1, 10], 0)
 # print(fn)
 
 # esforcos, residuals, rank, s = np.linalg.lstsq(leq, fn)
 # print(esforcos)
 
-# def_nd, residuals, rank, s = np.linalg.lstsq(k_global, fn)
-# print(def_nd)
+def_nd = np.linalg.solve(k_global, fn)
+print(def_nd)
 
 '''
         ESTÁTICA
