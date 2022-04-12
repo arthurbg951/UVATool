@@ -16,7 +16,7 @@ Passo 1: Criando as matrizes e vetores
 # Matriz de equilibrio - [ L ]
 
 af12 = 0 * (m.pi/180.)  # rad
-l12 = 4.5  # m
+l12 = 10  # m
 
 c1 = np.cos(af12)
 
@@ -52,9 +52,9 @@ leqt = np.delete(leqt, [0, 1, 2], 1)
 # Matriz de rigidez do elemento - [ k ]
 
 p11, p12 = 1, 1
-e12 = 205_000e6  # Pa
-in12 = 1.71E-02  # m4
-aa12 = 0.32  # m²
+e12 = 1  # Pa
+in12 = 1  # m4
+aa12 = 1  # m²
 
 ft1_1 = (3 * p11 / (4 - p11 * p12)) * (4 * e12 * in12 / l12)
 ft2_1 = (3 * p11 * p12 / (4 - p11 * p12)) * (-2 * e12 * in12 / l12)
@@ -91,7 +91,7 @@ print(f'a) MATRIZ DE RIGIDEZ GLOBAL - L k LT: \n\n{k_global}\n')
 
 
 # Vetor das Cargas Nodais (Cargas Pontuais e Cargas de Momento) - { λ }
-f1x, f2y, f3m, f4x, f5y, f6m = None, None, None, 0., -10_000., 0.
+f1x, f2y, f3m, f4x, f5y, f6m = None, None, None, 0., -100., 0.
 force = np.array([f1x, f2y, f3m, f4x, f5y, f6m])
 fn = np.transpose(force)  # Transformando em vetor
 
