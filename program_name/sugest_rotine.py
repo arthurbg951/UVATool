@@ -6,7 +6,7 @@
  - n de nós
  - n de elementos
  - ang dos elementos
- - l dos elementos
+ - L dos elementos
  - A, E e I dos elementos
  - P dos elementos 
 
@@ -42,10 +42,10 @@
 # CÁLCULOS
 
  - Matriz de Rigidez Global - k_global
-     ([L * k * L.T]) 
+     [L . k . L.T] 
 
  - Vetor dos deslocamentos nodais
-     {δ} = (L . k . L.T]^-1 . {λ}
+     {δ} = [L . k . L.T]^-1 . {λ}
 
  - Vetor das deformações correspondentes:
      {θ} = [L.T] . {δ}
