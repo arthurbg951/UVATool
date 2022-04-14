@@ -1,9 +1,8 @@
 import numpy as np
 import math as m
-
 """
 
-VARIÁVEIS
+VARIÁVEIS --------------------------------------------------------------------------------------------------------------
 
 """
 
@@ -15,32 +14,59 @@ inrc = []
 area = []
 mdes = []
 p_el = []
-# Verificações
+nelm = None
+
+"""
+
+USER INPUT's -----------------------------------------------------------------------------------------------------------
+
+"""
+
 vrfy = False
-"""
-
-USER INPUT
-
-"""
 while vrfy != 'ok':
     # Informações gerais da estrutura
+
     nodes = int(input('Informe o número de nós: '))
-    n_elm = int(input('Informe o número de elementos: '))
-    n_gdl = nodes * 3
-    print(f'\nDados do sistema: '
+    nelm = int(input('Informe o número de elementos: '))
+
+    print('\n-------------------------------------------------------------------\n')
+
+    ngdl = nodes * 3
+
+    print(f'\nDados do sistema: \n'
           f'\nNúmero de nós: {nodes}'
-          f'\nGraus de liberdade: {n_gdl}'
-          f'\nNúmero de elementos: {n_elm}\n')
+          f'\nNúmero de elementos: {nelm}'
+          f'\nGraus de liberdade da estrutura: {ngdl}\n')
+    print('\n-------------------------------------------------------------------\n')
+
     vrfy = str(input("""Digite "ok" para confirmar as informações: \n"""))
+
+print("\n" * 15)
 
 # Para montar a matriz de equilibrio
 
-for i in range(n_elm):
-    ang_e = float(input(f'[ELEMENTO {i+1}] Qual o ângulo em graus do elemento {i + 1} em relação ao eixo x? \n'))
-    l_eit = float(input(f'[ELEMENTO {i+1}] Qual o comprimento do vão do elemento {i + 1} em metros? \n'))
-    ang.append(ang_e)
-    l_e.append(l_eit)
+vrfy = False
+while vrfy != 'ok':
 
+    ang.clear()
+    l_e.clear()
+
+    for i in range(nelm):
+        ang_e = float(input(
+            f'[ELEMENTO {i+1}] (α{i+1}) Qual o ângulo em graus do elemento {i + 1} em relação ao eixo x? \n'))
+        l_eit = float(input(f'[ELEMENTO {i+1}] (L{i+1}) Qual o comprimento do vão do elemento {i + 1} em metros? \n'))
+        print("\n" * 2)
+        ang.append(ang_e)
+        l_e.append(l_eit)
+
+    for i in range(nelm):
+        print(f'\nELEMENTO {i+1}: '
+              f'\nComprimento do elemento: (L{i+1}) = {l_e[i]:.2f}m'
+              f'\nÂngulo em relação ao eixo x: (α{i+1}) = {ang[i]:.2f}°')
+    print('\n-------------------------------------------------------------------\n')
+    vrfy = str(input("""\nDigite "ok" para confirmar as informações: \n"""))
+
+print("\n" * 15)
 """
 # Para montar a matriz de rigidez
 for i in range(n_elm):
@@ -52,10 +78,9 @@ for i in range(n_elm):
     pm_e
     pj_e
 """
-print(ang)
-print(l_e)
+
 """
 
-CALCULATIONS
+CALCULATIONS -----------------------------------------------------------------------------------------------------------
 
 """
