@@ -33,6 +33,9 @@ lo_eq = np.array([
     [0,         0,        0,   s2,   c2/l23, -c2/l23],
     [0,         0,        0,    0,        0,      -1]
 ])
+
+print(lo_eq)
+A
 # Colocando as restrições de apoio em [ L ]
 leq = np.delete(lo_eq, [0, 1, 6, 7], 0)
 # print(leq.shape)

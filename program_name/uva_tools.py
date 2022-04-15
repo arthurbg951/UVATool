@@ -15,7 +15,7 @@ area = []
 mdes = []
 p_el = []
 nelm = None
-
+ngdl = None
 """
 
 USER INPUT's -----------------------------------------------------------------------------------------------------------
@@ -24,6 +24,7 @@ USER INPUT's -------------------------------------------------------------------
 
 vrfy = False
 while vrfy != 'ok':
+
     # Informações gerais da estrutura
 
     nodes = int(input('Informe o número de nós: '))
@@ -31,7 +32,7 @@ while vrfy != 'ok':
 
     print('\n-------------------------------------------------------------------\n')
 
-    ngdl = nodes * 3
+    ngdl = int(nodes * 3)
 
     print(f'\nDados do sistema: \n'
           f'\nNúmero de nós: {nodes}'
@@ -41,7 +42,8 @@ while vrfy != 'ok':
 
     vrfy = str(input("""Digite "ok" para confirmar as informações: \n"""))
 
-print("\n" * 15)
+print("\n" * 5)
+
 
 # Para montar a matriz de equilibrio
 
@@ -66,9 +68,12 @@ while vrfy != 'ok':
     print('\n-------------------------------------------------------------------\n')
     vrfy = str(input("""\nDigite "ok" para confirmar as informações: \n"""))
 
-print("\n" * 15)
-"""
+print("\n" * 5)
+
+
 # Para montar a matriz de rigidez
+
+"""
 for i in range(n_elm):
     sec = float(input(f'Qual o tipo de seção do elemento {i + 1} ? '))
     if sec == 'retangular':
@@ -82,5 +87,40 @@ for i in range(n_elm):
 """
 
 CALCULATIONS -----------------------------------------------------------------------------------------------------------
+
+"""
+
+# Matriz de equilibrio - [ L ]  ----------- FUNCIONAL GRAÇAS A DEUS PAI RECEBA!!! -------------
+
+lo_eq = np.zeros((ngdl, ngdl-3))
+for i in range(nelm):
+    lo_eq[0 + (3 * i), 0 + (3 * i)] = -np.cos(ang[i] * (m.pi / 180.))
+    lo_eq[0 + (3 * i), 1 + (3 * i)] = np.sin(ang[i] * (m.pi / 180.)) / l_e[i]
+    lo_eq[0 + (3 * i), 2 + (3 * i)] = -np.sin(ang[i] * (m.pi / 180.)) / l_e[i]
+    lo_eq[1 + (3 * i), 0 + (3 * i)] = -np.sin(ang[i] * (m.pi / 180.))
+    lo_eq[1 + (3 * i), 1 + (3 * i)] = -np.cos(ang[i] * (m.pi / 180.)) / l_e[i]
+    lo_eq[1 + (3 * i), 2 + (3 * i)] = np.cos(ang[i] * (m.pi / 180.)) / l_e[i]
+    lo_eq[2 + (3 * i), 1 + (3 * i)] = 1
+    lo_eq[3 + (3 * i), 0 + (3 * i)] = np.cos(ang[i] * (m.pi / 180.))
+    lo_eq[3 + (3 * i), 1 + (3 * i)] = -np.sin(ang[i] * (m.pi / 180.)) / l_e[i]
+    lo_eq[3 + (3 * i), 2 + (3 * i)] = np.sin(ang[i] * (m.pi / 180.)) / l_e[i]
+    lo_eq[4 + (3 * i), 0 + (3 * i)] = np.sin(ang[i] * (m.pi / 180.))
+    lo_eq[4 + (3 * i), 1 + (3 * i)] = np.cos(ang[i] * (m.pi / 180.)) / l_e[i]
+    lo_eq[4 + (3 * i), 2 + (3 * i)] = -np.cos(ang[i] * (m.pi / 180.)) / l_e[i]
+    lo_eq[5 + (3 * i), 2 + (3 * i)] = -1
+
+print(lo_eq)
+
+# Matriz de equilibrio transposta - [L.T]
+leqt = lo_eq.copy()
+leqt = leqt.transpose()
+
+# Inserindo as restrições de apoio
+leq = lo_eq.copy()
+
+
+"""
+
+RETURN -----------------------------------------------------------------------------------------------------------------
 
 """
