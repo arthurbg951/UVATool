@@ -1,4 +1,5 @@
 import numpy as np
+import math as m
 
 """
 ------------------------------------------------------------------------------------------------------------------------
@@ -50,7 +51,7 @@ print(f'o Ângulo entre as barras é: {ang_biela:.2f}°')
 
 # Dimensões da treliça
 
-ang_biela *= (3.1415926535897932384626433832795/180.)
+ang_biela *= m.pi/180.
 l_bzinf = l_viga
 z = 0
 if lh >= 2:
