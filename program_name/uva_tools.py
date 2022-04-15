@@ -22,6 +22,8 @@ USER INPUT's -------------------------------------------------------------------
 
 """
 
+# CARACTERISTICAS DO PORTICO PLANO
+
 vrfy = False
 while vrfy != 'ok':
 
@@ -43,7 +45,6 @@ while vrfy != 'ok':
     vrfy = str(input("""Digite "ok" para confirmar as informações: \n"""))
 
 print("\n" * 5)
-
 
 # Para montar a matriz de equilibrio
 
@@ -70,6 +71,11 @@ while vrfy != 'ok':
 
 print("\n" * 5)
 
+
+# INSERÇÃO DOS APOIOS
+
+
+# PROPRIEDADES DOS MATERIAIS E SEÇÃO TRANSVERSAL
 
 # Para montar a matriz de rigidez
 
