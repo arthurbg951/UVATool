@@ -16,6 +16,7 @@ mdes = []
 p_el = []
 nelm = None
 ngdl = None
+nodes = None
 """
 
 USER INPUT's -----------------------------------------------------------------------------------------------------------
@@ -97,8 +98,12 @@ CALCULATIONS -------------------------------------------------------------------
 """
 
 # Matriz de equilibrio - [ L ]  ----------- FUNCIONAL GRAÇAS A DEUS PAI RECEBA!!! -------------
+lo_eq = None
+if nelm < nodes:
+    lo_eq = np.zeros((ngdl, ngdl-3))
+if nelm == nodes:
+    lo_eq = np.zeros((ngdl, ngdl))
 
-lo_eq = np.zeros((ngdl, ngdl-3))
 for i in range(nelm):
     lo_eq[0 + (3 * i), 0 + (3 * i)] = -np.cos(ang[i] * (m.pi / 180.))
     lo_eq[0 + (3 * i), 1 + (3 * i)] = np.sin(ang[i] * (m.pi / 180.)) / l_e[i]
