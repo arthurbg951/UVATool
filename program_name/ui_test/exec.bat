@@ -1,10 +1,25 @@
+@echo off 
 @REM HOW TO EXECUTE : JUST OPEN THIS FILE IN TERMINAL USING ./exec.bat (windows users)
 
-@REM BUILD FOLDER OUTPUT
-mkdir build
+set DIRECTORY=.\program_name\ui_test
+set BUILD_DIRECTORY=%DIRECTORY%\build
+set FILE_NAME=uvatool
+set UI_FILE=%DIRECTORY%\%FILE_NAME%.ui
+SET OUTPUT_FILE=%BUILD_DIRECTORY%\%FILE_NAME%.py
 
-@REM BUILDING
-pyuic5 -x ./uvatool.ui -o ./build/uvatool.py
+@REM CREATING BUILD FOLDER OUTPUT
+if exist %BUILD_DIRECTORY% (
+  echo BUILD FOLDER ALREADY EXIST
+) else (
+  mkdir %BUILD_DIRECTORY%
+)
+
+@REM PROCESSING UI FILE
+echo EXECUTING  pyuic5 command
+pyuic5 -x %UI_FILE% -o %OUTPUT_FILE%
 
 @REM EXECUTING
-python ./build/uvatool.py
+echo EXECUTING %OUTPUT_FILE%
+python %OUTPUT_FILE%
+
+echo SCRIPT ENDING...
