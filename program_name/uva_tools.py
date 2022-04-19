@@ -1,6 +1,7 @@
 import numpy as np
 import math as m
 
+
 class apoio(enumerate):
     primeiro = 1
     segundo = 2
@@ -30,9 +31,12 @@ inrc = []
 area = []
 mdes = []
 p_el = []
+eq = []
 nelm = None
 ngdl = None
 nodes = None
+
+
 """
 
 USER INPUT's -----------------------------------------------------------------------------------------------------------
@@ -56,7 +60,7 @@ while vrfy != 'ok':
     for i in range(nodes):
         typenodes.append(input(f'   Tipo do nó {i+1} = '))
     print()
-    
+
     nelm = int(input('Informe o número de elementos: '))
 
     print('\n-------------------------------------------------------------------\n')
@@ -125,36 +129,38 @@ CALCULATIONS -------------------------------------------------------------------
 """
 
 # Matriz de equilibrio - [ L ]  ----------- FUNCIONAL GRAÇAS A DEUS PAI RECEBA!!! -------------
-lo_eq = None
-if nelm < nodes:
-    lo_eq = np.zeros((ngdl, ngdl-3))
-if nelm == nodes:
-    lo_eq = np.zeros((ngdl, ngdl))
 
+n_linhas = 6+(nelm-1)*3
+n_colunas = 3*nelm
+
+eq = np.zeros((n_linhas, n_colunas), dtype=np.float64)
+
+acrecimo = 0
 for i in range(nelm):
-    lo_eq[0 + (3 * i), 0 + (3 * i)] = -np.cos(ang[i] * (m.pi / 180.))
-    lo_eq[0 + (3 * i), 1 + (3 * i)] = np.sin(ang[i] * (m.pi / 180.)) / l_e[i]
-    lo_eq[0 + (3 * i), 2 + (3 * i)] = -np.sin(ang[i] * (m.pi / 180.)) / l_e[i]
-    lo_eq[1 + (3 * i), 0 + (3 * i)] = -np.sin(ang[i] * (m.pi / 180.))
-    lo_eq[1 + (3 * i), 1 + (3 * i)] = -np.cos(ang[i] * (m.pi / 180.)) / l_e[i]
-    lo_eq[1 + (3 * i), 2 + (3 * i)] = np.cos(ang[i] * (m.pi / 180.)) / l_e[i]
-    lo_eq[2 + (3 * i), 1 + (3 * i)] = 1
-    lo_eq[3 + (3 * i), 0 + (3 * i)] = np.cos(ang[i] * (m.pi / 180.))
-    lo_eq[3 + (3 * i), 1 + (3 * i)] = -np.sin(ang[i] * (m.pi / 180.)) / l_e[i]
-    lo_eq[3 + (3 * i), 2 + (3 * i)] = np.sin(ang[i] * (m.pi / 180.)) / l_e[i]
-    lo_eq[4 + (3 * i), 0 + (3 * i)] = np.sin(ang[i] * (m.pi / 180.))
-    lo_eq[4 + (3 * i), 1 + (3 * i)] = np.cos(ang[i] * (m.pi / 180.)) / l_e[i]
-    lo_eq[4 + (3 * i), 2 + (3 * i)] = -np.cos(ang[i] * (m.pi / 180.)) / l_e[i]
-    lo_eq[5 + (3 * i), 2 + (3 * i)] = -1
+    eq[0 + (3 * i), 0 + (3 * i)] = -np.cos(ang[i] * (m.pi / 180.))
+    eq[0 + (3 * i), 1 + (3 * i)] = np.sin(ang[i] * (m.pi / 180.)) / l_e[i]
+    eq[0 + (3 * i), 2 + (3 * i)] = -np.sin(ang[i] * (m.pi / 180.)) / l_e[i]
+    eq[1 + (3 * i), 0 + (3 * i)] = -np.sin(ang[i] * (m.pi / 180.))
+    eq[1 + (3 * i), 1 + (3 * i)] = -np.cos(ang[i] * (m.pi / 180.)) / l_e[i]
+    eq[1 + (3 * i), 2 + (3 * i)] = np.cos(ang[i] * (m.pi / 180.)) / l_e[i]
+    eq[2 + (3 * i), 1 + (3 * i)] = 1
+    eq[3 + (3 * i), 0 + (3 * i)] = np.cos(ang[i] * (m.pi / 180.))
+    eq[3 + (3 * i), 1 + (3 * i)] = -np.sin(ang[i] * (m.pi / 180.)) / l_e[i]
+    eq[3 + (3 * i), 2 + (3 * i)] = np.sin(ang[i] * (m.pi / 180.)) / l_e[i]
+    eq[4 + (3 * i), 0 + (3 * i)] = np.sin(ang[i] * (m.pi / 180.))
+    eq[4 + (3 * i), 1 + (3 * i)] = np.cos(ang[i] * (m.pi / 180.)) / l_e[i]
+    eq[4 + (3 * i), 2 + (3 * i)] = -np.cos(ang[i] * (m.pi / 180.)) / l_e[i]
+    eq[5 + (3 * i), 2 + (3 * i)] = -1
+    acrecimo += 3
 
-print(lo_eq)
+print(eq)
 
 # Matriz de equilibrio transposta - [L.T]
-leqt = lo_eq.copy()
+leqt = eq.copy()
 leqt = leqt.transpose()
 
 # Inserindo as restrições de apoio
-leq = lo_eq.copy()
+leq = eq.copy()
 
 
 """
