@@ -1,5 +1,21 @@
 import numpy as np
 import math as m
+
+class apoio(enumerate):
+    primeiro = 1
+    segundo = 2
+    terceiro = 3
+    no_reaction = 0
+
+    def toString(n_espacos: int) -> str:
+        return (
+            f'{n_espacos * " "}1º genero = {apoio.primeiro}\n'
+            f'{n_espacos * " "}2º genero = {apoio.segundo}\n'
+            f'{n_espacos * " "}3º genero = {apoio.terceiro}\n'
+            f'{n_espacos * " "}sem reação = {apoio.no_reaction}'
+        )
+
+
 """
 
 VARIÁVEIS --------------------------------------------------------------------------------------------------------------
@@ -31,6 +47,16 @@ while vrfy != 'ok':
     # Informações gerais da estrutura
 
     nodes = int(input('Informe o número de nós: '))
+    typenodes = []
+
+    print()
+    print(f'    Definição de nos:\n{apoio.toString(4)}')
+    print()
+
+    for i in range(nodes):
+        typenodes.append(input(f'   Tipo do nó {i+1} = '))
+    print()
+    
     nelm = int(input('Informe o número de elementos: '))
 
     print('\n-------------------------------------------------------------------\n')
@@ -43,7 +69,7 @@ while vrfy != 'ok':
           f'\nGraus de liberdade da estrutura: {ngdl}\n')
     print('\n-------------------------------------------------------------------\n')
 
-    vrfy = str(input("""Digite "ok" para confirmar as informações: \n"""))
+    vrfy = str(input("""Digite "ok" para confirmar as informações: """))
 
 print("\n" * 5)
 
@@ -58,7 +84,8 @@ while vrfy != 'ok':
     for i in range(nelm):
         ang_e = float(input(
             f'[ELEMENTO {i+1}] (α{i+1}) Qual o ângulo em graus do elemento {i + 1} em relação ao eixo x? \n'))
-        l_eit = float(input(f'[ELEMENTO {i+1}] (L{i+1}) Qual o comprimento do vão do elemento {i + 1} em metros? \n'))
+        l_eit = float(input(
+            f'[ELEMENTO {i+1}] (L{i+1}) Qual o comprimento do vão do elemento {i + 1} em metros? \n'))
         print("\n" * 2)
         ang.append(ang_e)
         l_e.append(l_eit)
@@ -68,12 +95,12 @@ while vrfy != 'ok':
               f'\nComprimento do elemento: (L{i+1}) = {l_e[i]:.2f}m'
               f'\nÂngulo em relação ao eixo x: (α{i+1}) = {ang[i]:.2f}°')
     print('\n-------------------------------------------------------------------\n')
-    vrfy = str(input("""\nDigite "ok" para confirmar as informações: \n"""))
+    vrfy = str(input("""\nDigite "ok" para confirmar as informações: """))
 
 print("\n" * 5)
 
 
-# INSERÇÃO DOS APOIOS
+# INSERÇÃO DOS apoioS
 
 
 # PROPRIEDADES DOS MATERIAIS E SEÇÃO TRANSVERSAL

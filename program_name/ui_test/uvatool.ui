@@ -38,9 +38,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>icons/i_section.ico</normaloff>
-      <normalon>icons/i_section.ico</normalon>
-      <activeon>icons/i_section.ico</activeon>icons/i_section.ico</iconset>
+      <normaloff>../icons/i_section.ico</normaloff>../icons/i_section.ico</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -62,7 +60,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_3">
@@ -75,7 +73,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string/>
     </property>
    </widget>
    <widget class="QGroupBox" name="groupBox">
