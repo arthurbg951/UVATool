@@ -1,7 +1,7 @@
 @echo off 
 @REM HOW TO EXECUTE : JUST OPEN THIS FILE IN TERMINAL USING ./execute.bat (windows users)
 
-call ./build_ui_file.bat
+@REM call ./build_ui_file.bat
 
 set BUILD_DIRECTORY=build
 set FILE_NAME=form_uvatool

@@ -22,8 +22,6 @@
 # window.show()
 # sys.exit(app.exec())
 
-from ast import IsNot
-from turtle import begin_fill
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel
 from PyQt5.QtGui import QIcon, QFont, QMouseEvent, QPixmap, QPainter, QPen, QImage, QPaintEvent
 from PyQt5.QtCore import Qt, QPoint, QRect
@@ -40,7 +38,7 @@ class Window(QWidget):
 
         self.mousePosition = QPoint()
         self.image = QImage(
-            "src\\UVATool_UI\\icons\\apoio_primeiro_genero.png")
+            ".\\src\\UVATool_UI\\icons\\apoio_primeiro_genero.png")
 
         self.pix = QPixmap(self.rect().size())
         self.pix.fill(Qt.GlobalColor.transparent)
@@ -99,12 +97,15 @@ class Window(QWidget):
             self.update()
 
     def mouseReleaseEvent(self, event: QMouseEvent):
-        if event.buttons() & Qt.MouseButton.LeftButton:
-            rect = QPoint(
+        if event.button() & Qt.MouseButton.LeftButton:
+            point = QPoint(
                 event.pos().x() - 16, event.pos().y() - 5)
             painter = QPainter(self.pix)
-            painter.drawImage(rect, self.image)
+            painter.drawImage(point, self.image)
+            self.mousePosition = QPoint()
             self.update()
+            # painter.eraseRect(QRect(0, 0, 700, 400))
+        
 
 
 app = QApplication(sys.argv)

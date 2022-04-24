@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog_table_results</class>
- <widget class="QDialog" name="Dialog_table_results">
+ <class>ResultForm</class>
+ <widget class="QDialog" name="ResultForm">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -12,6 +12,10 @@
   </property>
   <property name="windowTitle">
    <string>Results</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>icons/table.png</normaloff>icons/table.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">

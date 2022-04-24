@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>DrawForm</class>
+ <widget class="QDialog" name="DrawForm">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -23,165 +23,168 @@
    <iconset>
     <normaloff>icons/draw.png</normaloff>icons/draw.png</iconset>
   </property>
-  <widget class="QGroupBox" name="groupBox">
-   <property name="geometry">
-    <rect>
-     <x>230</x>
-     <y>10</y>
-     <width>230</width>
-     <height>134</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>Node</string>
-   </property>
-   <layout class="QGridLayout" name="gridLayout_2">
-    <item row="0" column="0">
-     <widget class="QRadioButton" name="radioButton">
-      <property name="text">
-       <string>1º gênero</string>
-      </property>
-      <property name="checked">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QLineEdit" name="lineEdit">
-      <property name="placeholderText">
-       <string>X value</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QRadioButton" name="radioButton_2">
-      <property name="text">
-       <string>2º gênero</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QLineEdit" name="lineEdit_2">
-      <property name="placeholderText">
-       <string>Y value</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="0">
-     <widget class="QRadioButton" name="radioButton_3">
-      <property name="text">
-       <string>3º gênero</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="1">
-     <widget class="QLineEdit" name="lineEdit_3">
-      <property name="placeholderText">
-       <string>Rotation (º)</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0">
-     <widget class="QRadioButton" name="radioButton_4">
-      <property name="text">
-       <string>4º gênero</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="1">
-     <widget class="QPushButton" name="pushButton">
-      <property name="minimumSize">
-       <size>
-        <width>75</width>
-        <height>23</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>75</width>
-        <height>23</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>Desenhar</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QGroupBox" name="groupBox_2">
-   <property name="geometry">
-    <rect>
-     <x>230</x>
-     <y>150</y>
-     <width>231</width>
-     <height>191</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>Element</string>
-   </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QLineEdit" name="lineEdit_4">
-      <property name="placeholderText">
-       <string>1st Node X value</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QLineEdit" name="lineEdit_5">
-      <property name="placeholderText">
-       <string>1st Node Y value</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="0">
-     <widget class="QLineEdit" name="lineEdit_7">
-      <property name="placeholderText">
-       <string>2nd Node X value</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0">
-     <widget class="QLineEdit" name="lineEdit_8">
-      <property name="placeholderText">
-       <string>2st Node X value</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="0">
-     <widget class="QPushButton" name="pushButton_2">
-      <property name="minimumSize">
-       <size>
-        <width>75</width>
-        <height>23</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>75</width>
-        <height>23</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>Desenhar</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QListView" name="listView">
-   <property name="geometry">
-    <rect>
-     <x>9</x>
-     <y>10</y>
-     <width>211</width>
-     <height>331</height>
-    </rect>
-   </property>
-  </widget>
+  <layout class="QGridLayout" name="gridLayout_3">
+   <item row="0" column="0">
+    <widget class="QListView" name="listView"/>
+   </item>
+   <item row="0" column="1">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QGroupBox" name="groupBox">
+       <property name="title">
+        <string>Node</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <widget class="QRadioButton" name="radioButton">
+          <property name="text">
+           <string>1º gênero</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="lineEdit">
+          <property name="placeholderText">
+           <string>X value</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QRadioButton" name="radioButton_2">
+          <property name="text">
+           <string>2º gênero</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="lineEdit_2">
+          <property name="placeholderText">
+           <string>Y value</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QRadioButton" name="radioButton_3">
+          <property name="text">
+           <string>3º gênero</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="lineEdit_3">
+          <property name="placeholderText">
+           <string>Rotation (º)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QRadioButton" name="radioButton_4">
+          <property name="text">
+           <string>4º gênero</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QPushButton" name="pushButton">
+          <property name="minimumSize">
+           <size>
+            <width>75</width>
+            <height>23</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>75</width>
+            <height>23</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Desenhar</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox_2">
+       <property name="title">
+        <string>Element</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="0">
+         <widget class="QLineEdit" name="lineEdit_4">
+          <property name="placeholderText">
+           <string>1st Node X value</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLineEdit" name="lineEdit_5">
+          <property name="placeholderText">
+           <string>1st Node Y value</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLineEdit" name="lineEdit_7">
+          <property name="placeholderText">
+           <string>2nd Node X value</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLineEdit" name="lineEdit_8">
+          <property name="placeholderText">
+           <string>2st Node X value</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QPushButton" name="pushButton_2">
+          <property name="minimumSize">
+           <size>
+            <width>75</width>
+            <height>23</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>75</width>
+            <height>23</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Desenhar</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
  </widget>
+ <tabstops>
+  <tabstop>lineEdit</tabstop>
+  <tabstop>lineEdit_2</tabstop>
+  <tabstop>lineEdit_3</tabstop>
+  <tabstop>lineEdit_4</tabstop>
+  <tabstop>lineEdit_5</tabstop>
+  <tabstop>lineEdit_7</tabstop>
+  <tabstop>lineEdit_8</tabstop>
+  <tabstop>pushButton</tabstop>
+  <tabstop>pushButton_2</tabstop>
+  <tabstop>radioButton</tabstop>
+  <tabstop>radioButton_2</tabstop>
+  <tabstop>radioButton_3</tabstop>
+  <tabstop>radioButton_4</tabstop>
+  <tabstop>listView</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

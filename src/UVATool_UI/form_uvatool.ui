@@ -99,6 +99,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionDraw"/>
+   <addaction name="actionTable"/>
   </widget>
   <action name="actionNew">
    <property name="text">
@@ -200,6 +201,18 @@
    </property>
    <property name="toolTip">
     <string>Draw on Canvas</string>
+   </property>
+  </action>
+  <action name="actionTable">
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/table.png</normaloff>icons/table.png</iconset>
+   </property>
+   <property name="text">
+    <string>Table</string>
+   </property>
+   <property name="toolTip">
+    <string>View Table</string>
    </property>
   </action>
  </widget>
