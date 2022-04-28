@@ -12,127 +12,304 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 from form_draw import Ui_DrawForm
 from form_results import Ui_ResultForm
+from uvat import Apoio, Canvas, Defaults, Elemento, Node, Grid
 
 
 class Ui_UVATools(object):
     def setupUi(self, UVATools):
         UVATools.setObjectName("UVATools")
-        UVATools.resize(803, 622)
+        UVATools.resize(850, 650)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("icons/UVATool_main_window.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("icons/UVATool_main_window.png"),
+                       QtGui.QIcon.Normal, QtGui.QIcon.Off)
         UVATools.setWindowIcon(icon)
         self.centralwidget = QtWidgets.QWidget(UVATools)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName("gridLayout")
-        self.graphicsView = QtWidgets.QGraphicsView(self.centralwidget)
-        self.graphicsView.setMinimumSize(QtCore.QSize(581, 511))
-        self.graphicsView.setObjectName("graphicsView")
-        self.gridLayout.addWidget(self.graphicsView, 0, 0, 1, 1)
+        self.verticalLayout = QtWidgets.QVBoxLayout()
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.graphicsViewCanvas = QtWidgets.QGraphicsView(self.centralwidget)
+        self.graphicsViewCanvas.setMinimumSize(QtCore.QSize(581, 511))
+        self.graphicsViewCanvas.setObjectName("graphicsViewCanvas")
+        self.verticalLayout.addWidget(self.graphicsViewCanvas)
+        self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.lineEditXCanvas = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEditXCanvas.setEnabled(False)
+        self.lineEditXCanvas.setMaximumSize(QtCore.QSize(50, 20))
+        self.lineEditXCanvas.setObjectName("lineEditXCanvas")
+        self.horizontalLayout.addWidget(self.lineEditXCanvas)
+        self.lineEditYCanvas = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEditYCanvas.setEnabled(False)
+        self.lineEditYCanvas.setMaximumSize(QtCore.QSize(50, 20))
+        self.lineEditYCanvas.setObjectName("lineEditYCanvas")
+        self.horizontalLayout.addWidget(self.lineEditYCanvas)
+        self.lineEditSuportAngulation = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEditSuportAngulation.setMinimumSize(QtCore.QSize(60, 20))
+        self.lineEditSuportAngulation.setMaximumSize(QtCore.QSize(60, 20))
+        self.lineEditSuportAngulation.setStyleSheet("QLineEdit {\n"
+                                                    "    border-color:black;\n"
+                                                    "    border-top: 4px;\n"
+                                                    "}")
+        self.lineEditSuportAngulation.setObjectName("lineEditSuportAngulation")
+        self.horizontalLayout.addWidget(self.lineEditSuportAngulation)
+        spacerItem = QtWidgets.QSpacerItem(
+            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem)
+        self.checkBoxGrid = QtWidgets.QCheckBox(self.centralwidget)
+        self.checkBoxGrid.setObjectName("checkBoxGrid")
+        self.horizontalLayout.addWidget(self.checkBoxGrid)
+        self.lineEditXGrid = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEditXGrid.setEnabled(False)
+        self.lineEditXGrid.setMaximumSize(QtCore.QSize(50, 20))
+        self.lineEditXGrid.setObjectName("lineEditXGrid")
+        self.horizontalLayout.addWidget(self.lineEditXGrid)
+        self.lineEditYGrid = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEditYGrid.setEnabled(False)
+        self.lineEditYGrid.setMaximumSize(QtCore.QSize(50, 20))
+        self.lineEditYGrid.setObjectName("lineEditYGrid")
+        self.horizontalLayout.addWidget(self.lineEditYGrid)
+        self.checkBoxGridSnap = QtWidgets.QCheckBox(self.centralwidget)
+        self.checkBoxGridSnap.setEnabled(False)
+        self.checkBoxGridSnap.setObjectName("checkBoxGridSnap")
+        self.horizontalLayout.addWidget(self.checkBoxGridSnap)
+        self.verticalLayout.addLayout(self.horizontalLayout)
+        self.gridLayout.addLayout(self.verticalLayout, 0, 0, 1, 1)
         UVATools.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(UVATools)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 803, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 850, 21))
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
+        self.menuProject = QtWidgets.QMenu(self.menubar)
+        self.menuProject.setObjectName("menuProject")
+        self.menuSettings = QtWidgets.QMenu(self.menubar)
+        self.menuSettings.setObjectName("menuSettings")
         UVATools.setMenuBar(self.menubar)
-        self.toolBar = QtWidgets.QToolBar(UVATools)
-        self.toolBar.setMinimumSize(QtCore.QSize(0, 0))
-        self.toolBar.setAllowedAreas(QtCore.Qt.LeftToolBarArea|QtCore.Qt.RightToolBarArea|QtCore.Qt.TopToolBarArea)
-        self.toolBar.setIconSize(QtCore.QSize(32, 32))
-        self.toolBar.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
-        self.toolBar.setObjectName("toolBar")
-        UVATools.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
-        self.toolBar_2 = QtWidgets.QToolBar(UVATools)
-        self.toolBar_2.setObjectName("toolBar_2")
-        UVATools.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar_2)
+        self.toolBarDraw = QtWidgets.QToolBar(UVATools)
+        self.toolBarDraw.setMinimumSize(QtCore.QSize(0, 0))
+        self.toolBarDraw.setAllowedAreas(
+            QtCore.Qt.LeftToolBarArea | QtCore.Qt.RightToolBarArea | QtCore.Qt.TopToolBarArea)
+        self.toolBarDraw.setIconSize(QtCore.QSize(32, 32))
+        self.toolBarDraw.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
+        self.toolBarDraw.setObjectName("toolBarDraw")
+        UVATools.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBarDraw)
+        self.dockWidgetResults = QtWidgets.QDockWidget(UVATools)
+        self.dockWidgetResults.setMinimumSize(QtCore.QSize(200, 253))
+        self.dockWidgetResults.setMaximumSize(QtCore.QSize(200, 524287))
+        self.dockWidgetResults.setAccessibleName("")
+        self.dockWidgetResults.setStyleSheet("QDockWidget{\n"
+                                             "border:0px;\n"
+                                             "}")
+        self.dockWidgetResults.setFloating(False)
+        self.dockWidgetResults.setFeatures(
+            QtWidgets.QDockWidget.DockWidgetClosable | QtWidgets.QDockWidget.DockWidgetMovable)
+        self.dockWidgetResults.setObjectName("dockWidgetResults")
+        self.dockWidgetContentsResults = QtWidgets.QWidget()
+        self.dockWidgetContentsResults.setObjectName(
+            "dockWidgetContentsResults")
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(
+            self.dockWidgetContentsResults)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.radioButton = QtWidgets.QRadioButton(
+            self.dockWidgetContentsResults)
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.radioButton.setFont(font)
+        self.radioButton.setChecked(True)
+        self.radioButton.setObjectName("radioButton")
+        self.verticalLayout_2.addWidget(self.radioButton)
+        self.radioButton_2 = QtWidgets.QRadioButton(
+            self.dockWidgetContentsResults)
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.radioButton_2.setFont(font)
+        self.radioButton_2.setObjectName("radioButton_2")
+        self.verticalLayout_2.addWidget(self.radioButton_2)
+        self.comboBoxResultOptions = QtWidgets.QComboBox(
+            self.dockWidgetContentsResults)
+        self.comboBoxResultOptions.setMinimumSize(QtCore.QSize(0, 24))
+        self.comboBoxResultOptions.setEditable(False)
+        self.comboBoxResultOptions.setObjectName("comboBoxResultOptions")
+        self.verticalLayout_2.addWidget(self.comboBoxResultOptions)
+        self.listWidgetResults = QtWidgets.QListWidget(
+            self.dockWidgetContentsResults)
+        self.listWidgetResults.setViewMode(QtWidgets.QListView.ListMode)
+        self.listWidgetResults.setObjectName("listWidgetResults")
+        self.verticalLayout_2.addWidget(self.listWidgetResults)
+        self.dockWidgetResults.setWidget(self.dockWidgetContentsResults)
+        UVATools.addDockWidget(
+            QtCore.Qt.DockWidgetArea(2), self.dockWidgetResults)
+        self.toolBarLoadings = QtWidgets.QToolBar(UVATools)
+        self.toolBarLoadings.setIconSize(QtCore.QSize(32, 32))
+        self.toolBarLoadings.setObjectName("toolBarLoadings")
+        UVATools.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBarLoadings)
         self.actionNew = QtWidgets.QAction(UVATools)
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap("icons/new_file.png"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionNew.setIcon(icon1)
         self.actionNew.setObjectName("actionNew")
         self.actionOpen = QtWidgets.QAction(UVATools)
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap("icons/open.png"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionOpen.setIcon(icon2)
         self.actionOpen.setObjectName("actionOpen")
         self.actionSave = QtWidgets.QAction(UVATools)
+        icon3 = QtGui.QIcon()
+        icon3.addPixmap(QtGui.QPixmap("icons/save.png"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionSave.setIcon(icon3)
         self.actionSave.setObjectName("actionSave")
-        self.actionSave_as = QtWidgets.QAction(UVATools)
-        self.actionSave_as.setObjectName("actionSave_as")
         self.actionExport = QtWidgets.QAction(UVATools)
+        icon4 = QtGui.QIcon()
+        icon4.addPixmap(QtGui.QPixmap("icons/export.png"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionExport.setIcon(icon4)
         self.actionExport.setObjectName("actionExport")
         self.actionExt = QtWidgets.QAction(UVATools)
+        icon5 = QtGui.QIcon()
+        icon5.addPixmap(QtGui.QPixmap("icons/exit.png"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionExt.setIcon(icon5)
         self.actionExt.setObjectName("actionExt")
         self.first_class_support = QtWidgets.QAction(UVATools)
         self.first_class_support.setCheckable(True)
-        icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("icons/apoio_primeiro_genero.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.first_class_support.setIcon(icon1)
+        icon6 = QtGui.QIcon()
+        icon6.addPixmap(QtGui.QPixmap(
+            "icons/apoio_primeiro_genero.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.first_class_support.setIcon(icon6)
         self.first_class_support.setObjectName("first_class_support")
-        self.first_class_support.triggered.connect(self.primeiroGenero)
-        self.second_class_support_2 = QtWidgets.QAction(UVATools)
-        self.second_class_support_2.setCheckable(True)
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("icons/apoio_segundo_genero.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.second_class_support_2.setIcon(icon2)
-        self.second_class_support_2.setObjectName("second_class_support_2")
-        self.second_class_support_2.triggered.connect(self.segundoGenero)
-        self.tird_class_support_3 = QtWidgets.QAction(UVATools)
-        self.tird_class_support_3.setCheckable(True)
-        icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap("icons/apoio_terceiro_genero.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.tird_class_support_3.setIcon(icon3)
-        self.tird_class_support_3.setObjectName("tird_class_support_3")
-        self.tird_class_support_3.triggered.connect(self.terceiroGenero)
+        self.second_class_support = QtWidgets.QAction(UVATools)
+        self.second_class_support.setCheckable(True)
+        icon7 = QtGui.QIcon()
+        icon7.addPixmap(QtGui.QPixmap(
+            "icons/apoio_segundo_genero.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.second_class_support.setIcon(icon7)
+        self.second_class_support.setObjectName("second_class_support")
+        self.tird_class_support = QtWidgets.QAction(UVATools)
+        self.tird_class_support.setCheckable(True)
+        icon8 = QtGui.QIcon()
+        icon8.addPixmap(QtGui.QPixmap(
+            "icons/apoio_terceiro_genero.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.tird_class_support.setIcon(icon8)
+        self.tird_class_support.setObjectName("tird_class_support")
         self.semi_rigid_class_support = QtWidgets.QAction(UVATools)
         self.semi_rigid_class_support.setCheckable(True)
-        icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap("icons/apoio_semi_rigido.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.semi_rigid_class_support.setIcon(icon4)
+        icon9 = QtGui.QIcon()
+        icon9.addPixmap(QtGui.QPixmap("icons/apoio_semi_rigido.png"),
+                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.semi_rigid_class_support.setIcon(icon9)
         self.semi_rigid_class_support.setObjectName("semi_rigid_class_support")
-        self.semi_rigid_class_support.triggered.connect(self.semiRigido)
         self.actionDraw = QtWidgets.QAction(UVATools)
-        icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap("icons/draw.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.actionDraw.setIcon(icon5)
+        icon10 = QtGui.QIcon()
+        icon10.addPixmap(QtGui.QPixmap("icons/draw.png"),
+                         QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionDraw.setIcon(icon10)
         self.actionDraw.setObjectName("actionDraw")
-        self.actionDraw.triggered.connect(self.showDrawForm)
-        self.actionTable = QtWidgets.QAction(UVATools)
-        icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap("icons/table.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.actionTable.setIcon(icon6)
-        self.actionTable.setObjectName("actionTable")
-        self.actionTable.triggered.connect(self.showResultsForm)
+        self.actionDefaults = QtWidgets.QAction(UVATools)
+        self.actionDefaults.setObjectName("actionDefaults")
+        self.elementClass = QtWidgets.QAction(UVATools)
+        self.elementClass.setCheckable(True)
+        icon11 = QtGui.QIcon()
+        icon11.addPixmap(QtGui.QPixmap("icons/element.png"),
+                         QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.elementClass.setIcon(icon11)
+        self.elementClass.setObjectName("elementClass")
+        self.actionOptions = QtWidgets.QAction(UVATools)
+        self.actionOptions.setObjectName("actionOptions")
+        self.nodalForces = QtWidgets.QAction(UVATools)
+        self.nodalForces.setCheckable(True)
+        icon12 = QtGui.QIcon()
+        icon12.addPixmap(QtGui.QPixmap("icons/vertical_force.png"),
+                         QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.nodalForces.setIcon(icon12)
+        self.nodalForces.setObjectName("nodalForces")
+        self.nodalMoments = QtWidgets.QAction(UVATools)
+        self.nodalMoments.setCheckable(True)
+        icon13 = QtGui.QIcon()
+        icon13.addPixmap(QtGui.QPixmap("icons/nodal_moments.png"),
+                         QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.nodalMoments.setIcon(icon13)
+        self.nodalMoments.setObjectName("nodalMoments")
+        self.uniformLoads = QtWidgets.QAction(UVATools)
+        self.uniformLoads.setCheckable(True)
+        icon14 = QtGui.QIcon()
+        icon14.addPixmap(QtGui.QPixmap("icons/uniform_loads.png"),
+                         QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.uniformLoads.setIcon(icon14)
+        self.uniformLoads.setObjectName("uniformLoads")
+        self.linearLoads = QtWidgets.QAction(UVATools)
+        self.linearLoads.setCheckable(True)
+        icon15 = QtGui.QIcon()
+        icon15.addPixmap(QtGui.QPixmap("icons/linear_loads.png"),
+                         QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.linearLoads.setIcon(icon15)
+        self.linearLoads.setObjectName("linearLoads")
+        self.actionProcess = QtWidgets.QAction(UVATools)
+        icon16 = QtGui.QIcon()
+        icon16.addPixmap(QtGui.QPixmap("icons/process.png"),
+                         QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionProcess.setIcon(icon16)
+        self.actionProcess.setObjectName("actionProcess")
         self.menuFile.addAction(self.actionNew)
         self.menuFile.addAction(self.actionOpen)
         self.menuFile.addAction(self.actionSave)
-        self.menuFile.addAction(self.actionSave_as)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionExport)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionExt)
+        self.menuProject.addAction(self.actionDefaults)
+        self.menuProject.addSeparator()
+        self.menuSettings.addAction(self.actionOptions)
         self.menubar.addAction(self.menuFile.menuAction())
-        self.toolBar.addAction(self.first_class_support)
-        self.toolBar.addAction(self.second_class_support_2)
-        self.toolBar.addAction(self.tird_class_support_3)
-        self.toolBar.addAction(self.semi_rigid_class_support)
-        self.toolBar_2.addAction(self.actionDraw)
-        self.toolBar_2.addAction(self.actionTable)
+        self.menubar.addAction(self.menuProject.menuAction())
+        self.menubar.addAction(self.menuSettings.menuAction())
+        self.toolBarDraw.addAction(self.first_class_support)
+        self.toolBarDraw.addAction(self.second_class_support)
+        self.toolBarDraw.addAction(self.tird_class_support)
+        self.toolBarDraw.addAction(self.semi_rigid_class_support)
+        self.toolBarDraw.addAction(self.elementClass)
+        self.toolBarDraw.addSeparator()
+        self.toolBarDraw.addAction(self.actionDraw)
+        self.toolBarDraw.addAction(self.actionProcess)
+        self.toolBarLoadings.addAction(self.nodalForces)
+        self.toolBarLoadings.addAction(self.nodalMoments)
+        self.toolBarLoadings.addAction(self.uniformLoads)
+        self.toolBarLoadings.addAction(self.linearLoads)
+
+###############################################################################################################
+
+        self.first_class_support.triggered.connect(self.primeiroGenero)
+        self.second_class_support.triggered.connect(self.segundoGenero)
+        self.tird_class_support.triggered.connect(self.terceiroGenero)
+        self.semi_rigid_class_support.triggered.connect(self.semiRigido)
+        self.elementClass.triggered.connect(self.elementClassToggle)
+        self.checkBoxGrid.clicked.connect(self.activateGrid)
+
+        self.actionDraw.triggered.connect(self.showDrawForm)
+        self.canvas = Canvas()
+        self.defaults = Defaults()
+        self.grid = Grid()
+        self.elementPoint1 = None
+        self.elementPoint2 = None
+
+        self.comboBoxResultOptions.addItem("Nodes")
+        self.comboBoxResultOptions.addItem("Elements")
 
         self.image = ""
         # self.canDrawOnCanvas = True
         self.correcaoClickImagem = [16, 5]
         self.graphicsScene = QtWidgets.QGraphicsScene()
         self.graphicsScene.mousePressEvent = self.mousePressEventScene
-        self.graphicsScene.setSceneRect(0, 0, 100,  100)
+        self.graphicsScene.setSceneRect(0, 0, 1,  1)
         self.graphicsScene.mousePressEvent = self.mousePressEventScene
-        self.graphicsView.setScene(self.graphicsScene)
-        self.gridActive = False
-        if self.gridActive:
-            for i in range(-50, 50, 1):
-                for j in range(-50, 50, 1):
-                    self.graphicsScene.addEllipse(i*10, j * 10, 1, 1, QtGui.QPen(
-                        QtCore.Qt.GlobalColor.black), QtGui.QBrush(QtCore.Qt.BrushStyle.SolidPattern))
-
+        self.graphicsViewCanvas.setScene(self.graphicsScene)
 
         self.retranslateUi(UVATools)
         QtCore.QMetaObject.connectSlotsByName(UVATools)
-    
 
     def showDrawForm(self):
         drawForm = QtWidgets.QDialog()
@@ -140,25 +317,56 @@ class Ui_UVATools(object):
         ui.setupUi(drawForm)
         drawForm.show()
         drawForm.exec()
-    
+
     def showResultsForm(self):
         resultsForm = QtWidgets.QDialog()
         ui = Ui_ResultForm()
         ui.setupUi(resultsForm)
         resultsForm.show()
         resultsForm.exec()
-    
+
     def mousePressEventScene(self, event: QtWidgets.QGraphicsSceneMouseEvent):
-        x = event.scenePos().x() 
-        y = event.scenePos().y() 
-        # xString = x[0]+x[1]+
+        first = self.first_class_support.isChecked()
+        second = self.second_class_support.isChecked()
+        tird = self.tird_class_support.isChecked()
+        rigid = self.semi_rigid_class_support.isChecked()
+        if first or second or tird or rigid:
+            self.drawSupport(event)
+        if self.elementClass.isChecked():
+            x = event.scenePos().x()
+            y = event.scenePos().y()
+            print(x, y)
+            if self.elementPoint1 == None:
+                self.elementPoint1 = QtCore.QPointF(x, y)
+                print('p1 setado')
+            else:
+                self.elementPoint2 = QtCore.QPointF(x, y)
+                print('p2 setado')
+            teste1 = self.elementPoint1 is not None
+            teste2 = self.elementPoint2 is not None
+            if teste1 and teste2:
+                self.canvas.elements.append(self.graphicsScene.addLine(self.elementPoint1.x(
+                ), self.elementPoint1.y(), self.elementPoint2.x(), self.elementPoint2.y(), QtGui.QPen(QtCore.Qt.GlobalColor.black, 2)))
+                self.elementPoint1 = None
+                self.elementPoint2 = None
+
+    def mouseMoveEventScene(self, event: QtWidgets.QGraphicsSceneMouseEvent):
+        x = event.pos().x()
+        y = event.pos().y()
+        self.lineEditXCanvas.setText(str(x))
+        self.lineEditYCanvas.setText(str(y))
+        self.update()
+
+    def drawSupport(self, event: QtCore.QEvent):
+        x = event.scenePos().x()
+        y = event.scenePos().y()
         pixMap = QtGui.QPixmap(self.image)
         imagem = self.graphicsScene.addPixmap(pixMap)
         point = None
-        if self.gridActive:
+        if self.grid.isActive:
             xString = int(str(x)[:-2])
             yString = int(str(y)[:-2])
-
+            print(xString, yString)
             if xString % 10 < 5:
                 xString = xString - xString % 10
             else:
@@ -168,79 +376,181 @@ class Ui_UVATools(object):
                 yString = yString - yString % 10
             else:
                 yString = yString + (10-yString % 10)
-            print('VALORES DE X E Y ALTERADOS')
-            print(xString, yString)
             point = QtCore.QPointF(float(xString), float(yString))
         else:
             point = QtCore.QPointF(
                 x - self.correcaoClickImagem[0], y - self.correcaoClickImagem[1])
-        imagem.setPos(point)
-        imagem.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
+        self.canvas.nodes.append(imagem.setPos(point))
+        # imagem.setFlag(
+        #     QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
 
     def primeiroGenero(self):
-        self.image = "icons/apoio_primeiro_genero.png"
-        self.correcaoClickImagem = [16, 5]
-        if self.semi_rigid_class_support.isChecked():
-            self.semi_rigid_class_support.toggle()
-        if self.second_class_support_2.isChecked():
-            self.second_class_support_2.toggle()
-        if self.tird_class_support_3.isChecked():
-            self.tird_class_support_3.toggle()
+        if self.first_class_support.isChecked():
+            self.image = "icons/apoio_primeiro_genero.png"
+            self.correcaoClickImagem = [16, 5]
+            if self.semi_rigid_class_support.isChecked():
+                self.semi_rigid_class_support.toggle()
+            elif self.second_class_support.isChecked():
+                self.second_class_support.toggle()
+            elif self.tird_class_support.isChecked():
+                self.tird_class_support.toggle()
+        else:
+            self.image = ""
 
     def segundoGenero(self):
-        self.image = "icons/apoio_segundo_genero.png"
-        self.correcaoClickImagem = [17, 7]
-        if self.first_class_support.isChecked():
-            self.first_class_support.toggle()
-        if self.tird_class_support_3.isChecked():
-            self.tird_class_support_3.toggle()
-        if self.semi_rigid_class_support.isChecked():
-            self.semi_rigid_class_support.toggle()
+        if self.second_class_support.isChecked():
+            self.image = "icons/apoio_segundo_genero.png"
+            self.correcaoClickImagem = [17, 7]
+            if self.first_class_support.isChecked():
+                self.first_class_support.toggle()
+            elif self.tird_class_support.isChecked():
+                self.tird_class_support.toggle()
+            elif self.semi_rigid_class_support.isChecked():
+                self.semi_rigid_class_support.toggle()
+        else:
+            self.image = ""
 
     def terceiroGenero(self):
-        self.image = "icons/apoio_terceiro_genero.png"
-        self.correcaoClickImagem = [17, 14]
-        if self.first_class_support.isChecked():
-            self.first_class_support.toggle()
-        if self.second_class_support_2.isChecked():
-            self.second_class_support_2.toggle()
-        if self.semi_rigid_class_support.isChecked():
-            self.semi_rigid_class_support.toggle()
+        if self.tird_class_support.isChecked():
+            self.image = "icons/apoio_terceiro_genero.png"
+            self.correcaoClickImagem = [17, 14]
+            if self.first_class_support.isChecked():
+                self.first_class_support.toggle()
+            elif self.second_class_support.isChecked():
+                self.second_class_support.toggle()
+            elif self.semi_rigid_class_support.isChecked():
+                self.semi_rigid_class_support.toggle()
+        else:
+            self.image = ""
 
     def semiRigido(self):
-        self.image = "icons/apoio_semi_rigido.png"
-        self.correcaoClickImagem = [15, 12]
-        if self.first_class_support.isChecked():
-            self.first_class_support.toggle()
-        if self.second_class_support_2.isChecked():
-            self.second_class_support_2.toggle()
-        if self.tird_class_support_3.isChecked():
-            self.tird_class_support_3.toggle()
+        if self.semi_rigid_class_support.isChecked():
+            self.image = "icons/apoio_semi_rigido.png"
+            self.correcaoClickImagem = [15, 12]
+            if self.first_class_support.isChecked():
+                self.first_class_support.toggle()
+            elif self.second_class_support.isChecked():
+                self.second_class_support.toggle()
+            elif self.tird_class_support.isChecked():
+                self.tird_class_support.toggle()
+        else:
+            self.image = ""
+
+    def elementClassToggle(self):
+        if self.semi_rigid_class_support.isChecked():
+            if self.first_class_support.isChecked():
+                self.first_class_support.toggle()
+            if self.second_class_support.isChecked():
+                self.second_class_support.toggle()
+            if self.tird_class_support.isChecked():
+                self.tird_class_support.toggle()
+            if self.semi_rigid_class_support.isChecked():
+                self.semi_rigid_class_support.toggle()
+
+    # def disableButton(self, button: QtWidgets.QAction):
+    #     first =
+    #     second
+    #     tird
+    #     rigid
+    #     element
+
+    def activateGrid(self):
+        if self.checkBoxGrid.isChecked():
+            self.lineEditXGrid.setEnabled(True)
+            self.lineEditYGrid.setEnabled(True)
+            self.checkBoxGridSnap.setEnabled(True)
+            self.drawGrid()
+        else:
+            self.lineEditXGrid.setEnabled(False)
+            self.lineEditXGrid.setText("")
+            self.lineEditYGrid.setEnabled(False)
+            self.lineEditYGrid.setText("")
+            self.checkBoxGridSnap.setEnabled(False)
+            self.removeGrid()
+
+    def drawGrid(self):
+        self.grid.isActive = True
+        xLength = int(self.graphicsViewCanvas.size().width()/20)
+        yLength = int(self.graphicsViewCanvas.size().height()/20)
+        for i in range(-xLength, xLength, 1):
+            for j in range(-yLength, yLength, 1):
+                self.grid.points.append(self.graphicsScene.addEllipse(i*10, j * 10, 1, 1, QtGui.QPen(
+                    QtCore.Qt.GlobalColor.black)))
+        # self.grid.points.append(self.graphicsScene.addEllipse(
+        #     0, 0, 1, 1, QtGui.QPen(QtCore.Qt.GlobalColor.black)))
+
+    def removeGrid(self):
+        for point in self.grid.points:
+            self.graphicsScene.removeItem(point)
+        self.grid.points = []
+        self.grid.isActive = False
+
+###############################################################################################################
 
     def retranslateUi(self, UVATools):
         _translate = QtCore.QCoreApplication.translate
         UVATools.setWindowTitle(_translate("UVATools", "UVATool"))
+        self.lineEditXCanvas.setPlaceholderText(_translate("UVATools", "X"))
+        self.lineEditYCanvas.setPlaceholderText(_translate("UVATools", "Y"))
+        self.lineEditSuportAngulation.setPlaceholderText(
+            _translate("UVATools", "support º"))
+        self.checkBoxGrid.setText(_translate("UVATools", "Grid"))
+        self.lineEditXGrid.setPlaceholderText(_translate("UVATools", "X"))
+        self.lineEditYGrid.setPlaceholderText(_translate("UVATools", "Y"))
+        self.checkBoxGridSnap.setText(_translate("UVATools", "Snap"))
         self.menuFile.setTitle(_translate("UVATools", "File"))
-        self.toolBar.setWindowTitle(_translate("UVATools", "Supports"))
-        self.toolBar_2.setWindowTitle(_translate("UVATools", "Draw"))
+        self.menuProject.setTitle(_translate("UVATools", "Project"))
+        self.menuSettings.setTitle(_translate("UVATools", "Settings"))
+        self.toolBarDraw.setWindowTitle(_translate("UVATools", "Supports"))
+        self.dockWidgetResults.setToolTip(_translate("UVATools", "Results"))
+        self.dockWidgetResults.setStatusTip(_translate("UVATools", "Results"))
+        self.dockWidgetResults.setAccessibleDescription(
+            _translate("UVATools", "Results"))
+        self.dockWidgetResults.setWindowTitle(
+            _translate("UVATools", "Results Analysis"))
+        self.radioButton.setText(_translate("UVATools", "Análise elastica:\n"
+                                            "  Método da rigidez analítica"))
+        self.radioButton_2.setText(_translate("UVATools", "Análise rígido plastica:\n"
+                                              "  Mínima norma Euclidiana"))
+        self.toolBarLoadings.setWindowTitle(_translate("UVATools", "toolBar"))
         self.actionNew.setText(_translate("UVATools", "New..."))
         self.actionOpen.setText(_translate("UVATools", "Open..."))
         self.actionSave.setText(_translate("UVATools", "Save"))
-        self.actionSave_as.setText(_translate("UVATools", "Save as..."))
         self.actionExport.setText(_translate("UVATools", "Export"))
         self.actionExt.setText(_translate("UVATools", "Exit"))
-        self.first_class_support.setText(_translate("UVATools", "first-class support"))
-        self.first_class_support.setToolTip(_translate("UVATools", "First-class support for drawing"))
-        self.second_class_support_2.setText(_translate("UVATools", "second-class support"))
-        self.second_class_support_2.setToolTip(_translate("UVATools", "Second-class support for drawing"))
-        self.tird_class_support_3.setText(_translate("UVATools", "tird-class support"))
-        self.tird_class_support_3.setToolTip(_translate("UVATools", "Tird-class support for drawing"))
-        self.semi_rigid_class_support.setText(_translate("UVATools", "semi_rigid_class_support"))
-        self.semi_rigid_class_support.setToolTip(_translate("UVATools", "Semi rigid support"))
+        self.first_class_support.setText(
+            _translate("UVATools", "first-class support"))
+        self.first_class_support.setToolTip(_translate(
+            "UVATools", "First-class support for drawing"))
+        self.second_class_support.setText(
+            _translate("UVATools", "second-class support"))
+        self.second_class_support.setToolTip(_translate(
+            "UVATools", "Second-class support for drawing"))
+        self.tird_class_support.setText(
+            _translate("UVATools", "tird-class support"))
+        self.tird_class_support.setToolTip(_translate(
+            "UVATools", "Tird-class support for drawing"))
+        self.semi_rigid_class_support.setText(
+            _translate("UVATools", "semi_rigid_class_support"))
+        self.semi_rigid_class_support.setToolTip(
+            _translate("UVATools", "Semi rigid support"))
         self.actionDraw.setText(_translate("UVATools", "Draw"))
         self.actionDraw.setToolTip(_translate("UVATools", "Draw on Canvas"))
-        self.actionTable.setText(_translate("UVATools", "Table"))
-        self.actionTable.setToolTip(_translate("UVATools", "View Table"))
+        self.actionDefaults.setText(_translate("UVATools", "Defaults"))
+        self.elementClass.setText(_translate("UVATools", "elementClass"))
+        self.elementClass.setToolTip(_translate("UVATools", "Element"))
+        self.actionOptions.setText(_translate("UVATools", "Options"))
+        self.nodalForces.setText(_translate("UVATools", "nodalForces"))
+        self.nodalForces.setToolTip(_translate("UVATools", "Vertical Force"))
+        self.nodalMoments.setText(_translate("UVATools", "nodalMoments"))
+        self.nodalMoments.setToolTip(_translate("UVATools", "Nodal Moments"))
+        self.uniformLoads.setText(_translate("UVATools", "uniformLoads"))
+        self.uniformLoads.setToolTip(_translate("UVATools", "Uniform Loads"))
+        self.linearLoads.setText(_translate("UVATools", "linearLoads"))
+        self.linearLoads.setToolTip(_translate("UVATools", "Linear Loads"))
+        self.actionProcess.setText(_translate("UVATools", "Process"))
+        self.actionProcess.setToolTip(
+            _translate("UVATools", "Process Calculations"))
 
 
 if __name__ == "__main__":
