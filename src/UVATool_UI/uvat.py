@@ -1,22 +1,30 @@
 from enum import Enum
-
+# import typing
 
 class Apoio(Enum):
     primeiroGenero = 0
     segundoGenero = 1
     terceiroGenero = 2
     semiRigido = 3
+    semApoio = 4
+
 
 class Canvas(object):
     def __init__(self) -> None:
         self.nodes = []
         self.elements = []
+        self.drawnNodes = []
+        self.drawnElements = []
+        self.loadings = []
+        self.drawnLoadings = []
         self.grid = Grid()
-    
+
+
 class Grid(object):
     def __init__(self) -> None:
         self.points = []
         self.isActive = False
+
 
 class Defaults(object):
     def __init__(self) -> None:
@@ -28,34 +36,41 @@ class Defaults(object):
 
 
 class Node(object):
-    def __init__(self, x: float, y: float, apoio: Apoio) -> None:
+    def __init__(self, x: float, y: float) -> None:
         self.x = x
         self.y = y
-        self.apoio = apoio
+        self.apoio = None
         self.p = 1
 
     def __str__(self) -> str:
-        return "({0}, {1})".format(self.x, self.y)
+        return "{0},{1}".format(self.x, self.y)
+    
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Node):
+            # don't attempt to compare against unrelated types
+            return NotImplemented
+
+        return self.x == other.x and self.y == other.y
 
 
-class Elemento(object):
-    def __init__(self, no1: Node, no2: Node) -> None:
-        self.no1 = no1
-        self.no2 = no2
-        self.moduloDeElasticidade = None
-        self.momentoDeInercia = None
+class Element(object):
+    def __init__(self, node1: Node, node2: Node) -> None:
+        self.node1 = node1
+        self.node2 = node2
+        self.coefficientElascity = None
+        self.momentInertia = None
 
     def getLenght(self) -> float:
-        return 10.
+        raise NotImplementedError("A função não foi implementada pelos programadores!")
 
     def getAngulo(self) -> float:
-        return 0.1
+        raise NotImplementedError("A função não foi implementada pelos programadores!")
 
-    def setModuloDeElasticidade(self, moduloDeElasticidade: float) -> None:
-        self.moduloDeElasticidade = moduloDeElasticidade
+    def setCoefficientElascity(self, moduloDeElasticidade: float) -> None:
+        self.coefficientElascity = moduloDeElasticidade
 
-    def setMomentoInercia(self, momentoDeInercia: float) -> None:
-        self.momentoDeInercia = momentoDeInercia
+    def setMomentInertia(self, momentoDeInercia: float) -> None:
+        self.momentInertia = momentoDeInercia
 
     def __str__(self) -> str:
-        return "{0}m {1}rad no1={2} no2={3}".format(self.getLenght(), self.getAngulo(), self.no1, self.no2)
+        return "Node1={0};Node2={1}".format(self.node1, self.node2)
