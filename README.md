@@ -1,8 +1,10 @@
  ## Instruções para utilização do UVATool pelo código fonte
 
-Para utilização do UVATool é necessário possuir o python 3.8 no computador com as bibliotecas pyqt5-tools que pode ser baixado pelo pip (comando: pip install pyqt5-tools)
+Para utilização do UVATool é necessário: 1 - python 3.8 ; 2 - biblioteca "pyqt5-tools"
 
-No github, procure o botão code e baixe o zip do código, ou clone, caso conheça o sistema do git
+OBS: para instalar o passo 2, basta executar o comando: pip install pyqt5-tools
+
+No github, procure o botão code e baixe o zip do código, ou clone, caso conheça o sistema do git.
 
 Após instalar o python e a biblioteca, para executar, siga os comandos para o seu sistema operacional:
 
@@ -21,7 +23,6 @@ sobre a utilização do sistema em cada área de desenvolvimento.
 O git é um sistema de versionamento que utilizamos no UVATools para manter as alterações
 feitas pelo sistema a medida que é desenvolvido. Segue algumas orientações para utilização do git
 para novos usuários.  -->
- -->
 
 ## Anotações git
 
