@@ -13,7 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 from form_draw import Ui_DrawForm
 from form_results import Ui_ResultForm
-from uvat import Apoio, Canvas, Defaults, Element, Node, Grid
+from uvat import *
 
 
 class Ui_UVATools(object):
@@ -55,8 +55,7 @@ class Ui_UVATools(object):
                                                     "}")
         self.lineEditSuportAngulation.setObjectName("lineEditSuportAngulation")
         self.horizontalLayout.addWidget(self.lineEditSuportAngulation)
-        spacerItem = QtWidgets.QSpacerItem(
-            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
         self.checkBoxGrid = QtWidgets.QCheckBox(self.centralwidget)
         self.checkBoxGrid.setObjectName("checkBoxGrid")
@@ -90,8 +89,7 @@ class Ui_UVATools(object):
         UVATools.setMenuBar(self.menubar)
         self.toolBarDraw = QtWidgets.QToolBar(UVATools)
         self.toolBarDraw.setMinimumSize(QtCore.QSize(0, 0))
-        self.toolBarDraw.setAllowedAreas(
-            QtCore.Qt.LeftToolBarArea | QtCore.Qt.RightToolBarArea | QtCore.Qt.TopToolBarArea)
+        self.toolBarDraw.setAllowedAreas(QtCore.Qt.LeftToolBarArea | QtCore.Qt.RightToolBarArea | QtCore.Qt.TopToolBarArea)
         self.toolBarDraw.setIconSize(QtCore.QSize(32, 32))
         self.toolBarDraw.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
         self.toolBarDraw.setObjectName("toolBarDraw")
@@ -104,90 +102,75 @@ class Ui_UVATools(object):
                                              "border:0px;\n"
                                              "}")
         self.dockWidgetResults.setFloating(False)
-        self.dockWidgetResults.setFeatures(
-            QtWidgets.QDockWidget.DockWidgetClosable | QtWidgets.QDockWidget.DockWidgetMovable)
+        self.dockWidgetResults.setFeatures(QtWidgets.QDockWidget.DockWidgetClosable | QtWidgets.QDockWidget.DockWidgetMovable)
         self.dockWidgetResults.setObjectName("dockWidgetResults")
         self.dockWidgetContentsResults = QtWidgets.QWidget()
-        self.dockWidgetContentsResults.setObjectName(
-            "dockWidgetContentsResults")
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout(
-            self.dockWidgetContentsResults)
+        self.dockWidgetContentsResults.setObjectName("dockWidgetContentsResults")
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.dockWidgetContentsResults)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.radioButton = QtWidgets.QRadioButton(
-            self.dockWidgetContentsResults)
+        self.radioButton = QtWidgets.QRadioButton(self.dockWidgetContentsResults)
         font = QtGui.QFont()
         font.setPointSize(10)
         self.radioButton.setFont(font)
         self.radioButton.setChecked(True)
         self.radioButton.setObjectName("radioButton")
         self.verticalLayout_2.addWidget(self.radioButton)
-        self.radioButton_2 = QtWidgets.QRadioButton(
-            self.dockWidgetContentsResults)
+        self.radioButton_2 = QtWidgets.QRadioButton(self.dockWidgetContentsResults)
         font = QtGui.QFont()
         font.setPointSize(10)
         self.radioButton_2.setFont(font)
         self.radioButton_2.setObjectName("radioButton_2")
         self.verticalLayout_2.addWidget(self.radioButton_2)
-        self.comboBoxResultOptions = QtWidgets.QComboBox(
-            self.dockWidgetContentsResults)
+        self.comboBoxResultOptions = QtWidgets.QComboBox(self.dockWidgetContentsResults)
         self.comboBoxResultOptions.setMinimumSize(QtCore.QSize(0, 24))
         self.comboBoxResultOptions.setEditable(False)
         self.comboBoxResultOptions.setObjectName("comboBoxResultOptions")
         self.verticalLayout_2.addWidget(self.comboBoxResultOptions)
-        self.listWidgetResults = QtWidgets.QListWidget(
-            self.dockWidgetContentsResults)
+        self.listWidgetResults = QtWidgets.QListWidget(self.dockWidgetContentsResults)
         self.listWidgetResults.setViewMode(QtWidgets.QListView.ListMode)
         self.listWidgetResults.setObjectName("listWidgetResults")
         self.verticalLayout_2.addWidget(self.listWidgetResults)
         self.dockWidgetResults.setWidget(self.dockWidgetContentsResults)
-        UVATools.addDockWidget(
-            QtCore.Qt.DockWidgetArea(2), self.dockWidgetResults)
+        UVATools.addDockWidget(QtCore.Qt.DockWidgetArea(2), self.dockWidgetResults)
         self.toolBarLoadings = QtWidgets.QToolBar(UVATools)
         self.toolBarLoadings.setIconSize(QtCore.QSize(32, 32))
         self.toolBarLoadings.setObjectName("toolBarLoadings")
         UVATools.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBarLoadings)
         self.actionNew = QtWidgets.QAction(UVATools)
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("icons/new_file.png"),
-                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("icons/new_file.png"),QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionNew.setIcon(icon1)
         self.actionNew.setObjectName("actionNew")
         self.actionOpen = QtWidgets.QAction(UVATools)
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("icons/open.png"),
-                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap("icons/open.png"),QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionOpen.setIcon(icon2)
         self.actionOpen.setObjectName("actionOpen")
         self.actionSave = QtWidgets.QAction(UVATools)
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap("icons/save.png"),
-                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap("icons/save.png"),QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionSave.setIcon(icon3)
         self.actionSave.setObjectName("actionSave")
         self.actionExport = QtWidgets.QAction(UVATools)
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap("icons/export.png"),
-                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap("icons/export.png"),QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionExport.setIcon(icon4)
         self.actionExport.setObjectName("actionExport")
         self.actionExt = QtWidgets.QAction(UVATools)
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap("icons/exit.png"),
-                        QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon5.addPixmap(QtGui.QPixmap("icons/exit.png"),QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionExt.setIcon(icon5)
         self.actionExt.setObjectName("actionExt")
         self.first_class_support = QtWidgets.QAction(UVATools)
         self.first_class_support.setCheckable(True)
         icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap(
-            "icons/apoio_primeiro_genero.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon6.addPixmap(QtGui.QPixmap("icons/apoio_primeiro_genero.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.first_class_support.setIcon(icon6)
         self.first_class_support.setObjectName("first_class_support")
         self.second_class_support = QtWidgets.QAction(UVATools)
         self.second_class_support.setCheckable(True)
         icon7 = QtGui.QIcon()
-        icon7.addPixmap(QtGui.QPixmap(
-            "icons/apoio_segundo_genero.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon7.addPixmap(QtGui.QPixmap("icons/apoio_segundo_genero.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.second_class_support.setIcon(icon7)
         self.second_class_support.setObjectName("second_class_support")
         self.tird_class_support = QtWidgets.QAction(UVATools)
@@ -283,7 +266,7 @@ class Ui_UVATools(object):
 
 ###############################################################################################################
         self.toolBarLoadings.hide()
-        # self.dockWidgetResults.hide()
+        self.dockWidgetResults.hide()
         self.lineEditSuportAngulation.setEnabled(False)
         self.first_class_support.triggered.connect(self.primeiroGenero)
         self.second_class_support.triggered.connect(self.segundoGenero)
@@ -291,6 +274,7 @@ class Ui_UVATools(object):
         self.semi_rigid_class_support.triggered.connect(self.semiRigido)
         self.elementClass.triggered.connect(self.elementClassToggle)
         self.checkBoxGrid.clicked.connect(self.activateGrid)
+        self.actionProcess.triggered.connect(self.actionProcessClicked)
 
         self.actionDraw.triggered.connect(self.showDrawForm)
         self.canvas = Canvas()
@@ -409,7 +393,7 @@ class Ui_UVATools(object):
         elif apoio == Apoio.semiRigido:
             imagem = "icons/apoio_semi_rigido.png"
         return imagem
-    
+
     def correcaoClickImage(self) -> list:
         apoio = self.verifySuportChecked()
         correcaoClickImagem = []
@@ -548,6 +532,14 @@ class Ui_UVATools(object):
             self.graphicsScene.removeItem(point)
         self.canvas.grid.points = []
         self.canvas.grid.isActive = False
+
+    def actionProcessClicked(self):
+        print('Execução dos cálculos não implementado!')
+        if self.dockWidgetResults.isHidden():
+            self.dockWidgetResults.show()
+        else:
+            self.dockWidgetResults.hide()
+
 
 ###############################################################################################################
 
