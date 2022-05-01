@@ -19,7 +19,7 @@ class Support:
 
 class Apoio:
     primeiro_genero = 0
-    segunro_genero = 1
+    segundo_genero = 1
     terceiro_genero = 2
     rotula = 3
     semi_rigido = 4
@@ -29,23 +29,6 @@ class Apoio:
 class Analise:
     elastica_via_rigidez_analitica = 0
     rigido_plastica_via_minima_norma_euclidiana = 1
-
-
-class NodalForce:
-    fx: float
-    fy: float
-    m: float
-
-    def __init__(self, fx: float, fy: float, m: float) -> None:
-        self.fx = fx
-        self.fy = fy
-        self.m = m
-
-    def getAsVector(self) -> list:
-        return numpy.array([self.fx, self.fy, self.m])
-
-    def __str__(self) -> str:
-        return "{0};{1};{2}".format(self.fx, self.fy, self.m)
 
 
 class Point2d:
@@ -63,6 +46,39 @@ class Point2d:
         if not isinstance(other, Point2d):
             return NotImplemented
         return self.x == other.x and self.y == other.y
+
+
+class Retangle:
+    __b: float
+    __h: float
+
+    def __init__(self, b: float, h: float) -> None:
+        super().__init__()
+        self.__b = b
+        self.__h = h
+
+    def area(self) -> float:
+        return self.__b * self.__h
+
+    def momentInertia(self) -> float:
+        return self.__b * math.pow(self.__h, 3) / 12
+
+
+class NodalForce:
+    fx: float
+    fy: float
+    m: float
+
+    def __init__(self, fx: float, fy: float, m: float) -> None:
+        self.fx = fx
+        self.fy = fy
+        self.m = m
+
+    def getAsVector(self) -> list:
+        return numpy.array([self.fx, self.fy, self.m])
+
+    def __str__(self) -> str:
+        return "{0};{1};{2}".format(self.fx, self.fy, self.m)
 
 
 class Node:
@@ -92,11 +108,14 @@ class Node:
 
     def __checkP(self, p) -> None:
         value = round(p, 2)
-        if value >= 4 or value < 0:
-            raise ValueError("Node p must be greater or equal to 0 and less then 4.")
+        if value >= 4:
+            self.__p = 3.99999
+
+        if value <= 0:
+            self.__p = 0.01e-31
 
     def setP(self, p: float) -> None:
-        self.__checkP()
+        self.__checkP(p)
         self.__p = p
 
     def getP(self) -> float:
@@ -130,6 +149,8 @@ class Node:
 
     def setSupport(self, support: Support) -> None:
         self.__checkSupport(support)
+        if support == Support.middle_hinge:
+            self.setP(0)
         self.__support = support
 
     def getSupport(self) -> Support:
@@ -336,6 +357,11 @@ class Process:
         equilibrium_matrix_restriction = equilibrium_matrix.copy()  # Deep Copy
         equilibrium_matrix_restriction = numpy.delete(equilibrium_matrix_restriction, cuts, 0)  # Cut
 
+        shapeX = equilibrium_matrix_restriction.shape[0]
+        shapeY = equilibrium_matrix_restriction.shape[1]
+        if shapeX > shapeY:
+            raise ValueError("ESTRUTURA HIPOSTÁTICA")
+
         # Matriz de equilíbrio transposta com restrições
         equilibrium_matrix_transpose = equilibrium_matrix.copy()  # Deep Copy
         equilibrium_matrix_transpose = equilibrium_matrix_transpose.transpose()  # Transpose
@@ -346,10 +372,16 @@ class Process:
          
         [K] = [l] * [k] * [L.T]
         """
-
-        global_frame_stiffnes = equilibrium_matrix_restriction @ stifiness_matrix @ equilibrium_matrix_transpose
+        aux1 = numpy.dot(equilibrium_matrix_restriction, stifiness_matrix)
+        global_frame_stiffnes = numpy.dot(aux1, equilibrium_matrix_transpose)
+        # print(equilibrium_matrix, "\n")
+        # print(stifiness_matrix, "\n")
+        # print(equilibrium_matrix, "\n")
+        # print(equilibrium_matrix_transpose, "\n")
+        # print(global_frame_stiffnes, "\n")
 
         self.__global_frame_stiffness = global_frame_stiffnes
+        # print(global_frame_stiffnes)
 
         """
         # VETOR DOS DESLOCAMENTOS NODAIS - {δ}
@@ -359,17 +391,19 @@ class Process:
 
         # Criando o vetor das forças nodais
 
-        nodal_forces = numpy.zeros((n_linhas))
+        nodal_forces = numpy.array([])
 
         for node in self.__nodes:
             force = node.getNodalForce()
-            numpy.append(nodal_forces, [force.fx, force.fy, force.m])
+            forces = numpy.array([force.fx, force.fy, force.m])
+            nodal_forces = numpy.append(nodal_forces, forces)
 
         # Transpondo o vetor das forças para realizar o corte de linhas
 
         nodal_forces = nodal_forces.transpose()
 
         self.__nodal_force = nodal_forces
+        # print(nodal_forces)
 
         # Aplicando as restrições dos apoios - corte das linhas
 
@@ -401,20 +435,34 @@ class Process:
 
         self.__stress_resultants = stress_resultants
 
-    def getEquilibriumMatrix(self):
+    def getEquilibriumMatrix(self) -> numpy.array:
         return self.__equilibrium
 
-    def getFrameStiffness(self):
+    def getFrameStiffness(self) -> numpy.array:
         return self.__frame_stiffness
 
-    def getGlobalFrameStiffness(self):
+    def getGlobalFrameStiffness(self) -> numpy.array:
         return self.__global_frame_stiffness
 
-    def getNodalDisplacement(self):
+    def getNodalDisplacement(self) -> numpy.array:
         return self.__displacement
 
-    def getDeformations(self):
+    def getDeformations(self) -> numpy.array:
         return self.__deformations
 
-    def getStressResultants(self):
+    def getStressResultants(self) -> numpy.array:
         return self.__stress_resultants
+
+    # NÃO ESTÁ FUNCIONANDO CORRETAMENTE
+    # def matrixToCsv(self, file_name: str, matrix: numpy.array):
+    #     # criar função para criar matrizes no exel
+    #     file = open("{0}.csv".format(file_name), "w")
+    #     linhas = matrix.shape[0]
+    #     colunas = matrix.shape[1]
+    #     print(linhas, colunas)
+    #     linha = list()
+    #     for i in range(linhas):
+    #         for j in range(colunas):
+    #             linha.append("{0},".format(matrix[i, j]))
+    #         linha.append("\n")
+    #     file.writelines(linha)
