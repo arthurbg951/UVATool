@@ -274,7 +274,7 @@ class Process:
             equilibrium_matrix[2+node_index, 2+element_index] = -1
 
         '''
-        # RESULTADO DA MATRIZ DE EQUILIBRIO
+        # RESULTADO DA MATRIZ DE EQUILIBRIO - [L]
         '''
         self.__equilibrium = equilibrium_matrix
 
@@ -294,7 +294,7 @@ class Process:
             stifiness_matrix[2 + (3 * i), 2 + (3 * i)] = (3 * p2 / (4 - p1 * p2)) * (4 * young_module * moment_inertia / length)
 
         '''
-        # RESULTADO DA MATRIZ DE RIGIDEZ (DO ELEMENTO)
+        # RESULTADO DA MATRIZ DE RIGIDEZ (DO ELEMENTO) - [k]
         '''
         self.__frame_stiffness = stifiness_matrix
 
@@ -326,9 +326,66 @@ class Process:
                     pass
 
         cuts = list(dict.fromkeys(cuts))
-        print("Endereços do exemplo para corte: {0}".format(cuts))
+        # print("Endereços do exemplo para corte: {0}".format(cuts))
 
-        equilibrium_matrix_transpose = equilibrium_matrix.transpose()
+        """
+        # DEEP COPY NA MATRIZ DE EQUILÍBRIO ORIGINAL
+        """
+
+        # Matriz de equilíbrio com restrições
+        equilibrium_matrix_restriction = equilibrium_matrix.copy()  # Deep Copy
+        equilibrium_matrix_restriction = numpy.delete(equilibrium_matrix_restriction, cuts, 0)  # Cut
+
+        # Matriz de equilíbrio transposta com restrições
+        equilibrium_matrix_transpose = equilibrium_matrix.copy()  # Deep Copy
+        equilibrium_matrix_transpose = equilibrium_matrix_transpose.transpose()  # Transpose
+        equilibrium_matrix_transpose = numpy.delete(equilibrium_matrix_transpose, cuts, 1)  # Cut
+
+        """
+        # MATRIZ DE RIGIDEZ GLOBAL DO SISTEMA - [K] 
+         
+        [K] = [l] * [k] * [L.T]
+        """
+        
+        global_frame_stiffnes = equilibrium_matrix_restriction @ stifiness_matrix @ equilibrium_matrix_transpose
+
+        self.__global_frame_stiffness
+
+
+        """
+        # VETOR DOS DESLOCAMENTOS NODAIS - {δ}
+
+        Utilizando a resolução de matriz inversa -> {δ} = [L k LT] ^ -1 * {λ}
+        """
+
+        nodal_forces = self.__nodal_force
+
+        displacement = numpy.linalg.inv(global_frame_stiffnes) @ nodal_forces
+
+        self.__displacement = displacement
+
+
+        """
+        # VETOR DAS DEFORMAÇÕES CORRESPONDENTES - {θ}
+
+            {θ} = [L.T] * {δ}
+        """
+
+        deformations = equilibrium_matrix_transpose @ displacement
+
+        self.__deformations = deformations
+
+
+        """
+        Esforços Seccionais Internos - {m}
+
+            {m} = [k] * {θ}
+        """
+
+        stress_resultants = stifiness_matrix @ deformations
+
+        self.__stress_resultants = stress_resultants
+
 
     def getEquilibriumMatrix(self):
         return self.__equilibrium
@@ -336,5 +393,14 @@ class Process:
     def getFrameStiffness(self):
         return self.__frame_stiffness
 
+    def getGlobalFrameStiffness(self):
+        return self.__global_frame_stiffness
+
     def getNodalDisplacement(self):
         return self.__displacement
+
+    def getDeformations(self):
+        return self.__deformations
+
+    def getStressResultants(self):
+        return self.__stress_resultants
