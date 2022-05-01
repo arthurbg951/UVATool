@@ -2,7 +2,7 @@ import sys
 from enum import Enum
 import numpy as np
 # import typing
-from typing import Protocol, overload
+from typing import Protocol, List, overload
 from abc import abstractmethod
 import math
 
@@ -149,7 +149,7 @@ class Element(object):
 
 
 class Process(object):
-    def __init__(self, nodes: list, elements: list, nodal_force: list) -> None:
+    def __init__(self, nodes: List[Node], elements: List[Node], nodal_force: List[Node]) -> None:
         self.__nodes = nodes
         self.__elements = elements
         self.__nodal_forces = nodal_force
