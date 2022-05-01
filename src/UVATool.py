@@ -358,7 +358,26 @@ class Process:
         Utilizando a resolução de matriz inversa -> {δ} = [L k LT] ^ -1 * {λ}
         """
 
+        # Criando o vetor das forças nodais
+         
+        nodal_forces = numpy.zeros((n_linhas))
+
+        for node in self.__nodes:
+            force = node.getNodalForce()
+            nodal_forces.append(numpy.array([force.fx, force.fy, force.m]))
+        
+        # Transpondo o vetor das forças para realizar o corte de linhas
+
+        nodal_forces = nodal_forces.transpose()
+
         nodal_forces = self.__nodal_force
+
+        # Aplicando as restrições dos apoios - corte das linhas
+
+        nodal_forces = numpy.delete(nodal_forces, cuts, 0)
+
+
+        # RESOLVENDO O SISTEMA LINEAR
 
         displacement = numpy.linalg.inv(global_frame_stiffnes) @ nodal_forces
 
