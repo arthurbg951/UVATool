@@ -15,6 +15,8 @@ class Support:
     no_support = 5    # SEM SUPORTE
 
 # CLASSE SUPPORT EM PORTUGUES
+
+
 class Apoio:
     primeiro_genero = 0
     segunro_genero = 1
@@ -301,7 +303,6 @@ class Process:
 
         cuts = []
         for element in self.__elements:
-            node_index = self.__nodes.index(element.node1) * 3
             # ENDEREÇO DO ELEMENTO NA MATRIZ DE EQUILIBRIO
             element_index = self.__elements.index(element) * 3
             nodes = [element.node1, element.node2]
@@ -310,22 +311,20 @@ class Process:
                 node_index = self.__nodes.index(node) * 3
                 if node.getSupport() == Support.roller:
                     cuts.append(node_index + 1)
-
                 if node.getSupport() == Support.pinned:
                     cuts.append(node_index)
                     cuts.append(node_index + 1)
-
                 if node.getSupport() == Support.fixed:
                     cuts.append(node_index)
                     cuts.append(node_index + 1)
                     cuts.append(node_index + 2)
-
                 if node.getSupport() == Support.semi_fixed:
                     cuts.append(node_index)
                     cuts.append(node_index + 1)
                     cuts.append(node_index + 2)
                 if node.getSupport() == Support.no_support:
                     pass
+
         cuts = list(dict.fromkeys(cuts))
         print("Endereços do exemplo para corte: {0}".format(cuts))
 
