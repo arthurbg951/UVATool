@@ -54,6 +54,10 @@ elements = [e1]
 # elements = [e1, e2, e3, e4, e5, e6]
 
 proc = Process(nodes, elements, Analise.elastica_via_rigidez_analitica)
-# print(proc.getEquilibriumMatrix())
-# print(proc.getFrameStiffness())
-print("\nA execução terminou em {0}".format(datetime.now()))
+print("MATRIZ DE EQUILIBRIO - [L]\n",proc.getEquilibriumMatrix(), "\n")
+print("MATRIZ DE RIGIDEZ (DO ELEMENTO) - [k]\n",proc.getFrameStiffness(), "\n")
+print("RIGIDEZ GLOBAL DO SISTEMA - [K]\n",proc.getNodalDisplacement(), "\n")
+print("VETOR DOS DESLOCAMENTOS NODAIS - {δ}\n",proc.getDeformations(),"\n")
+print("DEFORMAÇÕES CORRESPONDENTES - {θ}\n",proc.getStressResultants(),"\n")
+# print("Esforços Seccionais Internos - {m}", proc.getse)
+print("A execução terminou em {0}".format(datetime.now()))

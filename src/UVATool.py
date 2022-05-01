@@ -346,11 +346,10 @@ class Process:
          
         [K] = [l] * [k] * [L.T]
         """
-        
+
         global_frame_stiffnes = equilibrium_matrix_restriction @ stifiness_matrix @ equilibrium_matrix_transpose
 
-        self.__global_frame_stiffness
-
+        self.__global_frame_stiffness = global_frame_stiffnes
 
         """
         # VETOR DOS DESLOCAMENTOS NODAIS - {δ}
@@ -359,30 +358,28 @@ class Process:
         """
 
         # Criando o vetor das forças nodais
-         
+
         nodal_forces = numpy.zeros((n_linhas))
 
         for node in self.__nodes:
             force = node.getNodalForce()
-            nodal_forces.append(numpy.array([force.fx, force.fy, force.m]))
-        
+            numpy.append(nodal_forces, [force.fx, force.fy, force.m])
+
         # Transpondo o vetor das forças para realizar o corte de linhas
 
         nodal_forces = nodal_forces.transpose()
 
-        nodal_forces = self.__nodal_force
+        self.__nodal_force = nodal_forces
 
         # Aplicando as restrições dos apoios - corte das linhas
 
         nodal_forces = numpy.delete(nodal_forces, cuts, 0)
-
 
         # RESOLVENDO O SISTEMA LINEAR
 
         displacement = numpy.linalg.inv(global_frame_stiffnes) @ nodal_forces
 
         self.__displacement = displacement
-
 
         """
         # VETOR DAS DEFORMAÇÕES CORRESPONDENTES - {θ}
@@ -394,7 +391,6 @@ class Process:
 
         self.__deformations = deformations
 
-
         """
         Esforços Seccionais Internos - {m}
 
@@ -404,7 +400,6 @@ class Process:
         stress_resultants = stifiness_matrix @ deformations
 
         self.__stress_resultants = stress_resultants
-
 
     def getEquilibriumMatrix(self):
         return self.__equilibrium
