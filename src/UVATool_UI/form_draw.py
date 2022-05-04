@@ -9,8 +9,6 @@
 
 
 from distutils.command.clean import clean
-from msilib import CAB
-import struct
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from form_results import Ui_ResultForm

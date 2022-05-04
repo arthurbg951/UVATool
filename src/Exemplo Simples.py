@@ -12,7 +12,7 @@ n2.setNodalForce(NodalForce(0, -10, 0))
 n4.setNodalForce(NodalForce(0, -10, -10))
 
 # DEFININDO APOIO
-n1.setSupport(Apoio.segundo_genero)
+n1.setSupport(Apoio.terceiro_genero)
 n2.setSupport(Apoio.primeiro_genero)
 n3.setSupport(Apoio.primeiro_genero)
 
