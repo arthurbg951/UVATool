@@ -28,7 +28,8 @@ hx_pilar = 0.30
 l_vcp = l_x - hx_pilar
 h_vcp = 0.60
 b_vcp = 1.10
-d_vcp = h_vcp - 7e-2
+d_vcp = h_vcp - 0.07
+f_cb = 0.5 * h_vcp - 0.07
 
 hy_pilar = b_vcp
 
@@ -103,9 +104,11 @@ e_s = 10  # ‰
 e_c = 3.5  # ‰
 lmbd = 0.8  # Lambda
 class_concreto = 40 * 1e6  # C40
+class_aco = 500 * 1e6  # CA-50
 s_cd = 0.85 * class_concreto / 1.4  # Sigma,cd
 aa_cordoalha = 0.98  # cm²
-percas = 21 / 100  # %
+percas = 21  # %
+efc_prot = (100 - percas) / 100
 protension_force = 140e3  # 140 kN 
 young_ap = 200e9  # 200GPa
 # -----------------------------------------------
@@ -122,33 +125,34 @@ kx = (1 - m.sqrt(1 - 2 * kmd)) / lmbd
 
 # > Domínio 2
 if kx <= 0.259:
-  print("Domínio 2")
+  print("Domínio 2\n\n")
   e_c = kx / (1 - kx) * e_s 
   if e_c < 2.00:
       s_cd = s_cd * (1 - (1 - kx / 2) ** 2)
-      print(f'Verificação da Tensão de compressão no Concreto: {s_cd:.2f}MPa')
+      print('Ec menor que 2‰ > {e_c:.2f}‰\n')
+      print(f'Verificação da Tensão de compressão no Concreto: {s_cd:.2f}MPa\n')
       kmd = (md * 1e3) / (b_vcp * (d_vcp ** 2) * s_cd)
-      print(f'Novo Kmd = {kx:.3f}')
+      print(f'Kmd, corrigido = {kx:.3f}\n')
       kx = (1 - m.sqrt(1 - 2 * kmd)) / lmbd
-      print(f'Novo Kx = {kx:.3f}')
+      print(f'Kx, corrigido = {kx:.3f}\n')
 
 # > Domínio 3
 if kx > 0.259 and kx <= 0.324:
-    print("Domínio 3")
+    print("Domínio 3\n\n")
     e_s = (1 - kx) / kx * e_c
 
 # > Domínio 4 com ductilidade
 if kx > 0.324  and kx <= 0.450:
-    print("Domínio 4 com ductilidade")
+    print("Domínio 4 com ductilidade\n\n")
     e_s = (1 - kx) / kx * e_c
 
 # > Domínio 4 sem ductilidade e domínio 5 
 if kx > 0.450:
-    print("Domínio 4 sem ductilidade, ou domínio 5. Redimensione a seção!!!!")
+    print("Domínio 4 sem ductilidade, ou domínio 5. Redimensione a seção!!!!\n\n")
     raise
   
 # Deformações específicas do Aço de Protensão
-e_fp = (1 - percas) * protension_force / (aa_cordoalha * 1e-4 * young_ap) * 1000
+e_fp = efc_prot * protension_force / (aa_cordoalha * 1e-4 * young_ap) * 1000
 # print(f'{e_p:.2f}‰')
 
 x_ep = e_s + e_fp
@@ -183,6 +187,11 @@ as_ativa = md * 1e3 / (kz * d_vcp * s_pd)
 
 as_ativa *= 1e4
 
+# > Area de aço se fosse passiva
+
+aa_steel = as_ativa * s_pd * 1.15 / class_aco
+
+
 # > Quantidade de cordoalhas
 qtd_cordoalhas = int(as_ativa / aa_cordoalha) + 1
 
@@ -203,16 +212,31 @@ qtd_sobreapoio = int(as_sobreapoio / aa_bitola) + 1
 if qtd_sobreapoio < 4:
     qtd_sobreapoio == 4
 
+# > Cordoalhas necessárias para anular o peso própio da viga
+qtd_cordoalhas_pp = int(((25 * b_vcp * h_vcp) * (l_vcp ** 2)) / (8 * 140 * 0.75 * f_cb))
+qtd_cordoalhas_pp += 1
+
 # > 5% do vão da viga
 l5_100 = 0.05 * l_vcp * 1e2
 
-print(f'\nN° de cordoalhas de armadura ativa:......  {qtd_cordoalhas} ∅ 12.7mm \n'
-      f'N° de bitolas da armadura passiva:.......  {qtd_bitolas} ∅ 12.5mm \n'
-      f'N° de bitolas da armadura sobre-apoio:...   {qtd_sobreapoio} ∅ 12.5mm \n'
-      f''
-      f''
-      f''
-      f''
-      f''
-      f''
+print(
+      f'Kmd:  ........................................  {kmd:.3f}\n'
+      f'Kx:  .........................................  {kx:.3f}\n'
+      f'Ec:  .........................................  {e_c:.2f}‰\n'
+      f'Es:  .........................................  {e_s:.2f}‰\n'
+      f'Ep:  .........................................  {e_fp:.2f}‰\n'
+      f'Etotal:  .....................................  {x_ep:.2f}‰\n'
+      f'Sigma,pd: ....................................  {s_pd * 1e-6:.2f}Mpa\n'
+      f'Kz:  .........................................  {kz:.3f}\n'
+      f'Ap:  .........................................  {as_ativa:.2f}cm²\n'
+      f'As sem protensão:  ...........................  {aa_steel:.2f}cm²\n'
+      f'As,min:  .....................................  {as_passiva:.2f}cm²\n'
+      f'As,sobreapoio:  ..............................  {as_sobreapoio:.2f}cm²\n'
+      f'\n\n'
+      f'n° de cordoalhas de armadura ativa:  .........  {qtd_cordoalhas} ∅ 12.7mm \n'
+      f'n° de bitolas da armadura passiva:  ..........  {qtd_bitolas} ∅ 12.5mm \n'
+      f'n° de bitolas da armadura sobre-apoio:  ......   {qtd_sobreapoio} ∅ 12.5mm \n'
+      f'\nnº de cordoalhas peso própio:  ...............  {qtd_cordoalhas_pp} ∅ 12.7mm '
+      f'\n5% de L: .....................................  {l5_100}cm'
+      f'\n' * 3
 )
