@@ -108,11 +108,11 @@ class Node:
 
     def __checkP(self, p) -> None:
         value = round(p, 2)
-        if value >= 4:
-            self.__p = 3.99999
+        if value > 3.99:
+            self.__p = 3.99
 
-        if value <= 0:
-            self.__p = 0.01e-31
+        if value < 0.01:
+            self.__p = 0.01
 
     def setP(self, p: float) -> None:
         self.__checkP(p)
@@ -359,6 +359,8 @@ class Process:
 
         shapeX = equilibrium_matrix_restriction.shape[0]
         shapeY = equilibrium_matrix_restriction.shape[1]
+        # print(shapeX, shapeY)
+
         if shapeX > shapeY:
             raise ValueError("ESTRUTURA HIPOSTÁTICA")
 
