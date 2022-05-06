@@ -50,7 +50,8 @@ print(f'\n-> CARACTERISTICAS DA VIGA PROTENDIDA \n'
       f'\nViga protendida biapoiada com vão de {l_vcp:.2f}m\n'
       f'Seção: {b_vcp * 100:.0f}cm x {h_vcp * 100:.0f}cm\n'
       f'Ac: {(b_vcp * h_vcp) * 100:.2f}cm²\n'
-      f'Percas de protensão: {percas}%')
+      f'Percas de protensão: {percas}%\n'
+      f'Altura útil (d): {d_vcp*100:.1f}cm')
 
 
 """------------------------------------------------------------------------------------------------------------------"""
@@ -116,12 +117,12 @@ rl1 = (g_laje + q_laje) * aa_influencia_l1 / l_vcp  # kN/m²
 print(f'\n-> CARREGAMENTO DA LAJE 1 NERVURADA \n'
       f'\nLaje nervurada com caixotes 61x61 unidirecional com 25cm de altura total\n'
       f'apoiada nos 4 cantos. Peso própio de {pp_impacto*100:.2f}kg/m² (calculado).\n'
-      f'68 caixotes duplos  ................... 61 x 122 cm\n'
-      f'34 caixotes  .......................... 61 x 61 cm\n'
-      f'34 meio caixotes  ..................... 61 x 30,5 cm\n'
-      f'1 meio caixote  ....................... 30,5 x 61 cm\n'
-      f'2 meio caitote duplo  ................. 30,5 x 122 cm\n'
-      f'1 meio meio caixote  .................. 30,5 x 30,5 cm\n'
+      f'68 caixotes duplos  ...................... 61 x 122 cm\n'
+      f'34 caixotes  ............................. 61 x 61 cm\n'
+      f'34 meio caixotes  ........................ 61 x 30,5 cm\n'
+      f'1 meio caixote  .......................... 30,5 x 61 cm\n'
+      f'2 meio caitote duplo  .................... 30,5 x 122 cm\n'
+      f'1 meio meio caixote  ..................... 30,5 x 30,5 cm\n'
       f'Fonte: Impacto\n'
       f'\n'
       f'Vão da laje em x: {vao_laje_x:.2f}m e Vão da laje em y: {vao_laje_y:.2f}m'
@@ -151,7 +152,7 @@ carregamento = rl1 + alvenaria_viga + peso_propio_vp  # kN/m
 print(f'\n-> CARREGAMENTO DA VIGA 1 PROTENDIDA \n'
       f'\nReação da Laje 1  ............................  {rl1:.2f}kN/m\n'
       f'Peso própio:  ................................  {peso_propio_vp:.2f}kN/m\n'
-      f'Alvenaria sob viga:  .........................  {alvenaria_viga:.2f}kN/m\n'
+      f'Alvenaria sob viga:  .........................   {alvenaria_viga:.2f}kN/m\n'
       f'                                        Total:  {carregamento:.2f}kN/m\n')
 
 """------------------------------------------------------------------------------------------------------------------"""
@@ -316,7 +317,7 @@ print(f'\n-> DIMENSIONAMENTO    \n\n'
       f'Kz:  .........................................  {kz:.3f}\n'
       f'Ap:  .........................................  {as_ativa:.2f}cm²\n'
       f'As sem protensão:  ...........................  {aa_steel:.2f}cm²\n'
-      f'As,min:  .....................................  {as_passiva:.2f}cm²\n'
+      f'As,min:  .....................................  {as_passiva:.2f}cm² - C40\n'
       f'As,sobreapoio:  ..............................  {as_sobreapoio:.2f}cm²\n'
       f'nº de cordoalhas peso própio:  ...............  {qtd_cordoalhas_pp} ∅ 12.7mm CP 190 RB\n'
       f'\n\n-> DETALHAMENTO\n\n'
