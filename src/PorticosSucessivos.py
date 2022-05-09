@@ -1,8 +1,8 @@
 from UVATool import *
 from datetime import datetime
 
-inicio = datetime.now()
-
+print('Montando estrutura ...')
+est_inicio = datetime.now()
 nodes = []
 elements = []
 
@@ -30,7 +30,7 @@ elements.append(e1)
 elements.append(e2)
 elements.append(e3)
 
-for i in range(2, 1000, 1):
+for i in range(2, 100, 1):
     n2, n3 = Node(0, i), Node(1, i)
 
     e1 = Element(nodes[len(nodes)-4], n2, area, inercia, 1)
@@ -44,17 +44,31 @@ for i in range(2, 1000, 1):
     elements.append(e3)
 
 nodes[len(nodes)-2].setNodalForce(NodalForce(-100, 0, 0))
+est_fim = datetime.now()
 
-print('iniciando calculos')
+print('Processando cálculos ...')
+calc_inicio = datetime.now()
 calc = Process(nodes, elements, Analise.elastica_via_rigidez_analitica)
-esforcos = calc.getStressResultants()
-print(calc.getGlobalFrameStiffness().shape)
+calc_fim = datetime.now()
 
-# for i in range(0, len(calc.getStressResultants()), 3):
-#     # print(" N[{0}]={1:.2f}".format(int(i/3+1), proc.getStressResultants()[0 + i]))
-#     print("M1[{0}]={1:.2f}".format(int(i/3+1), calc.getStressResultants()[1 + i]))
-#     print("M2[{0}]={1:.2f}".format(int(i/3+1), calc.getStressResultants()[2 + i]))
-#     print()
 
-fim = datetime.now()
-print("TEMPO DE CALCULO = ", fim - inicio)
+
+# PRINTA AS DEFORMAÇÕES (SEM FORMATAÇÃO - sujeito a análise)
+# deformacoes = calc.getNodalDisplacement()
+# for deformacao in deformacoes:
+#     print(deformacao)
+
+# PRINTA OS ESFORÇOS INTERNOS
+for i in range(0, len(calc.getStressResultants()), 3):
+    print('ELEMENT: {0}'.format(int(i/3+1)))
+    print(" N={0:.2f}".format(calc.getStressResultants()[0 + i]))
+    print("M1={0:.2f}".format(calc.getStressResultants()[1 + i]))
+    print("M2={0:.2f}".format(calc.getStressResultants()[2 + i]))
+    print()
+
+# PRINTA O TAMANHO DA MATRIZ DE DE RIGIDEZ GLOBAL
+print("TAMANHO DA MATRIZ DE RIGIDEZ GLOBAL CORTADA = " , calc.getGlobalFrameStiffness().shape)
+
+# PRINTA OS TEMPOS DECORRIDOS NA EXECUÇÃO DO CÓDIGO
+print("TEMPO DE PARA DEFINIR A ESTRUTURA = ", est_fim - est_inicio)
+print("TEMPO DE CALCULO = ", calc_fim - calc_inicio)

@@ -155,11 +155,15 @@ try:
     # print("DEFORMAÇÕES CORRESPONDENTES - {θ}\n", proc.getDeformations(), "\n")
     # print("Esforços Seccionais Internos - {m}\n", proc.getStressResultants(), "\n")
 
-    for i in range(0, len(proc.getStressResultants()), 3):
-        # print(" N[{0}]={1:.2f}".format(int(i/3+1), proc.getStressResultants()[0 + i]))
-        print("M1[{0}]={1:.2f}".format(int(i/3+1), proc.getStressResultants()[1 + i]))
-        print("M2[{0}]={1:.2f}".format(int(i/3+1), proc.getStressResultants()[2 + i]))
-        print()
+    # for i in range(0, len(proc.getStressResultants()), 3):
+    #     # print(" N[{0}]={1:.2f}".format(int(i/3+1), proc.getStressResultants()[0 + i]))
+    #     print("M1[{0}]={1:.2f}".format(int(i/3+1), proc.getStressResultants()[1 + i]))
+    #     print("M2[{0}]={1:.2f}".format(int(i/3+1), proc.getStressResultants()[2 + i]))
+    #     print()
+
+    deformacoes = proc.getNodalDisplacement()
+    for deformacao in deformacoes:
+        print(deformacao)
 
 except ValueError:
     print("ESTRUTURA HIPOSTATICA")
