@@ -1,13 +1,12 @@
 # FOLDERS:
+__pycache__
 .vscode
 .idea
-tests
 .testes
+tests
 build
-__pycache__
-
-venv
 dist
+venv
 
 # FILES:
 *.spec
