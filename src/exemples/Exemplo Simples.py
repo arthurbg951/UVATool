@@ -1,6 +1,4 @@
-import sys
-sys.path.append('..//..//')
-from src.UVATool.UVATool import *
+from lib.UVATool import *
 # DEFININDO PONTOS (NODES)
 n1 = Node(0, 0)
 n2 = Node(5, 0)

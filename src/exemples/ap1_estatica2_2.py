@@ -1,6 +1,4 @@
-import sys
-sys.path.append('..//..//')
-from src.UVATool.UVATool import *
+from lib.UVATool import *
 
 n1 = Node(0, 0)
 n2 = Node(8, 0)

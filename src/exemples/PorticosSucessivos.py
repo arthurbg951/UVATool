@@ -1,6 +1,4 @@
-import sys
-sys.path.append('..//..//')
-from src.UVATool.UVATool import *
+from lib.UVATool import *
 from datetime import datetime
 
 print('Montando estrutura ...')
@@ -8,7 +6,7 @@ est_inicio = datetime.now()
 nodes = []
 elements = []
 
-rec = Rectangle(12, 1)
+rec = Rectangle(0.012, 0.001)
 area = rec.area()
 inercia = rec.momentInertia()
 
@@ -32,7 +30,7 @@ elements.append(e1)
 elements.append(e2)
 elements.append(e3)
 
-for i in range(2, 1000, 1):
+for i in range(2, 100, 1):
     n2, n3 = Node(0, i), Node(1, i)
 
     e1 = Element(nodes[len(nodes)-4], n2, area, inercia, 1)
@@ -53,15 +51,12 @@ calc_inicio = datetime.now()
 calc = Process(nodes, elements, Analise.elastica_via_rigidez_analitica)
 calc_fim = datetime.now()
 
-
+results = Print(calc)
 
 # PRINTA AS DEFORMAÇÕES (SEM FORMATAÇÃO - sujeito a análise)
-# deformacoes = calc.getNodalDisplacement()
-# for deformacao in deformacoes:
-#     print(deformacao)
+results.printNodalDisplacement()
 
 # PRINTA OS ESFORÇOS INTERNOS
-results = Print(calc)
 results.printStressResultance()
 
 # PRINTA O TAMANHO DA MATRIZ DE DE RIGIDEZ GLOBAL

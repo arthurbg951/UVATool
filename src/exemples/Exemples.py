@@ -1,6 +1,4 @@
-import sys
-sys.path.append('..//..//')
-from src.UVATool.UVATool import *
+from lib.UVATool import *
 from datetime import datetime
 import math
 import traceback
