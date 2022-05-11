@@ -1,6 +1,6 @@
-
-from UVATool import *
-
+import sys
+sys.path.append('..//..//')
+from src.UVATool.UVATool import *
 # DEFININDO PONTOS (NODES)
 n1 = Node(0, 0)
 n2 = Node(5, 0)
@@ -17,7 +17,7 @@ n2.setSupport(Apoio.primeiro_genero)
 n3.setSupport(Apoio.primeiro_genero)
 
 # DEFININDO SEÇÃO
-rec = Retangle(1, 12)
+rec = Rectangle(1, 12)
 area = rec.area()
 momento_inercia = rec.momentInertia()
 

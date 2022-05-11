@@ -1,9 +1,13 @@
-from typing import Protocol, List, overload, Union, Optional
+# from typing import Protocol, List, overload, Union, Optional
 # from abc import abstractmethod
 # from enum import Enum
+
+# REMOVER DAS CLASSES
+# from PyQt5 import QtGui
+
+from typing import List
 import numpy
 import math
-from PyQt5 import QtGui
 
 
 class Support:
@@ -48,7 +52,7 @@ class Point2d:
         return self.x == other.x and self.y == other.y
 
 
-class Retangle:
+class Rectangle:
     __b: float
     __h: float
 
@@ -89,7 +93,7 @@ class Node:
     __p: float
     __displacement: numpy.array
     __angle: float
-    __pix_map: QtGui.QPixmap
+    # __pix_map: QtGui.QPixmap
 
     def __init__(self, x: float, y: float) -> None:
         self.x = x
@@ -127,11 +131,11 @@ class Node:
     def setAngle(self, angle: float) -> None:
         self.__angle = angle
 
-    def setQPixmap(self, pix_map: QtGui.QPixmap) -> None:
-        self.__pix_map = pix_map
+    # def setQPixmap(self, pix_map: QtGui.QPixmap) -> None:
+        # self.__pix_map = pix_map
 
-    def getQPixmap(self) -> QtGui.QPixmap:
-        return self.__pix_map
+    # def getQPixmap(self) -> QtGui.QPixmap:
+        # return self.__pix_map
 
     def __checkSupport(self, support: Support) -> None:
         test = True
@@ -468,3 +472,18 @@ class Process:
     #             linha.append("{0},".format(matrix[i, j]))
     #         linha.append("\n")
     #     file.writelines(linha)
+
+
+class Print:
+    __process: Process
+
+    def __init__(self, process: Process) -> None:
+        self.__process = process
+
+    def printStressResultance(self) -> None:
+        for i in range(0, len(self.__process.getStressResultants()), 3):
+            print('ELEMENT: {0}'.format(int(i/3+1)))
+            print(" N={0:.2f}".format(self.__process.getStressResultants()[0 + i]))
+            print("M1={0:.2f}".format(self.__process.getStressResultants()[1 + i]))
+            print("M2={0:.2f}".format(self.__process.getStressResultants()[2 + i]))
+            print()
