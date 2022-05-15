@@ -26,6 +26,7 @@ class Apoio:
     rotula = 3
     semi_rigido = 4
     sem_suporte = 5
+    sem_suporte_semi_rigido = 6
 
 
 class Analise:
@@ -119,6 +120,8 @@ class Node:
     def setP(self, p: float) -> None:
         if p == 0:
             self.__support = Support.middle_hinge
+        elif p != 1:
+            self.__support = Support.semi_fixed
         p = self.__checkP(p)
         self.__p = p
 
@@ -173,6 +176,8 @@ class Element:
     __internal_forces: numpy.array
     __angle: float
     __length: float
+    __p1: float
+    __p2: float
 
     def __init__(self, node1: Node, node2: Node, area: float, moment_inertia: float, young_modulus: float) -> None:
         self.node1 = node1
@@ -183,6 +188,8 @@ class Element:
         self.young_modulus = young_modulus
         self.__angle = self.__setAngle()
         self.__length = self.__setLength()
+        self.__p1 = node1.getP()
+        self.__p2 = node2.getP()
 
     def __str__(self) -> str:
         return "Node1={0};Node2={1}".format(self.node1, self.node2)
@@ -233,6 +240,13 @@ class Element:
 
     def setInternalForces(self, internal_forces: numpy.array) -> None:
         self.__internal_forces = internal_forces
+
+    def setP(self, p1: float, p2: float) -> None:
+        self.__p1 = p1
+        self.__p2 = p2
+
+    def getP(self) -> list:
+        return [self.__p1, self.__p2]
 
 
 class Process:
@@ -309,8 +323,21 @@ class Process:
             young_module = self.__elements[i].young_modulus
             area = self.__elements[i].area
             length = self.__elements[i].getLength()
-            p1 = self.__elements[i].node1.getP()
-            p2 = self.__elements[i].node2.getP()
+
+            pno1 = self.__elements[i].node1.getP()
+            pno2 = self.__elements[i].node2.getP()
+            pele1 = self.__elements[i].getP()[0]
+            pele2 = self.__elements[i].getP()[1]
+
+            p1 = None
+            p2 = None
+            if pno1 > pele1 or pno2 > pele2:
+                p1 = pele1
+                p2 = pele2
+            else:
+                p1 = self.__elements[i].node1.getP()
+                p2 = self.__elements[i].node2.getP()
+
             moment_inertia = self.__elements[i].moment_inertia
             stifiness_matrix[0 + (3 * i), 0 + (3 * i)] = young_module * area / length
             stifiness_matrix[1 + (3 * i), 1 + (3 * i)] = (3 * p1 / (4 - p1 * p2)) * (4 * young_module * moment_inertia / length)
@@ -353,6 +380,8 @@ class Process:
         # Matriz de equilíbrio com restrições
         equilibrium_matrix_restriction = self.__equilibrium.copy()  # Deep Copy
         equilibrium_matrix_restriction = numpy.delete(equilibrium_matrix_restriction, cuts, 0)  # Cut
+        # print(equilibrium_matrix_restriction)
+        # print()
         shapeX = equilibrium_matrix_restriction.shape[0]
         shapeY = equilibrium_matrix_restriction.shape[1]
         if shapeX > shapeY:
@@ -482,4 +511,4 @@ class Print:
     def nodalDisplacement(self):
         deformacoes = self.__process.getNodalDisplacement()
         for deformacao in deformacoes:
-            print(f"{deformacao:.2f}")
+            print(f"{deformacao:.6f}")
