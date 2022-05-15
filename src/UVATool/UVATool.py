@@ -2,9 +2,6 @@
 # from abc import abstractmethod
 # from enum import Enum
 
-# REMOVER DAS CLASSES
-# from PyQt5 import QtGui
-
 from typing import List
 import numpy
 import math
@@ -94,7 +91,6 @@ class Node:
     __p: float
     __displacement: numpy.array
     __angle: float
-    # __pix_map: QtGui.QPixmap
 
     def __init__(self, x: float, y: float) -> None:
         self.x = x
@@ -111,16 +107,19 @@ class Node:
             return NotImplemented
         return self.x == other.x and self.y == other.y
 
-    def __checkP(self, p) -> None:
-        value = round(p, 2)
-        if value > 3.99:
-            self.__p = 3.99
-
-        if value < 0.01:
-            self.__p = 0.01
+    def __checkP(self, p) -> float:
+        if p == 0:
+            p = 1e-31
+        if p >= 4:
+            raise ValueError("P must be less than 4")
+        if p < 0:
+            raise ValueError("P must be greater than or equal to 0")
+        return p
 
     def setP(self, p: float) -> None:
-        self.__checkP(p)
+        if p == 0:
+            self.__support = Support.middle_hinge
+        p = self.__checkP(p)
         self.__p = p
 
     def getP(self) -> float:
@@ -131,12 +130,6 @@ class Node:
 
     def setAngle(self, angle: float) -> None:
         self.__angle = angle
-
-    # def setQPixmap(self, pix_map: QtGui.QPixmap) -> None:
-        # self.__pix_map = pix_map
-
-    # def getQPixmap(self) -> QtGui.QPixmap:
-        # return self.__pix_map
 
     def __checkSupport(self, support: Support) -> None:
         test = True
@@ -329,7 +322,7 @@ class Process:
         # RESULTADO DA MATRIZ DE RIGIDEZ (DO ELEMENTO) - [k]
         '''
         return stifiness_matrix
-    
+
     def __getGlobalFrameStiffnessMatrix(self) -> numpy.array:
         cuts = []
         for element in self.__elements:
@@ -395,12 +388,12 @@ class Process:
         # Aplicando as restrições dos apoios - corte das linhas
         nodal_forces = numpy.delete(nodal_forces, self.__cuts, 0)
         return nodal_forces
-    
+
     def __getDisplacement(self) -> numpy.array:
         # RESOLVENDO O SISTEMA LINEAR
         displacement = numpy.linalg.inv(self.__global_frame_stiffness) @ self.__nodal_force
         return displacement
-    
+
     def __getDeformations(self) -> numpy.array:
         """
         # VETOR DAS DEFORMAÇÕES CORRESPONDENTES - {θ}
@@ -418,7 +411,7 @@ class Process:
         """
         stress_resultants = self.__frame_stiffness @ self.__deformations
         return stress_resultants
-        
+
     def __processCalculations(self):
         self.__equilibrium = self.__getEquilibriumMatrix()
         self.__frame_stiffness = self.__getFrameStiffnessMatrix()
@@ -432,7 +425,6 @@ class Process:
         self.__deformations = self.__getDeformations()
         self.__internal_forces = self.__getInternalForces
         self.__internal_forces = self.__getInternalForces()
-
 
     def getEquilibriumMatrix(self) -> numpy.array:
         return self.__equilibrium
@@ -451,10 +443,10 @@ class Process:
 
     def getInternalForces(self) -> numpy.array:
         return self.__internal_forces
-    
+
     def getProcessTime(self) -> datetime:
         return self.__process_time
-    
+
     def getCuts(self) -> list:
         return self.__cuts
 
@@ -486,7 +478,7 @@ class Print:
             print("M1={0:.2f}".format(self.__process.getInternalForces()[1 + i]))
             print("M2={0:.2f}".format(self.__process.getInternalForces()[2 + i]))
             print()
-    
+
     def nodalDisplacement(self):
         deformacoes = self.__process.getNodalDisplacement()
         for deformacao in deformacoes:
