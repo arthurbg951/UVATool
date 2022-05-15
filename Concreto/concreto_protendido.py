@@ -1,16 +1,16 @@
 import math as m
 
 print("""
-----------------------------------------------------------------
-
-               ESTRUTURAS DE CONCRETO PROTENDIDO
-
-          Dimensionamento de viga faixa protendida:
-                projeto proposto na disciplina
-
-                Autor: Victtor Rodrigues Feijão
-
-----------------------------------------------------------------
+-------------------------------------------------------------------------
+    
+                   ESTRUTURAS DE CONCRETO PROTENDIDO
+    
+               Dimensionamento de viga faixa protendida:
+                    Projeto proposto na disciplina
+    
+                    Autor: Victtor Rodrigues Feijão
+    
+-------------------------------------------------------------------------
 """)
 
 
@@ -27,7 +27,7 @@ l_vcp = l_x - hx_pilar  # Vão da viga protendida (L)
 
 
 b_vcp = 1.20  # Largura da viga protendida (b)
-h_vcp = 1.0  # Altura da viga protendida  (h)
+h_vcp = 0.85  # Altura da viga protendida  (h)
 
 
 d_vcp = h_vcp - 0.07  # Altura útil da viga protendida (d)
@@ -47,23 +47,25 @@ area_laje1 = vao_laje_x * vao_laje_y  # área da laje
 pd = 4.5  # pé direito
 
 print(f'\n-> CARACTERISTICAS DA VIGA PROTENDIDA \n'
-      f'\nViga protendida biapoiada com vão de {l_vcp:.2f}m\n'
-      f'Seção: {b_vcp * 100:.0f}cm x {h_vcp * 100:.0f}cm\n'
-      f'Ac: {(b_vcp * h_vcp) * 100:.2f}cm²\n'
-      f'Percas de protensão: {percas}%\n'
-      f'Altura útil (d): {d_vcp*100:.1f}cm')
+      f'\n - Viga protendida biapoiada com vão de {l_vcp:.2f}m\n'
+      f' - Seção: {b_vcp * 100:.0f}cm x {h_vcp * 100:.0f}cm\n'
+      f' - Ac: {(b_vcp * h_vcp):.2f}m²\n'
+      f' - Percas de protensão: {percas}%\n'
+      f' - Altura útil (d): {d_vcp*100:.1f}cm\n'
+      f' - Pé direito: {pd:.2f}m\n'
+      f' - Pilar: {hx_pilar*100:.0f} x {hy_pilar*100:.0f} cm')
 
 
 """------------------------------------------------------------------------------------------------------------------"""
 """
 CARREGAMENTO DA LAJE 1
 
-->  Laje nervurada com formas 80x80 e h=25cm com peso própio de 303,9kg/m²
+->  Laje nervurada com formas 80x80 e h=25cm com peso próprio de 303,9kg/m²
 
 -->   CARREGAMENTO PERMANENTE (g)
 
 """
-# > Peso própio: -------------------------------------------------------------------------------------------------------
+# > Peso próprio: -------------------------------------------------------------------------------------------------------
 
 pp_impacto = 1.95  # kN/m² Laje nervurada com caixotes 61x61 unidirecional com 25cm de altura total. Fonte: Impacto
 
@@ -116,19 +118,19 @@ rl1 = (g_laje + q_laje) * aa_influencia_l1 / l_vcp  # kN/m²
 
 print(f'\n-> CARREGAMENTO DA LAJE 1 NERVURADA \n'
       f'\nLaje nervurada com caixotes 61x61 unidirecional com 25cm de altura total\n'
-      f'apoiada nos 4 cantos. Peso própio de {pp_impacto*100:.2f}kg/m² (calculado).\n'
+      f'apoiada nos 4 cantos. Peso próprio de {pp_impacto*100:.2f}kg/m² (calculado).\n'
       f'68 caixotes duplos  ...................... 61 x 122 cm\n'
       f'34 caixotes  ............................. 61 x 61 cm\n'
       f'34 meio caixotes  ........................ 61 x 30,5 cm\n'
       f'1 meio caixote  .......................... 30,5 x 61 cm\n'
       f'2 meio caitote duplo  .................... 30,5 x 122 cm\n'
       f'1 meio meio caixote  ..................... 30,5 x 30,5 cm\n'
-      f'Fonte: Impacto\n'
+      f'Fonte: Impacto Protensão\n'
       f'\n'
       f'Vão da laje em x: {vao_laje_x:.2f}m e Vão da laje em y: {vao_laje_y:.2f}m'
       f'\n'
       f'\n - Carregamento permanente (g)\n'
-      f'Peso própio:  ................................  {pp_impacto:.3f}kN/m²\n'
+      f'Peso próprio:  ...............................  {pp_impacto:.3f}kN/m²\n'
       f'Revestimento:  ...............................  {revestimento:.2f}kN/m²\n'
       f'Pavimentação:  ...............................  {pavimentacao:.2f}kN/m²\n'
       f'Alvenaria: {l_alvenaria:.2f}m .............................  {alvenaria:.2f}kN/m²\n'
@@ -151,7 +153,7 @@ carregamento = rl1 + alvenaria_viga + peso_propio_vp  # kN/m
 
 print(f'\n-> CARREGAMENTO DA VIGA 1 PROTENDIDA \n'
       f'\nReação da Laje 1  ............................  {rl1:.2f}kN/m\n'
-      f'Peso própio:  ................................  {peso_propio_vp:.2f}kN/m\n'
+      f'Peso próprio:  ...............................  {peso_propio_vp:.2f}kN/m\n'
       f'Alvenaria sob viga:  .........................   {alvenaria_viga:.2f}kN/m\n'
       f'                                        Total:  {carregamento:.2f}kN/m\n')
 
@@ -202,7 +204,7 @@ if kx <= 0.259:
     e_c = (kx / (1 - kx)) * e_s 
     print(f'Verificações:\n'
           f'Deformação específica na zona comprimida de concreto'
-          f'\nEc: {e_c:.2f}‰  -> OK!\n')
+          f'\nεc: {e_c:.2f}‰  -> OK!\n')
     
     if e_c < 2.00:
         raise ValueError("Domínio 2 com baixa tensão no concreto, redefinir a seção!!!!\n\n")
@@ -223,7 +225,7 @@ if (kx > 0.259) and (kx <= 0.324):
     e_s = (1 - kx) / kx * e_c
     print(f'Verificações:\n'
           f'Deformação específica do aço protendido'
-          f'\nEs: {e_s:.2f}‰\n\n')
+          f'\nεs: {e_s:.2f}‰\n')
 
 # > Domínio 4 com ductilidade
 if (kx > 0.324) and (kx <= 0.450):
@@ -231,7 +233,7 @@ if (kx > 0.324) and (kx <= 0.450):
     e_s = (1 - kx) / kx * e_c
     print(f'Verificações:\n'
           f'Deformação específica do aço protendido'
-          f'\nEs: {e_s:.2f}‰\n\n')
+          f'\nεs: {e_s:.2f}‰\n')
 
 # > Domínio 4 sem ductilidade e domínio 5 
 if kx > 0.450:
@@ -288,20 +290,32 @@ as_min = 0.179 / 100 * ((b_vcp * 100) * (h_vcp * 100))
 as_passiva = as_min
 
 # > Número de bitolas
-aa_bitola = 0.25 * m.pi * 1.25 ** 2 
+aa_bitola = 0.25 * m.pi * 2.0 ** 2
 qtd_bitolas = int(as_passiva / aa_bitola) + 1
 
 
 # > Armadura sobre apoio
+aa_bitola_sa = 0.25 * m.pi * 1.6 ** 2
 as_sobreapoio = as_passiva / 3
-qtd_sobreapoio = int(as_sobreapoio / aa_bitola) + 1
+qtd_sobreapoio = int(as_sobreapoio / aa_bitola_sa) + 1
 
 if qtd_sobreapoio < 4:
     qtd_sobreapoio = 4
 
-# > Cordoalhas necessárias para anular o peso própio da viga
+# > Cordoalhas necessárias para anular o peso próprio da viga
 qtd_cordoalhas_pp = int(((25 * b_vcp * h_vcp) * (l_vcp ** 2)) / (8 * protension_force * 1e-3 * efc_prot * f_cb))
 qtd_cordoalhas_pp += 1
+
+# > Verificação da anulação do peso próprio
+
+alv_prot = None
+
+if qtd_cordoalhas > qtd_cordoalhas_pp:
+    rel_prot = qtd_cordoalhas/qtd_cordoalhas_pp
+    carga_exced = peso_propio_vp + ((peso_propio_vp * rel_prot) - peso_propio_vp)
+    alv_prot = (carga_exced - peso_propio_vp) / alvenaria_viga
+    if alv_prot > 1:
+        raise ValueError("Protensão de Carga Variável!!!!!\n\n")
 
 # > 5% do vão da viga
 l5_100 = 0.05 * l_vcp * 1e2
@@ -309,22 +323,26 @@ l5_100 = 0.05 * l_vcp * 1e2
 print(f'\n-> DIMENSIONAMENTO    \n\n'
       f'Kmd:  ........................................  {kmd:.3f}\n'
       f'Kx:  .........................................  {kx:.3f}\n'
-      f'Ec:  .........................................  {e_c:.2f}‰\n'
-      f'Es:  .........................................  {e_s:.2f}‰\n'
-      f'Ep:  .........................................  {e_fp:.2f}‰\n'
-      f'Etotal:  .....................................  {x_ep:.2f}‰\n'
-      f'Sigma,pd: ....................................  {s_pd * 1e-6:.2f}Mpa\n'
+      f'εc:  .........................................  {e_c:.2f}‰\n'
+      f'εs:  .........................................  {e_s:.2f}‰\n'
+      f'εp:  .........................................  {e_fp:.2f}‰\n'
+      f'εtotal:  .....................................  {x_ep:.2f}‰\n'
+      f'σ,pd: ........................................  {s_pd * 1e-6:.2f}Mpa CP 190 RB\n'
       f'Kz:  .........................................  {kz:.3f}\n'
       f'Ap:  .........................................  {as_ativa:.2f}cm²\n'
       f'As sem protensão:  ...........................  {aa_steel:.2f}cm²\n'
       f'As,min:  .....................................  {as_passiva:.2f}cm² - C40\n'
       f'As,sobreapoio:  ..............................  {as_sobreapoio:.2f}cm²\n'
-      f'nº de cordoalhas peso própio:  ...............  {qtd_cordoalhas_pp} ∅ 12.7mm CP 190 RB\n'
-      f'\n\n-> DETALHAMENTO\n\n'
+      f'\nnº de cordoalhas peso próprio:  ..............  {qtd_cordoalhas_pp} ∅ 12.7mm CP 190 RB')
+
+if qtd_cordoalhas > qtd_cordoalhas_pp:
+    print(f'% de carga da alvenaria protendida:  .........  {alv_prot*100:.2f}%')
+
+print(f'\n\n-> DETALHAMENTO\n\n'
       f'Armaduras:\n\n'
       f'n° de cordoalhas de armadura ativa:  .........  {qtd_cordoalhas} ∅ 12.7mm CP 190 RB\n'
-      f'n° de bitolas da armadura passiva:  ..........  {qtd_bitolas} ∅ 12.5mm CA 50\n'
-      f'n° de bitolas da armadura sobre-apoio:  ......   {qtd_sobreapoio} ∅ 12.5mm CA 50\n'
+      f'n° de bitolas da armadura passiva:  ..........   {qtd_bitolas} ∅ 20.0mm CA 50\n'
+      f'n° de bitolas da armadura sobre-apoio:  ......   {qtd_sobreapoio} ∅ 16.0mm CA 50\n'
       f'\nCablagem:\n'
       f'\n5% de L: .....................................  {l5_100:.1f}cm'
       f'\nFlecha da cablagem  ..........................  {f_cb * 100:.0f}cm'
