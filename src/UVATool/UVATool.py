@@ -8,6 +8,7 @@
 from typing import List
 import numpy
 import math
+from datetime import datetime
 
 
 class Support:
@@ -176,7 +177,7 @@ class Element:
     moment_inertia: float
     young_modulus: float
     __deformations: numpy.array
-    __stress_resultants: numpy.array
+    __internal_forces: numpy.array
     __angle: float
     __length: float
 
@@ -234,11 +235,11 @@ class Element:
     def setDeformations(self, deformations: numpy.array) -> None:
         self.__deformations = deformations
 
-    def getStressResultants(self) -> numpy.array:
-        return self.__stress_resultants
+    def getInternalForces(self) -> numpy.array:
+        return self.__internal_forces
 
-    def setStressResultants(self, stress_resultants: numpy.array) -> None:
-        self.__stress_resultants = stress_resultants
+    def setInternalForces(self, internal_forces: numpy.array) -> None:
+        self.__internal_forces = internal_forces
 
 
 class Process:
@@ -247,21 +248,26 @@ class Process:
     # __nodal_forces: List[NodalForce]
     __analisys: Analise
     __equilibrium: numpy.array
-    __equilibrium_cut: numpy.array
+    __equilibrium_cut_transpose: numpy.array
     __frame_stiffness: numpy.array
     __global_frame_stiffness: numpy.array
     __displacement: numpy.array
     __deformations: numpy.array
-    __stress_resultants: numpy.array
+    __internal_forces: numpy.array
+    __cuts: list
+    __process_time: datetime
 
     def __init__(self, nodes: List[Node], elements: List[Element], analisys: Analise) -> None:
         self.__nodes = nodes
         self.__elements = elements
         # self.__nodal_forces = nodal_forces
         self.__analisys = analisys
+        inicio = datetime.now()
         self.__processCalculations()
+        fim = datetime.now()
+        self.__process_time = fim - inicio
 
-    def __processCalculations(self):
+    def __getEquilibriumMatrix(self) -> numpy.array:
         # CÁLCULANDO GRAUS DE LIBERDADE
         n_linhas = 3 * len(self.__nodes)
         n_colunas = 3 * len(self.__elements)
@@ -301,8 +307,9 @@ class Process:
         '''
         # RESULTADO DA MATRIZ DE EQUILIBRIO - [L]
         '''
-        self.__equilibrium = equilibrium_matrix
+        return equilibrium_matrix
 
+    def __getFrameStiffnessMatrix(self) -> numpy.array:
         # CRIANDO MATRIZ DE RIGIDEZ DOS ELEMENTOS
         stifiness_matrix = numpy.zeros((3*len(self.__elements), 3*len(self.__elements)))
         for i in range(len(self.__elements)):
@@ -321,11 +328,9 @@ class Process:
         '''
         # RESULTADO DA MATRIZ DE RIGIDEZ (DO ELEMENTO) - [k]
         '''
-        self.__frame_stiffness = stifiness_matrix
-
-        # CRIANDO MATRIZ IDENTIDADE RIGIDO-PLASTICA DOS ELEMENTOS
-        identity_matrix = numpy.identity(3*len(self.__elements))
-
+        return stifiness_matrix
+    
+    def __getGlobalFrameStiffnessMatrix(self) -> numpy.array:
         cuts = []
         for element in self.__elements:
             element_index = self.__elements.index(element) * 3
@@ -347,89 +352,87 @@ class Process:
                     cuts.append(node_index + 2)
                 if node.getSupport() == Support.no_support:
                     pass
-
         cuts = list(dict.fromkeys(cuts))
-
+        self.__cuts = cuts
         """
         # DEEP COPY NA MATRIZ DE EQUILÍBRIO ORIGINAL
         """
-
         # Matriz de equilíbrio com restrições
-        equilibrium_matrix_restriction = equilibrium_matrix.copy()  # Deep Copy
+        equilibrium_matrix_restriction = self.__equilibrium.copy()  # Deep Copy
         equilibrium_matrix_restriction = numpy.delete(equilibrium_matrix_restriction, cuts, 0)  # Cut
-
         shapeX = equilibrium_matrix_restriction.shape[0]
         shapeY = equilibrium_matrix_restriction.shape[1]
-
         if shapeX > shapeY:
             raise ValueError("ESTRUTURA HIPOSTÁTICA")
-
         # Matriz de equilíbrio transposta com restrições
-        equilibrium_matrix_transpose = equilibrium_matrix.copy()  # Deep Copy
+        equilibrium_matrix_transpose = self.__equilibrium.copy()  # Deep Copy
         equilibrium_matrix_transpose = equilibrium_matrix_transpose.transpose()  # Transpose
         equilibrium_matrix_transpose = numpy.delete(equilibrium_matrix_transpose, cuts, 1)  # Cut
-
+        self.__equilibrium_cut_transpose = equilibrium_matrix_transpose
         """
         # MATRIZ DE RIGIDEZ GLOBAL DO SISTEMA - [K] 
          
         [K] = [l] * [k] * [L.T]
         """
-        aux1 = numpy.dot(equilibrium_matrix_restriction, stifiness_matrix)
+        aux1 = numpy.dot(equilibrium_matrix_restriction, self.__frame_stiffness)
         global_frame_stiffnes = numpy.dot(aux1, equilibrium_matrix_transpose)
+        return global_frame_stiffnes
 
-        self.__global_frame_stiffness = global_frame_stiffnes
-        # print(global_frame_stiffnes)
-
+    def __getNodalForcesVector(self) -> numpy.array:
         """
         # VETOR DOS DESLOCAMENTOS NODAIS - {δ}
 
         Utilizando a resolução de matriz inversa -> {δ} = [L k LT] ^ -1 * {λ}
         """
-
         # Criando o vetor das forças nodais
-
         nodal_forces = numpy.array([])
-
         for node in self.__nodes:
             force = node.getNodalForce()
             forces = numpy.array([force.fx, force.fy, force.m])
             nodal_forces = numpy.append(nodal_forces, forces)
-
         # Transpondo o vetor das forças para realizar o corte de linhas
-
         nodal_forces = nodal_forces.transpose()
-
-        self.__nodal_force = nodal_forces
-
         # Aplicando as restrições dos apoios - corte das linhas
-
-        nodal_forces = numpy.delete(nodal_forces, cuts, 0)
-
+        nodal_forces = numpy.delete(nodal_forces, self.__cuts, 0)
+        return nodal_forces
+    
+    def __getDisplacement(self) -> numpy.array:
         # RESOLVENDO O SISTEMA LINEAR
-
-        displacement = numpy.linalg.inv(global_frame_stiffnes) @ nodal_forces
-
-        self.__displacement = displacement
-
+        displacement = numpy.linalg.inv(self.__global_frame_stiffness) @ self.__nodal_force
+        return displacement
+    
+    def __getDeformations(self) -> numpy.array:
         """
         # VETOR DAS DEFORMAÇÕES CORRESPONDENTES - {θ}
 
             {θ} = [L.T] * {δ}
         """
+        deformations = self.__equilibrium_cut_transpose @ self.__displacement
+        return deformations
 
-        deformations = equilibrium_matrix_transpose @ displacement
-
-        self.__deformations = deformations
-
+    def __getInternalForces(self) -> numpy.array:
         """
         Esforços Seccionais Internos - {m}
 
             {m} = [k] * {θ}
         """
+        stress_resultants = self.__frame_stiffness @ self.__deformations
+        return stress_resultants
+        
+    def __processCalculations(self):
+        self.__equilibrium = self.__getEquilibriumMatrix()
+        self.__frame_stiffness = self.__getFrameStiffnessMatrix()
+        if self.__analisys == Analise.rigido_plastica_via_minima_norma_euclidiana:
+            self.__global_frame_stiffness = numpy.identity(3*len(self.__elements))
+        else:
+            self.__global_frame_stiffness = self.__getGlobalFrameStiffnessMatrix()
+        self.__global_frame_stiffness = self.__getGlobalFrameStiffnessMatrix()
+        self.__nodal_force = self.__getNodalForcesVector()
+        self.__displacement = self.__getDisplacement()
+        self.__deformations = self.__getDeformations()
+        self.__internal_forces = self.__getInternalForces
+        self.__internal_forces = self.__getInternalForces()
 
-        stress_resultants = stifiness_matrix @ deformations
-
-        self.__stress_resultants = stress_resultants
 
     def getEquilibriumMatrix(self) -> numpy.array:
         return self.__equilibrium
@@ -446,8 +449,14 @@ class Process:
     def getDeformations(self) -> numpy.array:
         return self.__deformations
 
-    def getStressResultants(self) -> numpy.array:
-        return self.__stress_resultants
+    def getInternalForces(self) -> numpy.array:
+        return self.__internal_forces
+    
+    def getProcessTime(self) -> datetime:
+        return self.__process_time
+    
+    def getCuts(self) -> list:
+        return self.__cuts
 
     # NÃO ESTÁ FUNCIONANDO CORRETAMENTE
     # def matrixToCsv(self, file_name: str, matrix: numpy.array):
@@ -470,15 +479,15 @@ class Print:
     def __init__(self, process: Process) -> None:
         self.__process = process
 
-    def printStressResultance(self) -> None:
-        for i in range(0, len(self.__process.getStressResultants()), 3):
+    def internalForces(self) -> None:
+        for i in range(0, len(self.__process.getInternalForces()), 3):
             print('ELEMENT: {0}'.format(int(i/3+1)))
-            print(" N={0:.2f}".format(self.__process.getStressResultants()[0 + i]))
-            print("M1={0:.2f}".format(self.__process.getStressResultants()[1 + i]))
-            print("M2={0:.2f}".format(self.__process.getStressResultants()[2 + i]))
+            print(" N={0:.2f}".format(self.__process.getInternalForces()[0 + i]))
+            print("M1={0:.2f}".format(self.__process.getInternalForces()[1 + i]))
+            print("M2={0:.2f}".format(self.__process.getInternalForces()[2 + i]))
             print()
     
-    def printNodalDisplacement(self):
+    def nodalDisplacement(self):
         deformacoes = self.__process.getNodalDisplacement()
         for deformacao in deformacoes:
             print(f"{deformacao:.2f}")

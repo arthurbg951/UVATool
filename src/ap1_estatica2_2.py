@@ -1,4 +1,4 @@
-from lib.UVATool import *
+from UVATool.UVATool import *
 
 n1 = Node(0, 0)
 n2 = Node(8, 0)
@@ -42,5 +42,5 @@ deslocamentos = calc.getNodalDisplacement()
 #         contador += 3
 #     print(deslocamentos[contador])
 
-for deslocamento in deslocamentos:
-    print(deslocamento)
+plot = Print(calc)
+plot.internalForces()

@@ -1,4 +1,4 @@
-from lib.UVATool import *
+from UVATool.UVATool import *
 
 n1 = Node(0, 0)
 n2 = Node(5, 0)
@@ -16,5 +16,5 @@ elements = [e1, e2]
 
 proc = Process(nodes, elements, Analise.elastica_via_rigidez_analitica)
 
-results = Print(proc)
-results.printNodalDisplacement()
+plot = Print(proc)
+plot.internalForces()

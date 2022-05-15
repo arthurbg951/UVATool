@@ -1,4 +1,4 @@
-from lib.UVATool import *
+from UVATool.UVATool import *
 
 n1 = Node(0, 0)
 n2 = Node(2.5, 0)
@@ -16,4 +16,4 @@ elemets = [e1, e2]
 calc = Process(nodes, elemets, Analise.elastica_via_rigidez_analitica)
 
 results = Print(calc)
-results.printNodalDisplacement()
+results.nodalDisplacement()

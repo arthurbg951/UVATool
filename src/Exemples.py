@@ -1,4 +1,4 @@
-from lib.UVATool import *
+from UVATool.UVATool import *
 from datetime import datetime
 import math
 import traceback
@@ -8,11 +8,9 @@ nodes = []
 elements = []
 
 # VERIFICACAO DO TEMPO DE EXECUCAO
-inicio = None
-fim = None
+time = None
 
 try:
-    inicio = datetime.now()
     # BALANÇO
     # n1 = Node(0, 0)
     # n1.setSupport(Support.fixed)
@@ -148,18 +146,16 @@ try:
     # elements = [e1, e2, e3]
 
     proc = Process(nodes, elements, Analise.elastica_via_rigidez_analitica )
+    time = proc.getProcessTime()
     # print("MATRIZ DE EQUILIBRIO - [L]\n", proc.getEquilibriumMatrix(), "\n")
     # print("MATRIZ DE RIGIDEZ (DO ELEMENTO) - [k]\n", proc.getFrameStiffness(), "\n")
     # print("RIGIDEZ GLOBAL DO SISTEMA - [K]\n", proc.getGlobalFrameStiffness(), "\n")
     # print("VETOR DOS DESLOCAMENTOS NODAIS - {δ}\n", proc.getNodalDisplacement(), "\n")
     # print("DEFORMAÇÕES CORRESPONDENTES - {θ}\n", proc.getDeformations(), "\n")
-    # print("Esforços Seccionais Internos - {m}\n", proc.getStressResultants(), "\n")
+    # print("Esforços Seccionais Internos - {m}\n", proc.getInternalForces(), "\n")
 
-    for i in range(0, len(proc.getStressResultants()), 3):
-        # print(" N[{0}]={1:.2f}".format(int(i/3+1), proc.getStressResultants()[0 + i]))
-        print("M1[{0}]={1:.2f}".format(int(i/3+1), proc.getStressResultants()[1 + i]))
-        print("M2[{0}]={1:.2f}".format(int(i/3+1), proc.getStressResultants()[2 + i]))
-        print()
+    plot = Print(proc)
+    plot.internalForces()
 
     # deformacoes = proc.getNodalDisplacement()
     # for deformacao in deformacoes:
@@ -171,5 +167,4 @@ except TypeError:
     print("ENTRADA DE DADOS INCORRETA")
     print(traceback.format_exc())
 finally:
-    fim = datetime.now()
-    print("TEMPO DE CALCULO = ", fim - inicio)
+    print("TEMPO DE CALCULO = ", time)

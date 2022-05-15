@@ -1,4 +1,5 @@
-from lib.UVATool import *
+from UVATool.UVATool import *
+
 # DEFININDO PONTOS (NODES)
 n1 = Node(0, 0)
 n2 = Node(5, 0)
@@ -30,11 +31,6 @@ elements = [e1, e2, e3]
 # REALIZANDO CÁLCULOS
 proc = Process(nodes, elements, Analise.elastica_via_rigidez_analitica)
 
-# ARMAZENANDO RESULTADOS
-esforcos_internos = proc.getStressResultants()
-
 # PRINTANDO RESULTADOS
-for i in range(0, len(esforcos_internos), 3):
-    print(" N[{0}]={1:.2f}".format(int(i/3+1), esforcos_internos[0 + i]))
-    print("M1[{0}]={1:.2f}".format(int(i/3+1), esforcos_internos[1 + i]))
-    print("M2[{0}]={1:.2f}".format(int(i/3+1), esforcos_internos[2 + i]))
+plot = Print(proc)
+plot.internalForces()
