@@ -3,7 +3,7 @@ __pycache__
 .vscode
 .idea
 .testes
-tests
+# tests
 build
 dist
 venv
