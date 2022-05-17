@@ -6,17 +6,16 @@ Para utilização do UVATool é necessário:
 
 2 - biblioteca "pyqt5-tools"
 
-### OBS:
- para instalar o passo 2, basta executar o comando: pip install pyqt5-tools
+#### OBS: Para instalar o passo 2, basta executar o comando: pip install pyqt5-tools
 
 ### Windows:
  Basta executar o arquivo setup.bat dentro da pasta src/UVATool_UI
 
-### MacOS:
+### MacOS: 
  Entre na pasta src/UVATool_UI pelo terminal e digite: python3.8 form_uvatool.py
 
 ### Linux: 
-Entre na pasta src/UVATool_UI pelo terminal e digite: python3.8 form_uvatool.py
+ Entre na pasta src/UVATool_UI pelo terminal e digite: python3.8 form_uvatool.py
 
 ## Para novos usuários
 
