@@ -19,7 +19,7 @@ af12 = 90 * (m.pi/180.)  # rad
 af23 = 0 * (m.pi/180.)  # rad
 af34 = 0 * (m.pi/180.)  # rad
 af45 = -90 * (m.pi/180.)  # rad
-l12, l23, l34, l45 = 3.0, 2.5, 2.5, 3.0  # m
+l12, l23, l34, l45 = 1e-10, 5, 5, 1e-10  # m
 
 c1 = np.cos(af12)
 c2 = np.cos(af23)
@@ -52,7 +52,7 @@ lo_eq = np.array([
 print(lo_eq)
 
 # Colocando as restrições de apoio em [ L ]
-leq = np.delete(lo_eq, [0, 1, 12, 13], 0)
+leq = np.delete(lo_eq, [0, 1, 2, 12, 13, 14], 0)
 # print(leq.shape)
 # print(leq)
 
@@ -60,7 +60,7 @@ leq = np.delete(lo_eq, [0, 1, 12, 13], 0)
 # Matriz de equilibrio Transposta - [ L.T ]
 leqt = lo_eq.transpose()
 # Colocando as restrições de apoio em [ L.T ]
-leqt = np.delete(leqt, [0, 1, 12, 13], 1)
+leqt = np.delete(leqt, [0, 1, 2, 12, 13, 14], 1)
 # print(leqt.shape)
 # print(leqt)
 
@@ -71,10 +71,10 @@ leqt = np.delete(leqt, [0, 1, 12, 13], 1)
 
 # Matriz de rigidez do elemento - [ k ]
 
-p11, p12, p21, p22, p31, p32, p41, p42 = 0.1e-30, 1, 1, 1, 1, 1, 1, 0.1e-30 
-e12, e23, e34, e45 = 25_000e6, 25_000e6, 25_000e6, 25_000e6  # Pa
-in12, in23, in34, in45 = 5.21E-08, 8.00E-08, 8.00E-08, 5.21E-08  # m4
-aa12, aa23, aa34, aa45 = 0.01, 6.00E-04, 6.00E-04, 0.01   # m²
+p11, p12, p21, p22, p31, p32, p41, p42 = 1, 1, 0.5, 1, 1, 0.5, 1, 1
+e12, e23, e34, e45 = 1, 1, 1, 1  # Pa
+in12, in23, in34, in45 = 0.001, 0.001, 0.001, 0.001  # m4
+aa12, aa23, aa34, aa45 = 0.012, 0.012, 0.012, 0.012   # m²
 
 ft1_1 = (3 * p11 / (4 - p11 * p12)) * (4 * e12 * in12 / l12)
 ft2_1 = (3 * p11 * p12 / (4 - p11 * p12)) * (-2 * e12 * in12 / l12)
@@ -97,24 +97,29 @@ ft3_4 = (3 * p42 / (4 - p41 * p42)) * (4 * e45 * in45 / l45)
 ft4_4 = e45 * aa45 / l45
 
 
-k_el = np.array([
-    [ft4_1,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0],
-    [    0, ft1_1, ft2_1,     0,     0,     0,     0,     0,     0,     0,     0,     0],
-    [    0, ft2_1, ft3_1,     0,     0,     0,     0,     0,     0,     0,     0,     0],
-    [    0,     0,     0, ft4_2,     0,     0,     0,     0,     0,     0,     0,     0],
-    [    0,     0,     0,     0, ft1_2, ft2_2,     0,     0,     0,     0,     0,     0],
-    [    0,     0,     0,     0, ft2_2, ft3_2,     0,     0,     0,     0,     0,     0],
-    [    0,     0,     0,     0,     0,     0, ft4_3,     0,     0,     0,     0,     0],
-    [    0,     0,     0,     0,     0,     0,     0, ft1_3, ft2_3,     0,     0,     0],
-    [    0,     0,     0,     0,     0,     0,     0, ft2_3, ft3_3,     0,     0,     0],
-    [    0,     0,     0,     0,     0,     0,     0,     0,     0, ft4_4,     0,     0],
-    [    0,     0,     0,     0,     0,     0,     0,     0,     0,     0, ft1_4, ft2_4],
-    [    0,     0,     0,     0,     0,     0,     0,     0,     0,     0, ft2_4, ft3_4]
-])
+# k_el = np.array([
+#     [ft4_1,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0],
+#     [    0, ft1_1, ft2_1,     0,     0,     0,     0,     0,     0,     0,     0,     0],
+#     [    0, ft2_1, ft3_1,     0,     0,     0,     0,     0,     0,     0,     0,     0],
+#     [    0,     0,     0, ft4_2,     0,     0,     0,     0,     0,     0,     0,     0],
+#     [    0,     0,     0,     0, ft1_2, ft2_2,     0,     0,     0,     0,     0,     0],
+#     [    0,     0,     0,     0, ft2_2, ft3_2,     0,     0,     0,     0,     0,     0],
+#     [    0,     0,     0,     0,     0,     0, ft4_3,     0,     0,     0,     0,     0],
+#     [    0,     0,     0,     0,     0,     0,     0, ft1_3, ft2_3,     0,     0,     0],
+#     [    0,     0,     0,     0,     0,     0,     0, ft2_3, ft3_3,     0,     0,     0],
+#     [    0,     0,     0,     0,     0,     0,     0,     0,     0, ft4_4,     0,     0],
+#     [    0,     0,     0,     0,     0,     0,     0,     0,     0,     0, ft1_4, ft2_4],
+#     [    0,     0,     0,     0,     0,     0,     0,     0,     0,     0, ft2_4, ft3_4]
+# ])
 
 # print(k_el.shape)
 # print(f'MATRIZ DE RIGIDEZ DO ELEMENTO - k :  \n\n{k_el}\n')
 
+k_el = np.identity(12)
+
+print(f'MATRIZ DE RIGIDEZ DO ELEMENTO - k :\n\n'
+      f'{k_el}\n'  
+)
 
 # ---------------------------------------------------------------------------------------------------------------------
 
@@ -135,12 +140,12 @@ print(f'a) MATRIZ DE RIGIDEZ GLOBAL - L k LT: \n\n{k_global}\n')
 
 
 # Vetor das Cargas Nodais (Cargas Pontuais e Cargas de Momento) - { λ }
-f1x, f2y, f3m, f4x, f5y, f6m, f7x, f8y, f9m, f10x, f11y, f12m, f13x, f14y, f15m = None, None, 0, 5_000, 0, 0, 0, -150_000, 0, 0, 0, 0, None, None, 0,
+f1x, f2y, f3m, f4x, f5y, f6m, f7x, f8y, f9m, f10x, f11y, f12m, f13x, f14y, f15m = None, None, 0, 0, 0, 0, 0, -10, 0, 0, 0, 0, None, None, 0,
 force = np.array([f1x, f2y, f3m, f4x, f5y, f6m, f7x, f8y, f9m, f10x, f11y, f12m, f13x, f14y, f15m])
 fn = np.transpose(force)  # Transformando em vetor
 
 # Colocando as restrições de apoio em { λ }
-fn = np.delete(fn, [0, 1, 12, 13], 0)
+fn = np.delete(fn, [0, 1, 2, 12, 13, 14], 0)
 print(f'b) Vetor das Cargas Nodais - λ: \n\n{fn}\n')
 
 

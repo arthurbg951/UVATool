@@ -21,25 +21,25 @@ percas = 25  # %
 
 # Dimensão da viga protendida V1 e V2
 
-hx_pilar = 0.60  # Largura do pilar em x (hx)
-
-l_vcp = l_x - hx_pilar  # Vão da viga protendida (L)
-
-
 b_vcp = 1.20  # Largura da viga protendida (b)
-h_vcp = 0.85  # Altura da viga protendida  (h)
+h_vcp = 0.90  # Altura da viga protendida  (h)
+
+hy_pilar = 0.30  # Largura do pilar em x (hx)
+hx_pilar = b_vcp  # Largura do pilar em y (hy)
+
+l_vcp = l_x - hy_pilar  # Vão da viga protendida (L)
 
 
 d_vcp = h_vcp - 0.07  # Altura útil da viga protendida (d)
 f_cb = 0.5 * h_vcp - 0.07  # Flecha da cablagem (f1)
 
-hy_pilar = b_vcp  # Largura do pilar em y (hy)
+
 
 # Dimensão da laje nervurada
 
 h_laje = 0.25  # Altura da laje nervurada
 
-b_v3_v4 = 0.20  # largura das vigas de concreto armado
+b_v3_v4 = 0.15  # largura das vigas de concreto armado
 
 vao_laje_x = l_x - b_v3_v4  # vão da laje em x
 vao_laje_y = l_y - b_vcp  # vão da laje em y
@@ -96,7 +96,7 @@ g_laje = pp_impacto + alvenaria + revestimento + pavimentacao
 
 # Sobrecarga: sala comercial -------------------------------------------------------------------------------------------
 
-sobre_carga = 6.00  # kN/m²
+sobre_carga = 4.00  # kN/m²
 
 # Somatório das cargas permanentes
 
@@ -109,16 +109,18 @@ h_ai = vao_laje_y / 2
 b_menor_influencia = vao_laje_x - 2 * h_ai
 
 # Calculo da área de influência
-aa_influencia_l1 = (b_maior_influencia + b_menor_influencia) * h_ai / 2  # m²
+aa_influencia_bi = (b_maior_influencia + b_menor_influencia) * h_ai / 2  # m²
+
+aa_influencia_uni = vao_laje_x * (vao_laje_y / 2)
 
 
 # > Reação da laje 1
 
-rl1 = (g_laje + q_laje) * aa_influencia_l1 / l_vcp  # kN/m²
+rl1 = (g_laje + q_laje) * aa_influencia_uni / l_vcp  # kN/m²
 
 print(f'\n-> CARREGAMENTO DA LAJE 1 NERVURADA \n'
       f'\nLaje nervurada com caixotes 61x61 unidirecional com 25cm de altura total\n'
-      f'apoiada nos 4 cantos. Peso próprio de {pp_impacto*100:.2f}kg/m² (calculado).\n'
+      f'apoiada em 2 cantos. Peso próprio de {pp_impacto*100:.2f}kg/m² (calculado).\n'
       f'68 caixotes duplos  ...................... 61 x 122 cm\n'
       f'34 caixotes  ............................. 61 x 61 cm\n'
       f'34 meio caixotes  ........................ 61 x 30,5 cm\n'
@@ -136,11 +138,11 @@ print(f'\n-> CARREGAMENTO DA LAJE 1 NERVURADA \n'
       f'Alvenaria: {l_alvenaria:.2f}m .............................  {alvenaria:.2f}kN/m²\n'
       f'                                        Total:  {g_laje:.2f}kN/m²\n'
       f'\n - Carregamento variável (q)\n'
-      f'Sobrecarga: Biblioteca  ......................  {sobre_carga:.2f}kN/m²\n'
+      f'Carga acidental: Biblioteca  .................  {sobre_carga:.2f}kN/m²\n'
       f'                                        Total:  {q_laje:.2f}kN/m²\n\n'
       f' - Carregamento total (g + q)  ...............  {g_laje + q_laje:.2f}kN/m²\n'
       f'\n'
-      f' - Área de influência da laje 1:  ............  {aa_influencia_l1:.2f}m²\n')
+      f' - Área de influência da laje 1:  ............  {aa_influencia_uni:.2f}m² - Unidirecional\n')
 """------------------------------------------------------------------------------------------------------------------"""
 
 
