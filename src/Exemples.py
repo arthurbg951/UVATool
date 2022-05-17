@@ -1,4 +1,4 @@
-from UVATool.UVATool import *
+from lib.UVATool import *
 from datetime import datetime
 import math
 import traceback
@@ -21,16 +21,17 @@ try:
     # elements = [e1]
 
     # TRELIÇA
-    # n1 = Node(0, 0)
-    # n1.setSupport(Support.pinned)
-    # n2 = Node(0.5, math.sin(60*math.pi/180))
-    # n3 = Node(1, 0)
-    # n3.setSupport(Support.roller)
-    # nodes = [n1, n2, n3]
-    # e1 = Element(n1, n2, 1, 1, 1)
-    # e2 = Element(n2, n3, 1, 1, 1)
-    # e3 = Element(n1, n3, 1, 1, 1)
-    # elements = [e1, e2, e3]
+    n1 = Node(0, 0)
+    n2 = Node(0.5, math.sin(60*math.pi/180))
+    n3 = Node(1, 0)
+    n1.setSupport(Support.pinned)
+    n3.setSupport(Support.roller)
+    n2.setNodalForce(NodalForce(10, 0, 0))
+    e1 = Element(n1, n2, 1, 1, 1)
+    e2 = Element(n2, n3, 1, 1, 1)
+    e3 = Element(n1, n3, 1, 1, 1)
+    nodes = [n1, n2, n3]
+    elements = [e1, e2, e3]
 
     # EDIFICIO DE 3 ANDARES
     # n1 = Node(0, 0)
@@ -84,34 +85,31 @@ try:
     # elements = [e1, e2]
 
     # SEMI RIGIDO
-    fator = 1e-31
-    n1 = Node(0, 0)
-    n2 = Node(0, fator)
-    n3 = Node(5, fator)
-    n4 = Node(10, fator)
-    n5 = Node(10, 0)
-    n6 = Node(-0.17, 2.29)
-
-    rec = Rectangle(0.012, 0.001)
-    area = rec.area()
-    inercia = rec.momentInertia()
-
-    n1.setSupport(Support.fixed)
-    # n2.setP(0.5)
-    n3.setNodalForce(NodalForce(0, -10, 0))
-    # n4.setP(0.5)
-    n5.setSupport(Support.fixed)
-    n6.setSupport(Support.fixed)
-
-    e1 = Element(n1, n2, area, inercia, 1)
-    e2 = Element(n2, n3, area, inercia, 1)
-    e2.setP(0.5, n3.getP())
-    e3 = Element(n3, n4, area, inercia, 1)
-    e3.setP(n3.getP(), 0.5)
-    e4 = Element(n4, n5, area, inercia, 1)
-    e5 = Element(n2, n6, area, inercia, 1)
-    nodes = [n1, n2, n3, n4, n5, n6]
-    elements = [e1, e2, e3, e4, e5]
+    # fator = 1e-31
+    # n1 = Node(0, 0)
+    # n2 = Node(0, fator)
+    # n3 = Node(5, fator)
+    # n4 = Node(10, fator)
+    # n5 = Node(10, 0)
+    # n6 = Node(-0.17, 2.29)
+    # rec = Rectangle(0.012, 0.001)
+    # area = rec.area()
+    # inercia = rec.momentInertia()
+    # n1.setSupport(Support.fixed)
+    # # n2.setP(0.5)
+    # n3.setNodalForce(NodalForce(0, -10, 0))
+    # # n4.setP(0.5)
+    # n5.setSupport(Support.fixed)
+    # n6.setSupport(Support.fixed)
+    # e1 = Element(n1, n2, area, inercia, 1)
+    # e2 = Element(n2, n3, area, inercia, 1)
+    # e2.setP(0.5, n3.getP())
+    # e3 = Element(n3, n4, area, inercia, 1)
+    # e3.setP(n3.getP(), 0.5)
+    # e4 = Element(n4, n5, area, inercia, 1)
+    # e5 = Element(n2, n6, area, inercia, 1)
+    # nodes = [n1, n2, n3, n4, n5, n6]
+    # elements = [e1, e2, e3, e4, e5]
 
     # ISOSTATICO
     # n1 = Node(0, 0)
@@ -181,6 +179,7 @@ try:
 
     proc = Process(nodes, elements, Analise.elastica_via_rigidez_analitica)
     time = proc.getProcessTime()
+
     # print("MATRIZ DE EQUILIBRIO - [L]\n", proc.getEquilibriumMatrix(), "\n")
     # print("MATRIZ DE RIGIDEZ (DO ELEMENTO) - [k]\n", proc.getFrameStiffness(), "\n")
     # print("RIGIDEZ GLOBAL DO SISTEMA - [K]\n", proc.getGlobalFrameStiffness(), "\n")
@@ -191,14 +190,12 @@ try:
     plot = Print(proc)
     plot.internalForces()
 
-    # deformacoes = proc.getNodalDisplacement()
-    # for deformacao in deformacoes:
-    #     print(deformacao)
-
 except ValueError:
     print("ESTRUTURA HIPOSTATICA")
+except numpy.linalg.LinAlgError:
+    print("ERRO NOS CÁLCULOS")
 except TypeError:
     print("ENTRADA DE DADOS INCORRETA")
-    print(traceback.format_exc())
+    # print(traceback.format_exc())
 finally:
     print("TEMPO DE CALCULO = ", time)

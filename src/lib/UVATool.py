@@ -90,8 +90,8 @@ class Node:
     __nodal_force: NodalForce
     __support: Support
     __p: float
-    __displacement: numpy.array
-    __angle: float
+    # __displacement: numpy.array
+    # __angle: float
 
     def __init__(self, x: float, y: float) -> None:
         self.x = x
@@ -128,11 +128,11 @@ class Node:
     def getP(self) -> float:
         return self.__p
 
-    def setDisplacement(self, displacement: numpy.array) -> None:
-        self.__displacement = displacement
+    # def setDisplacement(self, displacement: numpy.array) -> None:
+    #     self.__displacement = displacement
 
-    def setAngle(self, angle: float) -> None:
-        self.__angle = angle
+    # def setAngle(self, angle: float) -> None:
+    #     self.__angle = angle
 
     def __checkSupport(self, support: Support) -> None:
         test = True
@@ -214,13 +214,6 @@ class Element:
 
     def __setAngle(self) -> float:
         resposta = None
-        # x = self.node1.x
-        # y = self.node1.y
-        # # ZERANDO UCS
-        # n1 = Point2d(x - x, y - y)
-        # n2 = Point2d(self.node2.x - x, self.node2.y - y)
-        # deltaX = n1.x - n2.x
-        # deltaY = n1.y - n2.y
         deltaX = self.node1.x - self.node2.x
         deltaY = self.node1.y - self.node2.y
         if deltaX == 0:
@@ -350,7 +343,7 @@ class Process:
         '''
         return stifiness_matrix
 
-    def __getGlobalFrameStiffnessMatrix(self) -> numpy.array:
+    def __getCuts(self) -> list:
         cuts = []
         for element in self.__elements:
             element_index = self.__elements.index(element) * 3
@@ -374,14 +367,15 @@ class Process:
                     pass
         cuts = list(dict.fromkeys(cuts))
         self.__cuts = cuts
+
+    def __getGlobalFrameStiffnessMatrix(self) -> numpy.array:
+        self.__getCuts()
         """
         # DEEP COPY NA MATRIZ DE EQUILÍBRIO ORIGINAL
         """
         # Matriz de equilíbrio com restrições
         equilibrium_matrix_restriction = self.__equilibrium.copy()  # Deep Copy
-        equilibrium_matrix_restriction = numpy.delete(equilibrium_matrix_restriction, cuts, 0)  # Cut
-        # print(equilibrium_matrix_restriction)
-        # print()
+        equilibrium_matrix_restriction = numpy.delete(equilibrium_matrix_restriction, self.__cuts, 0)  # Cut
         shapeX = equilibrium_matrix_restriction.shape[0]
         shapeY = equilibrium_matrix_restriction.shape[1]
         if shapeX > shapeY:
@@ -389,7 +383,7 @@ class Process:
         # Matriz de equilíbrio transposta com restrições
         equilibrium_matrix_transpose = self.__equilibrium.copy()  # Deep Copy
         equilibrium_matrix_transpose = equilibrium_matrix_transpose.transpose()  # Transpose
-        equilibrium_matrix_transpose = numpy.delete(equilibrium_matrix_transpose, cuts, 1)  # Cut
+        equilibrium_matrix_transpose = numpy.delete(equilibrium_matrix_transpose, self.__cuts, 1)  # Cut
         self.__equilibrium_cut_transpose = equilibrium_matrix_transpose
         """
         # MATRIZ DE RIGIDEZ GLOBAL DO SISTEMA - [K] 
@@ -401,6 +395,7 @@ class Process:
         return global_frame_stiffnes
 
     def __getNodalForcesVector(self) -> numpy.array:
+        self.__getCuts()
         """
         # VETOR DOS DESLOCAMENTOS NODAIS - {δ}
 
@@ -441,18 +436,19 @@ class Process:
         stress_resultants = self.__frame_stiffness @ self.__deformations
         return stress_resultants
 
+    def __getIdentity(self) -> numpy.array:
+        return numpy.identity(3*len(self.__elements))
+
     def __processCalculations(self):
         self.__equilibrium = self.__getEquilibriumMatrix()
-        self.__frame_stiffness = self.__getFrameStiffnessMatrix()
         if self.__analisys == Analise.rigido_plastica_via_minima_norma_euclidiana:
-            self.__global_frame_stiffness = numpy.identity(3*len(self.__elements))
+            self.__frame_stiffness = self.__getIdentity()
         else:
-            self.__global_frame_stiffness = self.__getGlobalFrameStiffnessMatrix()
+            self.__frame_stiffness = self.__getFrameStiffnessMatrix()
         self.__global_frame_stiffness = self.__getGlobalFrameStiffnessMatrix()
         self.__nodal_force = self.__getNodalForcesVector()
         self.__displacement = self.__getDisplacement()
         self.__deformations = self.__getDeformations()
-        self.__internal_forces = self.__getInternalForces
         self.__internal_forces = self.__getInternalForces()
 
     def getEquilibriumMatrix(self) -> numpy.array:
