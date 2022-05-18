@@ -23,9 +23,7 @@ Recomenda-se que estudem um pouco sobre o <a href="https://pt.wikipedia.org/wiki
 
 Entrem em contato com os desenvolvedores para mais informações.
 
-Editor de código utilizado: Visual Studio Code
-
-Link para download: <a href="https://code.visualstudio.com/download">vscode</a>
+Editor de código utilizado: <a href="https://code.visualstudio.com/download">Visual Studio Code</a>
 
 <!-- Para iniciar os trabalhos é necessário a instalação do git no computador do usuário. Cada pasta conterá informações
 sobre a utilização do sistema em cada área de desenvolvimento.
