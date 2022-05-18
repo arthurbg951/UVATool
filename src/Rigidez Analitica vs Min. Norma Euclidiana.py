@@ -12,8 +12,8 @@ n2.setNodalForce(NodalForce(0, -10, 0))
 n3.setNodalForce(NodalForce(0, -10, 0))
 
 rec = Rectangle(0.012, 0.001)
-area = rec.area()
-inercia = rec.momentInertia()
+area = rec.area
+inercia = rec.inertia
 
 e1 = Element(n1, n2, area, inercia, 1)
 e12 = Element(n2, n3, area, inercia, 1)
@@ -23,11 +23,11 @@ nodes = [n1, n2, n3, n4]
 elements = [e1, e12, e2]
 
 print("ANALISE ELASTICA VIA RIGIDEZ ANALITICA")
-proc = Process(nodes, elements, Analise.elastica_via_rigidez_analitica)
+proc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
 plot = Print(proc)
 plot.internalForces()
 
 print("ANALISE RIGIDO PLASTICA VIA MINIMA NORMA EUCLIDIANA")
-proc = Process(nodes, elements, Analise.rigido_plastica_via_minima_norma_euclidiana)
+proc = Process(nodes, elements, Analise.rigidoPlastica.viaMinimaNormaEuclidiana)
 plot = Print(proc)
 plot.internalForces()

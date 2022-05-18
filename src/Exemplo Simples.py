@@ -17,8 +17,8 @@ n3.setSupport(Apoio.primeiro_genero)
 
 # DEFININDO SEÇÃO
 rec = Rectangle(0.001, 0.012)
-area = rec.area()
-momento_inercia = rec.momentInertia()
+area = rec.area
+momento_inercia = rec.inertia
 
 # DEFININDO ELEMENTOS
 e1 = Element(n1, n4, area, momento_inercia, 1)
@@ -29,7 +29,7 @@ nodes = [n1, n4, n2, n3]
 elements = [e1, e2, e3]
 
 # REALIZANDO CÁLCULOS
-proc = Process(nodes, elements, Analise.elastica_via_rigidez_analitica)
+proc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
 
 # PRINTANDO RESULTADOS
 plot = Print(proc)

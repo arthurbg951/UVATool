@@ -30,8 +30,14 @@ class Apoio:
 
 
 class Analise:
-    elastica_via_rigidez_analitica = 0
-    rigido_plastica_via_minima_norma_euclidiana = 1
+    class elastica:
+        viaRigidezAnalitica = 0
+
+    class rigidoPlastica:
+        viaMinimaNormaEuclidiana = 1
+
+    # elastica_via_rigidez_analitica = 0
+    # rigido_plastica_via_minima_norma_euclidiana = 1
 
 
 class Point2d:
@@ -45,26 +51,56 @@ class Point2d:
     def __str__(self) -> str:
         return "({0}, {1})".format(self.x, self.y)
 
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, Point2d):
+    def __eq__(self, __o: object) -> bool:
+        if not isinstance(__o, Point2d):
             return NotImplemented
-        return self.x == other.x and self.y == other.y
+        return self.x == __o.x and self.y == __o.y
 
 
 class Rectangle:
     __b: float
     __h: float
+    __area: float
+    __inertia: float
 
     def __init__(self, b: float, h: float) -> None:
-        super().__init__()
         self.__b = b
         self.__h = h
 
+    def __eq__(self, __o: object) -> bool:
+        if not isinstance(__o, Rectangle):
+            return NotImplemented
+        return self.b == __o.b and self.h == __o.h
+
+    @property
     def area(self) -> float:
         return self.__b * self.__h
 
-    def momentInertia(self) -> float:
+    @property
+    def inertia(self) -> float:
         return self.__b * math.pow(self.__h, 3) / 12
+
+    @property
+    def b(self):
+        return self.__b
+
+    @b.setter
+    def b(self, value):
+        if value is not float:
+            raise ValueError("b must be an float number.")
+        else:
+            self.__b = value
+
+    @property
+    def h(self):
+        return self.__h
+
+    @b.setter
+    def h(self, value):
+        if value is not float:
+            raise ValueError("h must be an float number.")
+        else:
+            self.__h = value
 
 
 class NodalForce:
@@ -90,8 +126,6 @@ class Node:
     __nodal_force: NodalForce
     __support: Support
     __p: float
-    # __displacement: numpy.array
-    # __angle: float
 
     def __init__(self, x: float, y: float) -> None:
         self.x = x
@@ -127,12 +161,6 @@ class Node:
 
     def getP(self) -> float:
         return self.__p
-
-    # def setDisplacement(self, displacement: numpy.array) -> None:
-    #     self.__displacement = displacement
-
-    # def setAngle(self, angle: float) -> None:
-    #     self.__angle = angle
 
     def __checkSupport(self, support: Support) -> None:
         test = True
@@ -441,7 +469,7 @@ class Process:
 
     def __processCalculations(self):
         self.__equilibrium = self.__getEquilibriumMatrix()
-        if self.__analisys == Analise.rigido_plastica_via_minima_norma_euclidiana:
+        if self.__analisys == Analise.rigidoPlastica.viaMinimaNormaEuclidiana:
             self.__frame_stiffness = self.__getIdentity()
         else:
             self.__frame_stiffness = self.__getFrameStiffnessMatrix()

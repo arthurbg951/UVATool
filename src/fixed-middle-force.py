@@ -13,7 +13,7 @@ e2 = Element(n2, n3, 1, 1, 1)
 nodes = [n1, n2, n3]
 elemets = [e1, e2]
 
-calc = Process(nodes, elemets, Analise.elastica_via_rigidez_analitica)
+calc = Process(nodes, elemets, Analise.elastica.viaRigidezAnalitica)
 
 results = Print(calc)
 results.nodalDisplacement()

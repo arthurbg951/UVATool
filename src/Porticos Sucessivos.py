@@ -7,8 +7,8 @@ nodes = []
 elements = []
 
 rec = Rectangle(0.012, 0.001)
-area = rec.area()
-inercia = rec.momentInertia()
+area = rec.area
+inercia = rec.inertia
 
 n1 = Node(0, 0)
 n1.setSupport(Apoio.terceiro_genero)
@@ -47,7 +47,7 @@ nodes[len(nodes)-2].setNodalForce(NodalForce(-100, 0, 0))
 est_fim = datetime.now()
 
 print('Processando cálculos ...')
-calc = Process(nodes, elements, Analise.elastica_via_rigidez_analitica)
+calc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
 
 results = Print(calc)
 

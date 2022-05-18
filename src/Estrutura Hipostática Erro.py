@@ -18,7 +18,7 @@ try:
     nodes = [n1, n2, n3]
     elements = [e1, e2]
 
-    calc = Process(nodes, elements, Analise.elastica_via_rigidez_analitica)
+    calc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
 
     plot = Print(calc)
     plot.internalForces()
