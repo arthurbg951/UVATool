@@ -200,7 +200,7 @@ class Element:
     area: float
     moment_inertia: float
     young_modulus: float
-    __deformations: numpy.array
+    # __deformations: numpy.array
     __internal_forces: numpy.array
     __angle: float
     __length: float
@@ -250,8 +250,8 @@ class Element:
             resposta = math.atan(deltaY/deltaX)
         return resposta
 
-    def getDeformations(self) -> numpy.array:
-        return self.__deformations
+    # def getDeformations(self) -> numpy.array:
+    #     return self.__deformations
 
     def setDeformations(self, deformations: numpy.array) -> None:
         self.__deformations = deformations
