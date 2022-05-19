@@ -3,16 +3,30 @@
   // for the documentation about the tasks.json format
   "version": "2.0.0",
   "tasks": [{
-    "label": "UVATool",
-    "type": "shell",
-    "command": "cd ./src/UVATool_UI ; python form_uvatool.py",
-    "windows": {
-      "command": "cd .\\src\\UVATool_UI ; python form_uvatool.py"
+      "label": "UVATool",
+      "type": "shell",
+      "command": "cd ./src/UVATool_UI ; python form_uvatool.py",
+      "windows": {
+        "command": "cd .\\src\\UVATool_UI ; python form_uvatool.py"
+      },
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "close": true
+      }
     },
-    "group": "test",
-    "presentation": {
-      "reveal": "always",
-      "close": true
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "echo 'não implementado'",
+      "windows": {
+        "command": "echo 'não implementado'"
+      },
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
     }
-  }]
+  ]
 }
