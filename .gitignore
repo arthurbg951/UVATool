@@ -1,6 +1,6 @@
 # FOLDERS:
 __pycache__
-.vscode
+# .vscode
 .idea
 .testes
 # tests
