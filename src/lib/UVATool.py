@@ -95,7 +95,7 @@ class Rectangle:
     def h(self):
         return self.__h
 
-    @b.setter
+    @h.setter
     def h(self, value):
         if value is not float:
             raise ValueError("h must be an float number.")
