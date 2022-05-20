@@ -10,11 +10,12 @@ Editor de código utilizado: <a href="https://code.visualstudio.com/download">Vi
 
 Recomendações:
 
-Instalar o sistema do git no pc <a href="https://git-scm.com/downloads">git</a> (opcional - mas interessante para acompanhar o desenvolvimento da melhor forma o possível)
+Instalar o sistema do git no pc <a href="https://git-scm.com/downloads">git</a>
+(opcional, mas interessante para acompanhar o desenvolvimento da melhor forma possível)
 
 Para utilização do UVATool é necessário: 
 
-1 - <a href="https://www.python.org/downloads/">python3.8</a> ou <a href="https://www.python.org/downloads/">python3.9</a>
+1 - <a href="https://www.python.org/downloads/">python3.9</a>
 
 2 - <a href="https://pypi.org/project/pyqt5-tools/">pyqt5-tools</a>
 

@@ -5,15 +5,19 @@
   "tasks": [{
       "label": "UVATool",
       "type": "shell",
-      "command": "cd ./src/UVATool_UI ; python form_uvatool.py",
+      "command": "cd ${workspaceFolder}/src/UVATool_UI && ${workspaceFolder}/venv/bin/python3.9 form_uvatool.py",
       "windows": {
-        "command": "cd .\\src\\UVATool_UI ; python form_uvatool.py"
+        "command": "cd ${workspaceFolder}/src/UVATool_UI && ${workspaceFolder}/venv/bin/python3.9 form_uvatool.py"
       },
-      "group": "test",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
       "presentation": {
         "reveal": "always",
         "close": true
-      }
+      },
+      "problemMatcher": []
     },
     {
       "label": "build",
@@ -22,11 +26,40 @@
       "windows": {
         "command": "echo 'não implementado'"
       },
-      "group": "test",
+      "group": "build",
       "presentation": {
         "reveal": "always",
         "panel": "new"
       }
+    },
+    {
+      "label": "make venv",
+      "type": "shell",
+      "command": "python3.9 -m venv venv && source ${workspaceFolder}/venv/bin/activate",
+      "windows": {
+        "command": "python3.9 -m venv venv ; echo You must activate venv frist"
+      },
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Setup Development",
+      "type": "shell",
+      "command": "pip install pyqt5-tools numpy",
+      "windows": {
+        "command": "then use pip install pyqt5-tools numpy"
+      },
+      "group": "none",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "dependsOn":[
+        "make venv"
+      ]
     }
   ]
 }
