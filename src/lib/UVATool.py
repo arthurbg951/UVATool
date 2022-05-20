@@ -118,20 +118,53 @@ class Rectangle:
 
 
 class NodalForce:
-    fx: float
-    fy: float
-    m: float
+    __fx: float
+    __fy: float
+    __m: float
 
     def __init__(self, fx: float, fy: float, m: float) -> None:
-        self.fx = fx
-        self.fy = fy
-        self.m = m
+        self.__fx = fx
+        self.__fy = fy
+        self.__m = m
 
     def getAsVector(self) -> list:
-        return numpy.array([self.fx, self.fy, self.m])
+        return numpy.array([self.__fx, self.__fy, self.__m])
 
     def __str__(self) -> str:
-        return "{0};{1};{2}".format(self.fx, self.fy, self.m)
+        return "{0};{1};{2}".format(self.__fx, self.__fy, self.__m)
+
+    @property
+    def fx(self):
+        return self.__fx
+
+    @fx.setter
+    def fx(self, value):
+        if value is not float:
+            raise ValueError("fx must be an float number.")
+        else:
+            self.__fx = value
+
+    @property
+    def fy(self):
+        return self.__fy
+
+    @fy.setter
+    def fy(self, value):
+        if value is not float:
+            raise ValueError("m must be an float number.")
+        else:
+            self.__fy = value
+
+    @property
+    def m(self):
+        return self.__m
+
+    @m.setter
+    def m(self, value):
+        if value is not float:
+            raise ValueError("m must be an float number.")
+        else:
+            self.__m = value
 
 
 class Node:
@@ -239,7 +272,7 @@ class Element:
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Node):
             return NotImplemented
-        return self.node1.x == other.node1.x and self.node1.y == other.node1.y
+        return self.node1.x == other.node1.x and self.node2.y == other.node2.y
 
     def __verifyNodes(self) -> None:
         if self.node1 == self.node2:
@@ -287,7 +320,6 @@ class Element:
 class Process:
     __nodes: List[Node]
     __elements: List[Element]
-    # __nodal_forces: List[NodalForce]
     __analisys: Analise
     __equilibrium: numpy.array
     __equilibrium_cut_transpose: numpy.array
@@ -297,16 +329,19 @@ class Process:
     __deformations: numpy.array
     __internal_forces: numpy.array
     __cuts: list
+    __nodeSemiFixedCuts: list
+    __elementSemiFixedCuts: list
     __process_time: datetime
 
     def __init__(self, nodes: List[Node], elements: List[Element], analisys: Analise) -> None:
         self.__nodes = nodes
         self.__elements = elements
-        # self.__nodal_forces = nodal_forces
+        self.__verifySemiFixedSupport()
         self.__analisys = analisys
         inicio = datetime.now()
         self.__processCalculations()
         fim = datetime.now()
+        self.__removeSemiFixedParts()
         self.__process_time = fim - inicio
 
     def __getEquilibriumMatrix(self) -> numpy.array:
@@ -428,8 +463,8 @@ class Process:
         equilibrium_matrix_transpose = numpy.delete(equilibrium_matrix_transpose, self.__cuts, 1)  # Cut
         self.__equilibrium_cut_transpose = equilibrium_matrix_transpose
         """
-        # MATRIZ DE RIGIDEZ GLOBAL DO SISTEMA - [K] 
-         
+        # MATRIZ DE RIGIDEZ GLOBAL DO SISTEMA - [K]
+
         [K] = [l] * [k] * [L.T]
         """
         aux1 = numpy.dot(equilibrium_matrix_restriction, self.__frame_stiffness)
@@ -480,6 +515,80 @@ class Process:
 
     def __getIdentity(self) -> numpy.array:
         return numpy.identity(3*len(self.__elements))
+
+    def __verifySemiFixedSupport(self):
+        self.__nodeSemiFixedCuts = []
+        self.__elementSemiFixedCuts = []
+        nodePosCorrection = 0
+        elemPosCorrection = 0
+        for elemIndex in range(len(self.__elements) + 1):
+            node1 = self.__elements[elemIndex].node1
+            node2 = self.__elements[elemIndex].node2
+            node1HaveSupport = False
+            node2HaveSupport = False
+            n1 = None
+            n2 = None
+            if node1.getSupport() == Support.semi_fixed:
+                node1HaveSupport = True
+                nodePos = self.__nodes.index(node1, 0, len(self.__nodes)) + nodePosCorrection
+                self.__nodeSemiFixedCuts.append(self.__nodes.index(node1, 0, len(self.__nodes)))
+                n1 = Node(node1.x, node1.y - 1e-31)
+                n1.setSupport(Support.fixed)
+                self.__nodes.insert(nodePos, n1)
+                node1.setSupport(Support.no_support)
+                nodePosCorrection += 1
+
+            if node2.getSupport() == Support.semi_fixed:
+                node2HaveSupport = True
+                nodePos = self.__nodes.index(node2, 0, len(self.__nodes)) + 1 + nodePosCorrection
+                self.__nodeSemiFixedCuts.append(self.__nodes.index(node2, 0, len(self.__nodes)) + 1)
+                n2 = Node(node2.x, node2.y - 1e-31)
+                n2.setSupport(Support.fixed)
+                if nodePos < len(self.__nodes):
+                    self.__nodes.insert(nodePos, n2)
+                else:
+                    self.__nodes.append(n2)
+                node2.setSupport(Support.no_support)
+                nodePosCorrection += 1
+
+            if node1HaveSupport:
+                elem = Element(n1, node1, 1, 1, 1)
+                self.__elements.insert(elemIndex + elemPosCorrection, elem)
+                elemPosCorrection += 1
+                self.__elementSemiFixedCuts.append(elemIndex)
+            if node2HaveSupport:
+                elem = Element(n2, node2, 1, 1, 1)
+                if elemIndex < len(self.__elements):
+                    self.__elements.insert(elemIndex + elemPosCorrection, elem)
+                else:
+                    self.__elements.append(elem)
+                elemPosCorrection += 1
+                self.__elementSemiFixedCuts.append(elemIndex + 1)
+
+        # print('nodes positions:')
+        # for node in self.__nodes:
+        #     print(node)
+        # print('element positions:')
+        # for elem in self.__elements:
+        #     print(elem)
+        # print(self.__nodeSemiFixedCuts)
+        # print(self.__elementSemiFixedCuts)
+
+    def __removeSemiFixedParts(self):
+        # SUJEITO A ALTERAÇÕES - NÃO FINALIZADO
+        if self.__nodeSemiFixedCuts != [] and self.__elementSemiFixedCuts != []:
+            for cut in reversed(self.__nodeSemiFixedCuts):
+                self.__nodes.pop(cut)
+            for cut in reversed(self.__elementSemiFixedCuts):
+                self.__elements.pop(cut)
+
+        # print(self.__internal_forces.shape)
+        # print('nodes positions:')
+        # for node in self.__nodes:
+        #     print(node)
+        # print('element positions:')
+        # for elem in self.__elements:
+        #     print(elem)
 
     def __processCalculations(self):
         self.__equilibrium = self.__getEquilibriumMatrix()

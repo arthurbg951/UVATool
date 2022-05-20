@@ -11,6 +11,7 @@ Editor de código utilizado: <a href="https://code.visualstudio.com/download">Vi
 Recomendações:
 
 Instalar o sistema do <a href="https://git-scm.com/downloads">git</a> no pc.
+
 (opcional, mas interessante para acompanhar o desenvolvimento da melhor forma possível)
 
 Para utilização do UVATool é necessário: 
@@ -24,13 +25,13 @@ Para utilização do UVATool é necessário:
 ## Execução do programa
 
 ### Windows:
- Basta executar o arquivo setup.bat dentro da pasta src/UVATool_UI
+ Basta executar o arquivo setup.bat dentro da pasta src/UVATool_UI ou executar a task test pelo vscode
 
 ### MacOS: 
- Entre na pasta src/UVATool_UI pelo terminal e digite: python3.8 form_uvatool.py
+ Entre na pasta src/UVATool_UI pelo terminal e digite: python3.8 form_uvatool.py ou executar a task test pelo vscode
 
 ### Linux: 
- Entre na pasta src/UVATool_UI pelo terminal e digite: python3.8 form_uvatool.py
+ Entre na pasta src/UVATool_UI pelo terminal e digite: python3.8 form_uvatool.py ou executar a task test pelo vscode
 
 
 
