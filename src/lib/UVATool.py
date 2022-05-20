@@ -1,7 +1,3 @@
-# from typing import Protocol, List, overload, Union, Optional
-# from abc import abstractmethod
-# from enum import Enum
-
 from typing import List
 import numpy
 import math
@@ -16,15 +12,16 @@ class Support:
     semi_fixed = 4    # SEMI RÍGIDO
     no_support = 5    # SEM SUPORTE
 
+
 # CLASSE SUPPORT EM PORTUGUES
-
-
 class Apoio:
     primeiro_genero = 0
     segundo_genero = 1
     terceiro_genero = 2
     rotula = 3
     semi_rigido = 4
+
+    # SUGESTÃO PARA SOLUCIONAR APOIO SEMI RIGIDO
     sem_suporte = 5
     sem_suporte_semi_rigido = 6
 
@@ -36,25 +33,42 @@ class Analise:
     class rigidoPlastica:
         viaMinimaNormaEuclidiana = 1
 
-    # elastica_via_rigidez_analitica = 0
-    # rigido_plastica_via_minima_norma_euclidiana = 1
-
 
 class Point2d:
-    x: float
-    y: float
+    __x: float
+    __y: float
 
     def __init__(self, x: float, y: float) -> None:
-        self.x = x
-        self.y = y
+        self.__x = x
+        self.__y = y
 
     def __str__(self) -> str:
-        return "({0}, {1})".format(self.x, self.y)
+        return "({0}, {1})".format(self.__x, self.__y)
 
     def __eq__(self, __o: object) -> bool:
         if not isinstance(__o, Point2d):
             return NotImplemented
         return self.x == __o.x and self.y == __o.y
+
+    @property
+    def x(self) -> float:
+        return self.__x
+
+    @x.setter
+    def x(self, value):
+        if value is not float or value is not int:
+            raise ValueError("x value must be an float number.")
+        self.__x = value
+
+    @property
+    def y(self) -> float:
+        return self.__y
+
+    @x.setter
+    def y(self, value):
+        if value is not float or value is not int:
+            raise ValueError("y value must be an float number.")
+        self.__y = value
 
 
 class Rectangle:
