@@ -10,7 +10,7 @@ Editor de código utilizado: <a href="https://code.visualstudio.com/download">Vi
 
 Recomendações:
 
-Instalar o sistema do git no pc <a href="https://git-scm.com/downloads">git</a>
+Instalar o sistema do <a href="https://git-scm.com/downloads">git</a> no pc.
 (opcional, mas interessante para acompanhar o desenvolvimento da melhor forma possível)
 
 Para utilização do UVATool é necessário: 
