@@ -6,10 +6,10 @@ def biEngastada():
     n3 = Node(6, 0)
     n4 = Node(8, 0)
 
-    n1.setSupport(Apoio.semi_rigido)
-    n1.setP(0.5)
-    n4.setSupport(Apoio.semi_rigido)
-    n4.setP(0.5)
+    n1.setSupport(Apoio.terceiro_genero)
+    # n1.setP(0.5)
+    n4.setSupport(Apoio.terceiro_genero)
+    # n4.setP(0.5)
 
     n2.setNodalForce(NodalForce(0, -10, 0))
     n3.setNodalForce(NodalForce(0, -10, 0))
