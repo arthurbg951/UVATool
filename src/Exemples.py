@@ -24,20 +24,17 @@ try:
     # elements = [e1]
 
     # TRELIÇA
-    # n1 = Node(0, 0)
-    # n2 = Node(0.5, math.sin(60*math.pi/180))
-    # n3 = Node(1, 0)
-    # n1.setSupport(Support.pinned)
-    # n3.setSupport(Support.roller)
-    # n2.setNodalForce(NodalForce(10, 0, 0))
-    # rec = Rectangle(0.012, 0.001)
-    # area = rec.area
-    # inercia = rec.inertia
-    # e1 = Element(n1, n2, area, inercia, 1)
-    # e2 = Element(n2, n3, area, inercia, 1)
-    # e3 = Element(n1, n3, area, inercia, 1)
-    # nodes = [n1, n2, n3]
-    # elements = [e1, e2, e3]
+    n1 = Node(0, 0)
+    n2 = Node(0.5, math.sin(60*math.pi/180))
+    n3 = Node(1, 0)
+    n1.setSupport(Support.pinned)
+    n3.setSupport(Support.roller)
+    n2.setNodalForce(NodalForce(10, 0, 0))
+    e1 = Element(n1, n2, area, inercia, 1)
+    e2 = Element(n2, n3, area, inercia, 1)
+    e3 = Element(n1, n3, area, inercia, 1)
+    nodes = [n1, n2, n3]
+    elements = [e1, e2, e3]
 
     # EDIFICIO DE 3 ANDARES
     # n1 = Node(0, 0)
@@ -83,8 +80,22 @@ try:
     # n3 = Node(10, 0)
     # n3.setSupport(Support.fixed)
     # nodes = [n1, n2, n3]
-    # e1 = Element(n1, n2, 1, 1, 1)
-    # e2 = Element(n2, n3, 1, 1, 1)
+    # e1 = Element(n1, n2, area, inercia, 1)
+    # e2 = Element(n2, n3, area, inercia, 1)
+    # elements = [e1, e2]
+
+    # SEMI RIGIDO
+    # n1 = Node(0, 0)
+    # n2 = Node(5, 0)
+    # n3 = Node(10, 0)
+    # n1.setSupport(Support.semi_fixed)
+    # n1.setP(0.5)
+    # n2.setNodalForce(NodalForce(0, -10, 0))
+    # n3.setSupport(Support.semi_fixed)
+    # n3.setP(0.5)
+    # e1 = Element(n1, n2, area, inercia, 1)
+    # e2 = Element(n2, n3, area, inercia, 1)
+    # nodes = [n1, n2, n3]
     # elements = [e1, e2]
 
     # SEMI RIGIDO

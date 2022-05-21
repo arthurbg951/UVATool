@@ -1,4 +1,3 @@
-from typing import List
 import numpy
 import math
 from datetime import datetime
@@ -318,8 +317,8 @@ class Element:
 
 
 class Process:
-    __nodes: List[Node]
-    __elements: List[Element]
+    __nodes: list[Node]
+    __elements: list[Element]
     __analisys: Analise
     __equilibrium: numpy.array
     __equilibrium_cut_transpose: numpy.array
@@ -333,16 +332,15 @@ class Process:
     __elementSemiFixedCuts: list
     __process_time: datetime
 
-    def __init__(self, nodes: List[Node], elements: List[Element], analisys: Analise) -> None:
+    def __init__(self, nodes: list[Node], elements: list[Element], analisys: Analise) -> None:
         self.__nodes = nodes
         self.__elements = elements
-        self.__verifySemiFixedSupport()
         self.__analisys = analisys
-        inicio = datetime.now()
+        self.__nodeSemiFixedCuts = []
+        self.__elementSemiFixedCuts = []
+        self.__verifySemiFixedSupport()
         self.__processCalculations()
-        fim = datetime.now()
         self.__removeSemiFixedParts()
-        self.__process_time = fim - inicio
 
     def __getEquilibriumMatrix(self) -> numpy.array:
         # CÁLCULANDO GRAUS DE LIBERDADE
@@ -517,8 +515,6 @@ class Process:
         return numpy.identity(3*len(self.__elements))
 
     def __verifySemiFixedSupport(self):
-        self.__nodeSemiFixedCuts = []
-        self.__elementSemiFixedCuts = []
         haveSemiFixedSupport = False
         for node in self.__nodes:
             if node.getSupport() == Support.semi_fixed:
@@ -526,43 +522,44 @@ class Process:
         if haveSemiFixedSupport:
             nodePosCorrection = 0
             elemPosCorrection = 0
-            for elemIndex in range(len(self.__elements) + 1):
-                node1 = self.__elements[elemIndex].node1
-                node2 = self.__elements[elemIndex].node2
+            for elemIndex in range(len(self.__elements)):
+                node1 = Node(self.__elements[elemIndex].node1.x, self.__elements[elemIndex].node1.y)
+                node2 = Node(self.__elements[elemIndex].node2.x, self.__elements[elemIndex].node2.y)
                 node1HaveSupport = False
                 node2HaveSupport = False
-                n1 = None
-                n2 = None
+                naux1 = None
+                naux2 = None
                 if node1.getSupport() == Support.semi_fixed:
                     node1HaveSupport = True
                     nodePos = self.__nodes.index(node1, 0, len(self.__nodes)) + nodePosCorrection
                     self.__nodeSemiFixedCuts.append(self.__nodes.index(node1, 0, len(self.__nodes)))
-                    n1 = Node(node1.x, node1.y - 1e-31)
-                    n1.setSupport(Support.fixed)
-                    self.__nodes.insert(nodePos, n1)
+                    naux1 = Node(node1.x, node1.y - 1e-31)
+                    naux1.setSupport(Support.fixed)
+                    self.__nodes.insert(nodePos, naux1)
                     node1.setSupport(Support.no_support)
                     nodePosCorrection += 1
 
                 if node2.getSupport() == Support.semi_fixed:
                     node2HaveSupport = True
                     nodePos = self.__nodes.index(node2, 0, len(self.__nodes)) + 1 + nodePosCorrection
+                    print(nodePos)
                     self.__nodeSemiFixedCuts.append(self.__nodes.index(node2, 0, len(self.__nodes)) + 1)
-                    n2 = Node(node2.x, node2.y - 1e-31)
-                    n2.setSupport(Support.fixed)
+                    naux2 = Node(node2.x, node2.y - 1e-31)
+                    naux2.setSupport(Support.fixed)
                     if nodePos < len(self.__nodes):
-                        self.__nodes.insert(nodePos, n2)
+                        self.__nodes.insert(nodePos, naux2)
                     else:
-                        self.__nodes.append(n2)
+                        self.__nodes.append(naux2)
                     node2.setSupport(Support.no_support)
                     nodePosCorrection += 1
 
                 if node1HaveSupport:
-                    elem = Element(n1, node1, 1, 1, 1)
+                    elem = Element(naux1, node1, 1, 1, 1)
                     self.__elements.insert(elemIndex + elemPosCorrection, elem)
                     elemPosCorrection += 1
                     self.__elementSemiFixedCuts.append(elemIndex)
                 if node2HaveSupport:
-                    elem = Element(n2, node2, 1, 1, 1)
+                    elem = Element(naux2, node2, 1, 1, 1)
                     if elemIndex < len(self.__elements):
                         self.__elements.insert(elemIndex + elemPosCorrection, elem)
                     else:
@@ -576,9 +573,12 @@ class Process:
             for i in reversed(range(0, len(self.__internal_forces))):
                 if self.__elementSemiFixedCuts.__contains__(i):
                     self.__internal_forces = numpy.delete(self.__internal_forces, [[0 + i], [1 + i], [2 + i]])
-        pass
+
+        # self.__nodes = nodes
+        # self.__elements = elements
 
     def __processCalculations(self):
+        inicio = datetime.now()
         self.__equilibrium = self.__getEquilibriumMatrix()
         if self.__analisys == Analise.rigidoPlastica.viaMinimaNormaEuclidiana:
             self.__frame_stiffness = self.__getIdentity()
@@ -589,6 +589,8 @@ class Process:
         self.__displacement = self.__getDisplacement()
         self.__deformations = self.__getDeformations()
         self.__internal_forces = self.__getInternalForces()
+        fim = datetime.now()
+        self.__process_time = fim - inicio
 
     def getEquilibriumMatrix(self) -> numpy.array:
         return self.__equilibrium
