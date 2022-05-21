@@ -11,6 +11,9 @@ elements = []
 time = None
 
 try:
+    secao = Rectangle(0.012, 0.001)
+    area = secao.area
+    inercia = secao.inertia
     # BALANÇO
     # n1 = Node(0, 0)
     # n1.setSupport(Support.fixed)
@@ -27,9 +30,12 @@ try:
     # n1.setSupport(Support.pinned)
     # n3.setSupport(Support.roller)
     # n2.setNodalForce(NodalForce(10, 0, 0))
-    # e1 = Element(n1, n2, 1, 1, 1)
-    # e2 = Element(n2, n3, 1, 1, 1)
-    # e3 = Element(n1, n3, 1, 1, 1)
+    # rec = Rectangle(0.012, 0.001)
+    # area = rec.area
+    # inercia = rec.inertia
+    # e1 = Element(n1, n2, area, inercia, 1)
+    # e2 = Element(n2, n3, area, inercia, 1)
+    # e3 = Element(n1, n3, area, inercia, 1)
     # nodes = [n1, n2, n3]
     # elements = [e1, e2, e3]
 
@@ -42,15 +48,11 @@ try:
     # n6 = Node(15, 6)
     # n7 = Node(0, 9)
     # n8 = Node(15, 9)
-    # n1.setSupport(Support.pinned)
+    # n1.setSupport(Support.fixed)
     # n2.setSupport(Support.roller)
     # n3.setNodalForce(NodalForce(100, 0, 0))
     # n5.setNodalForce(NodalForce(100, 0, 0))
     # n7.setNodalForce(NodalForce(100, 0, 0))
-    # nodes = [n1, n2, n3, n4, n5, n6, n7, n8]
-    # secao = Rectangle(0.012, 0.001)
-    # area = secao.area
-    # momento_inercia = secao.inertia
     # e1 = Element(n1, n3, area, momento_inercia, 1)
     # e2 = Element(n3, n5, area, momento_inercia, 1)
     # e3 = Element(n2, n4, area, momento_inercia, 1)
@@ -60,6 +62,7 @@ try:
     # e7 = Element(n5, n7, area, momento_inercia, 1)
     # e8 = Element(n7, n8, area, momento_inercia, 1)
     # e9 = Element(n6, n8, area, momento_inercia, 1)
+    # nodes = [n1, n2, n3, n4, n5, n6, n7, n8]
     # elements = [e1, e2, e3, e4, e5, e6, e7, e8, e9]
 
     # ESTRUTURA HIPOSTATICA
@@ -92,9 +95,6 @@ try:
     # n4 = Node(10, fator)
     # n5 = Node(10, 0)
     # n6 = Node(-0.17, 2.29)
-    # rec = Rectangle(0.012, 0.001)
-    # area = rec.area
-    # inercia = rec.inertia
     # n1.setSupport(Support.fixed)
     # # n2.setP(0.5)
     # n3.setNodalForce(NodalForce(0, -10, 0))
@@ -178,17 +178,17 @@ try:
     # elements = [e1, e2, e3, e4]
 
     # SEMI RÍGIDO
-    n1 = Node(0, 0)
-    n2 = Node(1, 0)
-    n1.setSupport(Apoio.semi_rigido)
-    n2.setSupport(Apoio.primeiro_genero)
-    n2.setNodalForce(NodalForce(50, 0, 100))
-    rec = Rectangle(0.012, 0.001)
-    area = rec.area
-    inercia = rec.inertia
-    e1 = Element(n1, n2, area, inercia, 1)
-    nodes = [n1, n2]
-    elements = [e1]
+    # n1 = Node(0, 0)
+    # n2 = Node(1, 0)
+    # n1.setSupport(Apoio.semi_rigido)
+    # n2.setSupport(Apoio.primeiro_genero)
+    # n2.setNodalForce(NodalForce(50, 0, 100))
+    # rec = Rectangle(0.012, 0.001)
+    # area = rec.area
+    # inercia = rec.inertia
+    # e1 = Element(n1, n2, area, inercia, 1)
+    # nodes = [n1, n2]
+    # elements = [e1]
 
     proc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
     time = proc.getProcessTime()

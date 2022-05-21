@@ -519,51 +519,56 @@ class Process:
     def __verifySemiFixedSupport(self):
         self.__nodeSemiFixedCuts = []
         self.__elementSemiFixedCuts = []
-        nodePosCorrection = 0
-        elemPosCorrection = 0
-        for elemIndex in range(len(self.__elements) + 1):
-            node1 = self.__elements[elemIndex].node1
-            node2 = self.__elements[elemIndex].node2
-            node1HaveSupport = False
-            node2HaveSupport = False
-            n1 = None
-            n2 = None
-            if node1.getSupport() == Support.semi_fixed:
-                node1HaveSupport = True
-                nodePos = self.__nodes.index(node1, 0, len(self.__nodes)) + nodePosCorrection
-                self.__nodeSemiFixedCuts.append(self.__nodes.index(node1, 0, len(self.__nodes)))
-                n1 = Node(node1.x, node1.y - 1e-31)
-                n1.setSupport(Support.fixed)
-                self.__nodes.insert(nodePos, n1)
-                node1.setSupport(Support.no_support)
-                nodePosCorrection += 1
+        haveSemiFixedSupport = False
+        for node in self.__nodes:
+            if node.getSupport() == Support.semi_fixed:
+                haveSemiFixedSupport = True
+        if haveSemiFixedSupport:
+            nodePosCorrection = 0
+            elemPosCorrection = 0
+            for elemIndex in range(len(self.__elements) + 1):
+                node1 = self.__elements[elemIndex].node1
+                node2 = self.__elements[elemIndex].node2
+                node1HaveSupport = False
+                node2HaveSupport = False
+                n1 = None
+                n2 = None
+                if node1.getSupport() == Support.semi_fixed:
+                    node1HaveSupport = True
+                    nodePos = self.__nodes.index(node1, 0, len(self.__nodes)) + nodePosCorrection
+                    self.__nodeSemiFixedCuts.append(self.__nodes.index(node1, 0, len(self.__nodes)))
+                    n1 = Node(node1.x, node1.y - 1e-31)
+                    n1.setSupport(Support.fixed)
+                    self.__nodes.insert(nodePos, n1)
+                    node1.setSupport(Support.no_support)
+                    nodePosCorrection += 1
 
-            if node2.getSupport() == Support.semi_fixed:
-                node2HaveSupport = True
-                nodePos = self.__nodes.index(node2, 0, len(self.__nodes)) + 1 + nodePosCorrection
-                self.__nodeSemiFixedCuts.append(self.__nodes.index(node2, 0, len(self.__nodes)) + 1)
-                n2 = Node(node2.x, node2.y - 1e-31)
-                n2.setSupport(Support.fixed)
-                if nodePos < len(self.__nodes):
-                    self.__nodes.insert(nodePos, n2)
-                else:
-                    self.__nodes.append(n2)
-                node2.setSupport(Support.no_support)
-                nodePosCorrection += 1
+                if node2.getSupport() == Support.semi_fixed:
+                    node2HaveSupport = True
+                    nodePos = self.__nodes.index(node2, 0, len(self.__nodes)) + 1 + nodePosCorrection
+                    self.__nodeSemiFixedCuts.append(self.__nodes.index(node2, 0, len(self.__nodes)) + 1)
+                    n2 = Node(node2.x, node2.y - 1e-31)
+                    n2.setSupport(Support.fixed)
+                    if nodePos < len(self.__nodes):
+                        self.__nodes.insert(nodePos, n2)
+                    else:
+                        self.__nodes.append(n2)
+                    node2.setSupport(Support.no_support)
+                    nodePosCorrection += 1
 
-            if node1HaveSupport:
-                elem = Element(n1, node1, 1, 1, 1)
-                self.__elements.insert(elemIndex + elemPosCorrection, elem)
-                elemPosCorrection += 1
-                self.__elementSemiFixedCuts.append(elemIndex)
-            if node2HaveSupport:
-                elem = Element(n2, node2, 1, 1, 1)
-                if elemIndex < len(self.__elements):
+                if node1HaveSupport:
+                    elem = Element(n1, node1, 1, 1, 1)
                     self.__elements.insert(elemIndex + elemPosCorrection, elem)
-                else:
-                    self.__elements.append(elem)
-                elemPosCorrection += 1
-                self.__elementSemiFixedCuts.append(elemIndex + 1)
+                    elemPosCorrection += 1
+                    self.__elementSemiFixedCuts.append(elemIndex)
+                if node2HaveSupport:
+                    elem = Element(n2, node2, 1, 1, 1)
+                    if elemIndex < len(self.__elements):
+                        self.__elements.insert(elemIndex + elemPosCorrection, elem)
+                    else:
+                        self.__elements.append(elem)
+                    elemPosCorrection += 1
+                    self.__elementSemiFixedCuts.append(elemIndex + 1)
 
     def __removeSemiFixedParts(self):
         # SUJEITO A ALTERAÇÕES - NÃO FINALIZADO
@@ -571,7 +576,8 @@ class Process:
             for i in reversed(range(0, len(self.__internal_forces))):
                 if self.__elementSemiFixedCuts.__contains__(i):
                     self.__internal_forces = numpy.delete(self.__internal_forces, [[0 + i], [1 + i], [2 + i]])
-                
+        pass
+
     def __processCalculations(self):
         self.__equilibrium = self.__getEquilibriumMatrix()
         if self.__analisys == Analise.rigidoPlastica.viaMinimaNormaEuclidiana:
