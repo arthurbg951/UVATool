@@ -48,9 +48,9 @@
     {
       "label": "Setup Development",
       "type": "shell",
-      "command": "pip install pyqt5-tools numpy",
+      "command": "pip install pyqt5-tools numpy autopep8",
       "windows": {
-        "command": "${workspaceFolder}\\venv\\Scripts\\pip.exe install pyqt5-tools numpy"
+        "command": "${workspaceFolder}\\venv\\Scripts\\pip.exe install pyqt5-tools numpy autopep8"
       },
       "group": "test",
       "presentation": {

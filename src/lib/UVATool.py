@@ -565,31 +565,13 @@ class Process:
                 elemPosCorrection += 1
                 self.__elementSemiFixedCuts.append(elemIndex + 1)
 
-        # print('nodes positions:')
-        # for node in self.__nodes:
-        #     print(node)
-        # print('element positions:')
-        # for elem in self.__elements:
-        #     print(elem)
-        # print(self.__nodeSemiFixedCuts)
-        # print(self.__elementSemiFixedCuts)
-
     def __removeSemiFixedParts(self):
         # SUJEITO A ALTERAÇÕES - NÃO FINALIZADO
         if self.__nodeSemiFixedCuts != [] and self.__elementSemiFixedCuts != []:
-            for cut in reversed(self.__nodeSemiFixedCuts):
-                self.__nodes.pop(cut)
-            for cut in reversed(self.__elementSemiFixedCuts):
-                self.__elements.pop(cut)
-
-        # print(self.__internal_forces.shape)
-        # print('nodes positions:')
-        # for node in self.__nodes:
-        #     print(node)
-        # print('element positions:')
-        # for elem in self.__elements:
-        #     print(elem)
-
+            for i in reversed(range(0, len(self.__internal_forces))):
+                if self.__elementSemiFixedCuts.__contains__(i):
+                    self.__internal_forces = numpy.delete(self.__internal_forces, [[0 + i], [1 + i], [2 + i]])
+                
     def __processCalculations(self):
         self.__equilibrium = self.__getEquilibriumMatrix()
         if self.__analisys == Analise.rigidoPlastica.viaMinimaNormaEuclidiana:

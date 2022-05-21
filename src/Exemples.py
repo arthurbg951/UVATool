@@ -181,8 +181,8 @@ try:
     n1 = Node(0, 0)
     n2 = Node(1, 0)
     n1.setSupport(Apoio.semi_rigido)
-    n2.setSupport(Apoio.segundo_genero)
-    n2.setNodalForce(NodalForce(0, 50, 100))
+    n2.setSupport(Apoio.primeiro_genero)
+    n2.setNodalForce(NodalForce(50, 0, 100))
     rec = Rectangle(0.012, 0.001)
     area = rec.area
     inercia = rec.inertia

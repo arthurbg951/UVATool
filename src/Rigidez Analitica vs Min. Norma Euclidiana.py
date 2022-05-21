@@ -8,7 +8,7 @@ n4 = Node(8, 0)
 n1.setSupport(Apoio.semi_rigido)
 n4.setSupport(Apoio.semi_rigido)
 
-n2.setNodalForce(NodalForce(0, -10, 0))
+n2.setNodalForce(NodalForce(10, -10, 0))
 n3.setNodalForce(NodalForce(0, -10, 0))
 
 rec = Rectangle(0.012, 0.001)
