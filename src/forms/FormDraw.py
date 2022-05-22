@@ -17,7 +17,7 @@ from libs.Drawings import *
 class FormDraw(QDialog):
     def __init__(self) -> None:
         super().__init__()
-        uic.loadUi("FormDraw.ui", self)
+        uic.loadUi("ui/FormDraw.ui", self)
 
         self.canvas = Canvas()
         self.graphicsScene = QGraphicsScene()

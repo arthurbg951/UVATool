@@ -13,7 +13,7 @@ from PyQt5.QtGui import QPixmap, QPen
 from PyQt5 import uic
 from libs.UVATool import *
 from libs.Drawings import *
-from FormDraw import FormDraw
+from forms.FormDraw import FormDraw
 
 
 class FormUVATool(QMainWindow):
@@ -35,7 +35,7 @@ class FormUVATool(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        uic.loadUi("FormUVATool.ui", self)
+        uic.loadUi("ui/FormUVATool.ui", self)
 
         self.toolBarLoadings.hide()
         self.dockWidgetResults.hide()
@@ -294,9 +294,3 @@ class FormUVATool(QMainWindow):
             self.dockWidgetResults.hide()
 
 
-if __name__ == "__main__":
-    import sys
-    app = QApplication(sys.argv)
-    window = FormUVATool()
-    window.show()
-    app.exec()

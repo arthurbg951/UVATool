@@ -17,4 +17,4 @@ from libs.Drawings import *
 class FormResults(QDialog):
     def __init__(self) -> None:
         super().__init__()
-        uic.loadUi("FormResults.ui", self)
+        uic.loadUi("ui/FormResults.ui", self)

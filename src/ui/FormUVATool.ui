@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>icons/UVATool_main_window.png</normaloff>icons/UVATool_main_window.png</iconset>
+    <normaloff>../icons/UVATool_main_window.png</normaloff>../icons/UVATool_main_window.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -356,7 +356,7 @@ border:0px;
   <action name="actionNew">
    <property name="icon">
     <iconset>
-     <normaloff>icons/new_file.png</normaloff>icons/new_file.png</iconset>
+     <normaloff>../icons/new_file.png</normaloff>../icons/new_file.png</iconset>
    </property>
    <property name="text">
     <string>New...</string>
@@ -365,7 +365,7 @@ border:0px;
   <action name="actionOpen">
    <property name="icon">
     <iconset>
-     <normaloff>icons/open.png</normaloff>icons/open.png</iconset>
+     <normaloff>../icons/open.png</normaloff>../icons/open.png</iconset>
    </property>
    <property name="text">
     <string>Open...</string>
@@ -374,7 +374,7 @@ border:0px;
   <action name="actionSave">
    <property name="icon">
     <iconset>
-     <normaloff>icons/save.png</normaloff>icons/save.png</iconset>
+     <normaloff>../icons/save.png</normaloff>../icons/save.png</iconset>
    </property>
    <property name="text">
     <string>Save</string>
@@ -383,7 +383,7 @@ border:0px;
   <action name="actionExport">
    <property name="icon">
     <iconset>
-     <normaloff>icons/export.png</normaloff>icons/export.png</iconset>
+     <normaloff>../icons/export.png</normaloff>../icons/export.png</iconset>
    </property>
    <property name="text">
     <string>Export</string>
@@ -392,7 +392,7 @@ border:0px;
   <action name="actionExt">
    <property name="icon">
     <iconset>
-     <normaloff>icons/exit.png</normaloff>icons/exit.png</iconset>
+     <normaloff>../icons/exit.png</normaloff>../icons/exit.png</iconset>
    </property>
    <property name="text">
     <string>Exit</string>
@@ -404,7 +404,7 @@ border:0px;
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>icons/apoio_primeiro_genero.png</normaloff>icons/apoio_primeiro_genero.png</iconset>
+     <normaloff>../icons/apoio_primeiro_genero.png</normaloff>../icons/apoio_primeiro_genero.png</iconset>
    </property>
    <property name="text">
     <string>first-class support</string>
@@ -419,7 +419,7 @@ border:0px;
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>icons/apoio_segundo_genero.png</normaloff>icons/apoio_segundo_genero.png</iconset>
+     <normaloff>../icons/apoio_segundo_genero.png</normaloff>../icons/apoio_segundo_genero.png</iconset>
    </property>
    <property name="text">
     <string>second-class support</string>
@@ -434,7 +434,7 @@ border:0px;
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>icons/apoio_terceiro_genero.png</normaloff>icons/apoio_terceiro_genero.png</iconset>
+     <normaloff>../icons/apoio_terceiro_genero.png</normaloff>../icons/apoio_terceiro_genero.png</iconset>
    </property>
    <property name="text">
     <string>tird-class support</string>
@@ -449,7 +449,7 @@ border:0px;
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>icons/apoio_semi_rigido.png</normaloff>icons/apoio_semi_rigido.png</iconset>
+     <normaloff>../icons/apoio_semi_rigido.png</normaloff>../icons/apoio_semi_rigido.png</iconset>
    </property>
    <property name="text">
     <string>semi_rigid_class_support</string>
@@ -461,7 +461,7 @@ border:0px;
   <action name="actionDraw">
    <property name="icon">
     <iconset>
-     <normaloff>icons/draw.png</normaloff>icons/draw.png</iconset>
+     <normaloff>../icons/draw.png</normaloff>../icons/draw.png</iconset>
    </property>
    <property name="text">
     <string>Draw</string>
@@ -481,7 +481,7 @@ border:0px;
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>icons/element.png</normaloff>icons/element.png</iconset>
+     <normaloff>../icons/element.png</normaloff>../icons/element.png</iconset>
    </property>
    <property name="text">
     <string>elementClass</string>
@@ -501,7 +501,7 @@ border:0px;
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>icons/vertical_force.png</normaloff>icons/vertical_force.png</iconset>
+     <normaloff>../icons/vertical_force.png</normaloff>../icons/vertical_force.png</iconset>
    </property>
    <property name="text">
     <string>nodalForces</string>
@@ -516,7 +516,7 @@ border:0px;
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>icons/nodal_moments.png</normaloff>icons/nodal_moments.png</iconset>
+     <normaloff>../icons/nodal_moments.png</normaloff>../icons/nodal_moments.png</iconset>
    </property>
    <property name="text">
     <string>nodalMoments</string>
@@ -531,7 +531,7 @@ border:0px;
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>icons/uniform_loads.png</normaloff>icons/uniform_loads.png</iconset>
+     <normaloff>../icons/uniform_loads.png</normaloff>../icons/uniform_loads.png</iconset>
    </property>
    <property name="text">
     <string>uniformLoads</string>
@@ -546,7 +546,7 @@ border:0px;
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>icons/linear_loads.png</normaloff>icons/linear_loads.png</iconset>
+     <normaloff>../icons/linear_loads.png</normaloff>../icons/linear_loads.png</iconset>
    </property>
    <property name="text">
     <string>linearLoads</string>
@@ -558,7 +558,7 @@ border:0px;
   <action name="actionProcess">
    <property name="icon">
     <iconset>
-     <normaloff>icons/process.png</normaloff>icons/process.png</iconset>
+     <normaloff>../icons/process.png</normaloff>../icons/process.png</iconset>
    </property>
    <property name="text">
     <string>Process</string>
