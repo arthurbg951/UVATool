@@ -1,15 +1,17 @@
 from lib.UVATool import *
 
+
 def biEngastada():
     n1 = Node(0, 0)
     n2 = Node(2, 0)
     n3 = Node(6, 0)
     n4 = Node(8, 0)
 
+    rigidez = 1
     n1.setSupport(Apoio.terceiro_genero)
-    # n1.setP(0.5)
+    n1.setP(rigidez)
     n4.setSupport(Apoio.terceiro_genero)
-    # n4.setP(0.5)
+    n4.setP(rigidez)
 
     n2.setNodalForce(NodalForce(0, -10, 0))
     n3.setNodalForce(NodalForce(0, -10, 0))
@@ -25,6 +27,7 @@ def biEngastada():
     nodes = [n1, n2, n3, n4]
     elements = [e1, e2, e3]
     return nodes, elements
+
 
 nodes, elements = biEngastada()
 
