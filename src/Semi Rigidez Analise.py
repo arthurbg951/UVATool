@@ -24,7 +24,9 @@ def semiRigida():
     n1 = Node(0, 0)
     n2 = Node(5, 0)
     n3 = Node(10, 0)
-    rigidez = 0.5705
+    rigidez = 0.5
+    # rigidez = 0.5705
+    # rigidez = 3.999999999999999
     n1.setSupport(Support.semi_fixed)
     n1.setP(rigidez)
     n2.setNodalForce(NodalForce(0, -10, 0))
@@ -51,7 +53,7 @@ def isostatica():
     return nodes, elements
 
 
-analise = Analise.rigidoPlastica.viaMinimaNormaEuclidiana
+analise = Analise.elastica.viaRigidezAnalitica
 
 
 print("-----> HIPERESTÁTICA")
