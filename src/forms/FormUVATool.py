@@ -6,7 +6,8 @@ from PyQt5.QtWidgets import (
     QAction,
     QGraphicsScene,
     QGraphicsSceneMouseEvent,
-    QDialog
+    QDialog,
+    QToolBar
 )
 from PyQt5.QtCore import Qt, QPointF
 from PyQt5.QtGui import QPixmap, QPen
@@ -33,11 +34,13 @@ class FormUVATool(QMainWindow):
     actionExport: QAction
     actionExt: QAction
 
+    toolBarLoadings: QToolBar
+    nodalForces: QAction
+
     def __init__(self):
         super().__init__()
         uic.loadUi("ui/FormUVATool.ui", self)
 
-        self.toolBarLoadings.hide()
         self.dockWidgetResults.hide()
         self.lineEditSuportAngulation.setEnabled(False)
         self.first_class_support.triggered.connect(self.primeiro_genero)
@@ -49,6 +52,7 @@ class FormUVATool(QMainWindow):
         self.actionProcess.triggered.connect(self.actionProcessClicked)
 
         self.actionDraw.triggered.connect(self.showDrawForm)
+
         self.canvas = Canvas()
         self.defaults = Defaults()
         self.elementPoint1 = None
@@ -292,5 +296,4 @@ class FormUVATool(QMainWindow):
             self.dockWidgetResults.show()
         else:
             self.dockWidgetResults.hide()
-
 

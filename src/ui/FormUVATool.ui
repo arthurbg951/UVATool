@@ -349,9 +349,6 @@ border:0px;
     <bool>false</bool>
    </attribute>
    <addaction name="nodalForces"/>
-   <addaction name="nodalMoments"/>
-   <addaction name="uniformLoads"/>
-   <addaction name="linearLoads"/>
   </widget>
   <action name="actionNew">
    <property name="icon">
@@ -508,51 +505,6 @@ border:0px;
    </property>
    <property name="toolTip">
     <string>Vertical Force</string>
-   </property>
-  </action>
-  <action name="nodalMoments">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>../icons/nodal_moments.png</normaloff>../icons/nodal_moments.png</iconset>
-   </property>
-   <property name="text">
-    <string>nodalMoments</string>
-   </property>
-   <property name="toolTip">
-    <string>Nodal Moments</string>
-   </property>
-  </action>
-  <action name="uniformLoads">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>../icons/uniform_loads.png</normaloff>../icons/uniform_loads.png</iconset>
-   </property>
-   <property name="text">
-    <string>uniformLoads</string>
-   </property>
-   <property name="toolTip">
-    <string>Uniform Loads</string>
-   </property>
-  </action>
-  <action name="linearLoads">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>../icons/linear_loads.png</normaloff>../icons/linear_loads.png</iconset>
-   </property>
-   <property name="text">
-    <string>linearLoads</string>
-   </property>
-   <property name="toolTip">
-    <string>Linear Loads</string>
    </property>
   </action>
   <action name="actionProcess">
