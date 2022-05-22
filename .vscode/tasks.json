@@ -5,9 +5,9 @@
   "tasks": [{
       "label": "UVATool",
       "type": "shell",
-      "command": "cd ${workspaceFolder}/src && ${workspaceFolder}/venv/bin/python3.9 FormUVATool.py",
+      "command": "cd ${workspaceFolder}/src && ${workspaceFolder}/venv/bin/python3.9 UVAToolUi.py",
       "windows": {
-        "command": "cd ${workspaceFolder}\\src ; ${workspaceFolder}\\venv\\Scripts\\python.exe FormUVATool.py"
+        "command": "cd ${workspaceFolder}\\src ; ${workspaceFolder}\\venv\\Scripts\\python.exe UVAToolUi.py"
       },
       "group": {
         "kind": "test",
@@ -37,7 +37,7 @@
       "type": "shell",
       "command": "python3.9 -m venv venv ; source ${workspaceFolder}/venv/bin/activate ; ${workspaceFolder}/venv/bin/python -m pip install --upgrade pip",
       "windows": {
-        "command": "python3.9 -m venv venv ; Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned ; ${workspaceFolder}\\venv\\Scripts\\Activate.ps1 ; ${workspaceFolder}\\venv\\Scripts\\python.exe -m pip install --upgrade pip"
+        "command": "py -3.9 -m venv venv ; Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned ; ${workspaceFolder}\\venv\\Scripts\\Activate.ps1 ; ${workspaceFolder}\\venv\\Scripts\\python.exe -m pip install --upgrade pip"
       },
       "group": "test",
       "presentation": {
