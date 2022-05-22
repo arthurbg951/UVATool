@@ -1,4 +1,4 @@
-from lib.UVATool import *
+from libs.UVATool import *
 
 # DEFININDO PONTOS (NODES)
 n1 = Node(0, 0)

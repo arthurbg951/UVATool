@@ -5,16 +5,16 @@
   "tasks": [{
       "label": "UVATool",
       "type": "shell",
-      "command": "cd ${workspaceFolder}/src/UVATool_UI && ${workspaceFolder}/venv/bin/python3.9 form_uvatool.py",
+      "command": "cd ${workspaceFolder}/src && ${workspaceFolder}/venv/bin/python3.9 FormUVATool.py",
       "windows": {
-        "command": "cd ${workspaceFolder}\\src\\UVATool_UI ; ${workspaceFolder}\\venv\\Scripts\\python.exe form_uvatool.py"
+        "command": "cd ${workspaceFolder}\\src ; ${workspaceFolder}\\venv\\Scripts\\python.exe FormUVATool.py"
       },
       "group": {
         "kind": "test",
         "isDefault": true
       },
       "presentation": {
-        "reveal": "always",
+        "reveal": "silent",
         "close": true
       },
       "problemMatcher": []

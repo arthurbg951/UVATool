@@ -1,4 +1,4 @@
-from lib.UVATool import *
+from libs.UVATool import *
 from traceback import format_exc as error
 
 try:

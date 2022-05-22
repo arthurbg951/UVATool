@@ -1,4 +1,4 @@
-from lib.UVATool import *
+from libs.UVATool import *
 
 rec = Rectangle(0.012, 0.001)
 area = rec.area

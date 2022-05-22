@@ -4,12 +4,11 @@
     // Para obter mais informações, acesse: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [{
-        "name": "Python: Arquivo Atual",
+        "name": "Python: Current File (Integrated Terminal)",
         "type": "python",
         "request": "launch",
         "program": "${file}",
-        // "program": "cd ${worksSpaceRoot}\\src\\UVATool_UI; ",
         "console": "integratedTerminal",
-        "justMyCode": true
+        "cwd": "${fileDirname}"
     }]
 }

@@ -1,4 +1,4 @@
-from lib.UVATool import *
+from libs.UVATool import *
 
 n1 = Node(0, 0)
 n2 = Node(8, 0)
