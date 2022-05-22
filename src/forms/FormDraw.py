@@ -161,38 +161,38 @@ class FormDraw(QDialog):
     def verifySuportChecked(self) -> Apoio:
         apoio = None
         if self.radioButtonFirstClass.isChecked():
-            apoio = Apoio.primeiroGenero
+            apoio = Apoio.primeiro_genero
         elif self.radioButtonSecondClass.isChecked():
             apoio = Apoio.segundo_genero
         elif self.radioButtonTirdClass.isChecked():
-            apoio = Apoio.terceiroGenero
+            apoio = Apoio.terceiro_genero
         elif self.radioButtonSemiRigidClass.isChecked():
-            apoio = Apoio.semiRigido
+            apoio = Apoio.semi_rigido
         return apoio
 
     def imageReturn(self) -> str:
         apoio = self.verifySuportChecked()
         imagem = None
-        if apoio == Apoio.primeiroGenero:
+        if apoio == Apoio.primeiro_genero:
             imagem = "icons/apoio_primeiro_genero.png"
         elif apoio == Apoio.segundo_genero:
             imagem = "icons/apoio_segundo_genero.png"
-        elif apoio == Apoio.terceiroGenero:
+        elif apoio == Apoio.terceiro_genero:
             imagem = "icons/apoio_terceiro_genero.png"
-        elif apoio == Apoio.semiRigido:
+        elif apoio == Apoio.semi_rigido:
             imagem = "icons/apoio_semi_rigido.png"
         return imagem
 
     def correcaoClickImage(self):
         apoio = self.verifySuportChecked()
         correcaoClickImagem = []
-        if apoio == Apoio.primeiroGenero:
+        if apoio == Apoio.primeiro_genero:
             correcaoClickImagem = [16, 5]
         elif apoio == Apoio.segundo_genero:
             correcaoClickImagem = [17, 7]
-        elif apoio == Apoio.terceiroGenero:
+        elif apoio == Apoio.terceiro_genero:
             correcaoClickImagem = [17, 14]
-        elif apoio == Apoio.semiRigido:
+        elif apoio == Apoio.semi_rigido:
             correcaoClickImagem = [15, 12]
         return correcaoClickImagem
 
@@ -223,7 +223,7 @@ class FormDraw(QDialog):
         self.lineEditSecondNodeY.setText("")
         node1 = Node(fistX, fistY)
         node2 = Node(secondX, secondY)
-        element = Element(node1, node2)
+        element = Element(node1, node2, Defaults.area, Defaults.momentoDeInercia, Defaults.moduloDeElasticidade)
         self.drawElement(node1, node2)
         item = "{0}; {1}".format(
             str(element).split(";")[0], str(element).split(";")[1])
@@ -253,7 +253,7 @@ class FormDraw(QDialog):
             if node == node2:
                 test2 = True
         if test1 and test2:
-            element = Element(node1, node2)
+            element = Element(node1, node2, Defaults.area, Defaults.momentoDeInercia, Defaults.moduloDeElasticidade)
             line = self.graphicsScene.addLine(
                 node1.x, node1.y, node2.x, node2.y, QPen(Qt.GlobalColor.black, 2))
             self.canvas.elements.append(element)

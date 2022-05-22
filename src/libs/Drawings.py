@@ -16,9 +16,10 @@ class Grid(object):
 
 
 class Defaults(object):
-    def __init__(self) -> None:
-        self.moduloDeElasticidade = 1
-        self.momentoDeInercia = 1
+    area = 1
+    momentoDeInercia = 1
+    moduloDeElasticidade = 1
+    
 
     def __str__(self) -> str:
         return "{0}{1}".format(self.moduloDeElasticidade, self.momentoDeInercia)
