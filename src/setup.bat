@@ -1,2 +1,2 @@
 @echo off 
-python ./UVAToolUi.py
+py -3.9 ./UVAToolUi.py
