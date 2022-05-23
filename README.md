@@ -33,5 +33,5 @@ Para utilização do UVATool é necessário:
 ### Linux: 
  Entre na pasta src/UVATool_UI pelo terminal e digite: python3.9 form_uvatool.py ou executar a task "UVATool" (test) pelo vscode
 
-| [<img src="https://github.com/arthurbg951/UVATool/blob/main/src/icons/GEM.jpeg" width="115">] | [<img src="https://github.com/arthurbg951/UVATool/blob/main/src/icons/CNPQ.jpeg" width="115">] |
+<img src="https://github.com/arthurbg951/UVATool/blob/main/src/icons/GEM.jpeg" width=115> <img src="https://github.com/arthurbg951/UVATool/blob/main/src/icons/CNPQ.jpeg" width=115>
 
