@@ -3,10 +3,8 @@
 </p>
 
 <p align="center">
-<img src="http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=GREEN&style=for-the-badge"/><img src="https://img.shields.io/github/stars/camilafernanda?style=social"></img>
+<img src="http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=GREEN&style=for-the-badge"/> <img src="https://img.shields.io/github/stars/camilafernanda?style=social"></img>
 </p>
-
-![GitHub Org's stars](https://img.shields.io/github/stars/camilafernanda?style=social)
 
 
 ## Para novos usuários
