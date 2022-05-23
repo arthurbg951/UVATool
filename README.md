@@ -1,6 +1,10 @@
-<center>
-    <img src="https://raw.githubusercontent.com/arthurbg951/UVATool/main/src/icons/GEM.jpeg" style="height: 100px;"> <img src="https://raw.githubusercontent.com/arthurbg951/UVATool/main/src/icons/CNPQ.jpeg" style="height: 100px;">
-</center>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/arthurbg951/UVATool/main/src/icons/GEM.jpeg" style="height: 100px;">
+</p>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/arthurbg951/UVATool/main/src/icons/CNPQ.jpeg" style="height: 100px;">
+</p>
+ 
 
 ## Para novos usuários
 
