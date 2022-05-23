@@ -1,10 +1,8 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/arthurbg951/UVATool/main/src/icons/GEM.jpeg" style="height: 150px;">
+  <img src="https://raw.githubusercontent.com/arthurbg951/UVATool/main/src/icons/GEM.jpeg" style="height: 120px;"><img src="https://raw.githubusercontent.com/arthurbg951/UVATool/main/src/icons/CNPQ.jpeg" style="height: 100px;">
 </p>
-<p align="center">
-  <img src="https://raw.githubusercontent.com/arthurbg951/UVATool/main/src/icons/CNPQ.jpeg" style="height: 100px;">
-</p>
- 
+
+![Badge em Desenvolvimento](http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=GREEN&style=for-the-badge)
 
 ## Para novos usuários
 
