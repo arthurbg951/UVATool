@@ -7,10 +7,10 @@ from PyQt5.QtWidgets import (
     QGraphicsScene,
     QGraphicsSceneMouseEvent,
     QDialog,
-    QToolBar
+    QToolBar,
 )
 from PyQt5.QtCore import Qt, QPointF
-from PyQt5.QtGui import QPixmap, QPen
+from PyQt5.QtGui import QPixmap, QPen, QPolygonF, QBrush
 from PyQt5 import uic
 from libs.UVATool import *
 from libs.Drawings import *
@@ -97,9 +97,12 @@ class FormUVATool(QMainWindow):
             else:
                 self.elementPoint1 = None
                 self.elementPoint2 = None
+            if self.nodalForces.isChecked():
+                self.drawNodalForce(event.scenePos(), 90)
 
         if Qt.MouseButton.MiddleButton == event.button():
             print("MiddleButtonClick não implementado!")
+        
 
     def mouseMoveEventScene(self, event: QGraphicsSceneMouseEvent):
         x = event.pos().x()
@@ -127,18 +130,60 @@ class FormUVATool(QMainWindow):
                 yString = yString + (10-yString % 10)
             point = QPointF(float(xString), float(yString))
         else:
-            pointToDraw = QPointF(
-                x - self.correcaoClickImage()[0], y - self.correcaoClickImage()[1])
+            pointToDraw = QPointF(x - self.correcaoClickImage()[0], y - self.correcaoClickImage()[1])
             point = QPointF(x, y)
             imagem.setPos(pointToDraw)
             node = Node(point.x(), point.y())
             node.apoio = self.verifySuportChecked()
             self.canvas.nodes.append(node)
             self.canvas.drawnNodes.append(imagem)
-
         # Seta o item(imagem) desenhado para movimentar
         # imagem.setFlag(
         #  QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
+
+    def drawNodalForce(self, pos: QPointF, ang: int):
+        value = 5
+        brush = QBrush(Qt.GlobalColor.black, Qt.BrushStyle.SolidPattern)
+        pen = QPen(Qt.GlobalColor.black, 2)
+
+        if ang == 0 or ang == 360:
+            x1 = pos.x() + value
+            y1 = pos.y() + value * 2
+            x2 = pos.x() + value
+            y2 = pos.y() - value * 2
+            xline = pos.x() + value * 6
+            yline = pos.y()
+        elif ang == 90:
+            x1 = pos.x() - value
+            y1 = pos.y() - value * 2
+            x2 = pos.x() + value
+            y2 = pos.y() - value * 2
+            xline = pos.x()
+            yline = pos.y() - value * 6
+        elif ang == 180:
+            x1 = pos.x() - value
+            y1 = pos.y() - value * 2
+            x2 = pos.x() - value
+            y2 = pos.y() + value * 2
+            xline = pos.x() - value * 6
+            yline = pos.y()
+        elif ang == 270:
+            x1 = pos.x() + value
+            y1 = pos.y() + value * 2
+            x2 = pos.x() - value
+            y2 = pos.y() + value * 2
+            xline = pos.x()
+            yline = pos.y() + value * 6
+        point1 = pos
+        point2 = QPointF(x1, y1)
+        point3 = QPointF(x2, y2)
+        triangle = QPolygonF([point1, point2, point3])
+
+        try:
+            self.graphicsScene.addPolygon(triangle, pen, brush)
+            self.graphicsScene.addLine(pos.x(), pos.y(), xline, yline, pen)
+        except:
+            pass
 
     def verifySuportChecked(self) -> Apoio:
         apoio = None
@@ -296,4 +341,3 @@ class FormUVATool(QMainWindow):
             self.dockWidgetResults.show()
         else:
             self.dockWidgetResults.hide()
-
