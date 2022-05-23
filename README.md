@@ -1,9 +1,12 @@
 <p align="center">
   <img src="https://raw.githubusercontent.com/arthurbg951/UVATool/main/src/icons/GEM.jpeg" style="height: 120px;"><img src="https://raw.githubusercontent.com/arthurbg951/UVATool/main/src/icons/CNPQ.jpeg" style="height: 100px;">
-
-  ![Badge em Desenvolvimento](http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=GREEN&style=for-the-badge)
 </p>
 
+<p align="center">
+<img src="http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=GREEN&style=for-the-badge"/><img src="https://img.shields.io/github/stars/camilafernanda?style=social"></img>
+</p>
+
+![GitHub Org's stars](https://img.shields.io/github/stars/camilafernanda?style=social)
 
 
 ## Para novos usuários
