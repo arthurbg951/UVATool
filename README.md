@@ -1,3 +1,8 @@
+<center>
+    <img src="https://raw.githubusercontent.com/arthurbg951/UVATool/main/src/icons/GEM.jpeg" style="height: 100px;">
+    <img src="https://raw.githubusercontent.com/arthurbg951/UVATool/main/src/icons/CNPQ.jpeg" style="height: 100px;">
+</center>
+
 ## Para novos usuários
 
 Recomenda-se que estudem um pouco sobre o <a href="https://pt.wikipedia.org/wiki/Git">git</a> e <a href="https://pt.wikipedia.org/wiki/GitHub">github</a> para utilização do projeto.
@@ -32,6 +37,4 @@ Para utilização do UVATool é necessário:
 
 ### Linux: 
  Entre na pasta src/UVATool_UI pelo terminal e digite: python3.9 form_uvatool.py ou executar a task "UVATool" (test) pelo vscode
-
-<img src="https://github.com/arthurbg951/UVATool/blob/main/src/icons/GEM.jpeg" width=115> <img src="https://github.com/arthurbg951/UVATool/blob/main/src/icons/CNPQ.jpeg" width=115>
 
