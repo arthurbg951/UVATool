@@ -519,6 +519,7 @@ class Process:
         for node in self.__nodes:
             if node.getSupport() == Support.semi_fixed:
                 haveSemiFixedSupport = True
+                break
         if haveSemiFixedSupport:
             nodePosCorrection = 0
             elemPosCorrection = 0

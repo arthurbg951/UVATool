@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import (
     QPushButton,
     QMainWindow,
     QAction,
+    QGraphicsView,
     QGraphicsScene,
     QGraphicsSceneMouseEvent,
     QDialog,
@@ -18,6 +19,8 @@ from forms.FormDraw import FormDraw
 
 
 class FormUVATool(QMainWindow):
+
+    graphicsViewCanvas: QGraphicsView
 
     first_class_support: QAction
     second_class_support: QAction

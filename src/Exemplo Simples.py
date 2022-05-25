@@ -19,11 +19,12 @@ n3.setSupport(Apoio.primeiro_genero)
 rec = Rectangle(0.001, 0.012)
 area = rec.area
 momento_inercia = rec.inertia
+young = 100_000
 
 # DEFININDO ELEMENTOS
-e1 = Element(n1, n4, area, momento_inercia, 1)
-e2 = Element(n4, n2, area, momento_inercia, 1)
-e3 = Element(n2, n3, area, momento_inercia, 1)
+e1 = Element(n1, n4, area, momento_inercia, young)
+e2 = Element(n4, n2, area, momento_inercia, young)
+e3 = Element(n2, n3, area, momento_inercia, young)
 
 nodes = [n1, n4, n2, n3]
 elements = [e1, e2, e3]
@@ -34,3 +35,4 @@ proc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
 # PRINTANDO RESULTADOS
 plot = Print(proc)
 plot.internalForces()
+plot.nodalDisplacement()
