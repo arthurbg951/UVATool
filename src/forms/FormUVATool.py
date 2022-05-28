@@ -8,21 +8,29 @@ from PyQt5.QtWidgets import (
     QGraphicsScene,
     QGraphicsSceneMouseEvent,
     QDialog,
-    QToolBar
+    QToolBar,
+    QGroupBox,
+    QDockWidget,
+    QGraphicsItem,
+    QGraphicsSceneHoverEvent,
+    QGraphicsEllipseItem,
+    QLineEdit,
+    QRadioButton,
 )
 from PyQt5.QtCore import (
-    Qt, 
-    QPointF
+    Qt,
+    QPointF,
 )
 from PyQt5.QtGui import (
     QPixmap,
     QPen,
     QPolygonF,
     QBrush,
-    QMouseEvent
+    QMouseEvent,
+    QKeyEvent
 )
 from PyQt5 import uic
-from libs.Drawings import *
+from libs.UVATool import *
 
 
 class FormUVATool(QMainWindow):
@@ -36,19 +44,136 @@ class FormUVATool(QMainWindow):
     ToolsToolBar: QToolBar
     DrawAction: QAction
 
+    ChangeValues: QDockWidget
+    NodeParameters: QGroupBox
+    fx: QLineEdit
+    fy: QLineEdit
+    m: QLineEdit
+    p: QLineEdit
+    primeiroGenero: QRadioButton
+    segundoGenero: QRadioButton
+    terceiroGenero: QRadioButton
+    semiRigido: QRadioButton
+    semApoio: QRadioButton
+    confirmButton: QPushButton
+
     def __init__(self):
         super().__init__()
         uic.loadUi("ui/FormUVATool.ui", self)
 
-        self.scene = UVAGraphicsScene(self.NodeAction, self.ElementAction)
+        self.scene = UVAGraphicsScene(self)
+        self.scene.setSceneRect(0, 0, 1, 1)
         self.GraphicsView.setScene(self.scene)
 
-        self.canvas = Canvas()
-        self.defaults = Defaults()
+        self.ToolsToolBar.hide()
+
+        self.ChangeValues.close()
+        self.NodeParameters.setHidden(True)
+
+        self.confirmButton.clicked.connect(self.confirmClicked)
+        self.ChangeValues.visibilityChanged.connect(self.ChangeValuesClose)
 
         self.show()
 
-    
+    def confirmClicked(self):
+        for item in self.scene.items():
+            if isinstance(item, NodeDraw):
+                if item.brush() == QBrush(Qt.GlobalColor.red):
+                    fx = float(self.fx.text())
+                    fy = float(self.fy.text())
+                    m = float(self.m.text())
+                    p = float(self.p.text())
+                    item.node.setNodalForce(NodalForce(fx, fy, m))
+                    item.node.setP(p)
+                    if self.primeiroGenero.isChecked():
+                        item.node.setSupport(Apoio.primeiro_genero)
+                    elif self.segundoGenero.isChecked():
+                        item.node.setSupport(Apoio.segundo_genero)
+                    elif self.terceiroGenero.isChecked():
+                        item.node.setSupport(Apoio.terceiro_genero)
+                    elif self.semiRigido.isChecked():
+                        item.node.setSupport(Apoio.semi_rigido)
+
+    def ChangeValuesClose(self):
+        if not self.ChangeValues.isVisible():
+            for item in self.scene.items():
+                if item.isSelected():
+                    item.setSelected(False)
+                if isinstance(item, NodeDraw):
+                    item.setColor(Qt.GlobalColor.gray)
+
+
+class NodeDraw(QGraphicsEllipseItem):
+    node: Node
+
+    def __init__(self, node: Node):
+        super().__init__()
+        self.node = node
+        raio = 10
+        self.setRect(node.x, node.y, raio, raio)
+        self.setPen(QPen(Qt.GlobalColor.black, 1))
+        self.setBrush(QBrush(Qt.GlobalColor.gray, Qt.BrushStyle.SolidPattern))
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsFocusable)
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
+
+        self.setAcceptHoverEvents(True)
+
+    def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
+        self.setColor(Qt.GlobalColor.red)
+
+    def keyPressEvent(self, event: QKeyEvent) -> None:
+        if event.key() == Qt.Key.Key_Delete:
+            if self.brush() == QBrush(Qt.GlobalColor.red):
+                print('Botão deletar não implementado')
+
+    def setColor(self, color: Qt.GlobalColor):
+        self.setBrush(QBrush(color))
+
+    def hoverEnterEvent(self, event: QGraphicsSceneHoverEvent) -> None:
+        self.setSelected(True)
+
+    def hoverLeaveEvent(self, event: QGraphicsSceneHoverEvent) -> None:
+        self.setSelected(False)
+
+
+class UVAGraphicsScene(QGraphicsScene):
+
+    def __init__(self, form: FormUVATool):
+        super().__init__()
+        self.form = form
+
+    def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
+        if event.button() == Qt.MouseButton.LeftButton:
+            if self.form.NodeAction.isChecked():
+                self.createNode(Node(event.scenePos().x(), event.scenePos().y()))
+
+            for item in self.items():
+                if isinstance(item, NodeDraw):
+                    item.setColor(Qt.GlobalColor.gray)
+                if item.isSelected():
+                    item.setColor(Qt.GlobalColor.red)
+                    item.setFocus()
+                    self.form.NodeParameters.show()
+                    self.form.fx.setText(str(item.node.getNodalForce().fx))
+                    self.form.fy.setText(str(item.node.getNodalForce().fy))
+                    self.form.m.setText(str(item.node.getNodalForce().m))
+                    self.form.p.setText(str(item.node.getP()))
+                    if item.node.getSupport() == Apoio.primeiro_genero:
+                        self.form.primeiroGenero.setChecked(True)
+                    elif item.node.getSupport() == Apoio.segundo_genero:
+                        self.form.segundoGenero.setChecked(True)
+                    elif item.node.getSupport() == Apoio.terceiro_genero:
+                        self.form.terceiroGenero.setChecked(True)
+                    elif item.node.getSupport() == Apoio.semi_rigido:
+                        self.form.semiRigido.setChecked(True)
+                    elif item.node.getSupport() == Apoio.sem_suporte:
+                        self.form.semApoio.setChecked(True)
+                    self.form.ChangeValues.show()
+
+    def createNode(self, node: Node):
+        nodeDraw = NodeDraw(node)
+        self.addItem(nodeDraw)
+
 
 '''
     ###############################################
@@ -90,7 +215,7 @@ class FormUVATool(QMainWindow):
 
         if Qt.MouseButton.MiddleButton == event.button():
             print("MiddleButtonClick não implementado!")
-        
+
 
     def mouseMoveEventScene(self, event: QGraphicsSceneMouseEvent):
         x = event.pos().x()
