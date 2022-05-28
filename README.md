@@ -33,12 +33,14 @@ Para utilização do UVATool é necessário:
 
 ## Execução do programa
 
-### Windows:
+<a href="https://youtu.be/HX6RHFUiZRw">Tutorial</a>
+
+<!-- ### Windows:
  Basta executar o arquivo setup.bat dentro da pasta src ou executar a task "UVATool" (test) pelo vscode
 
 ### MacOS: 
  Entre na pasta src/UVATool_UI pelo terminal e digite: python3.9 form_uvatool.py ou executar a task "UVATool" (test) pelo vscode
 
 ### Linux: 
- Entre na pasta src/UVATool_UI pelo terminal e digite: python3.9 form_uvatool.py ou executar a task "UVATool" (test) pelo vscode
+ Entre na pasta src/UVATool_UI pelo terminal e digite: python3.9 form_uvatool.py ou executar a task "UVATool" (test) pelo vscode -->
 

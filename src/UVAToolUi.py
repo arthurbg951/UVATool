@@ -5,5 +5,4 @@ if __name__ == "__main__":
     import sys
     app = QApplication(sys.argv)
     window = FormUVATool()
-    window.show()
-    app.exec()
+    sys.exit(app.exec())

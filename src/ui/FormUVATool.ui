@@ -20,183 +20,11 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QGraphicsView" name="graphicsViewCanvas">
-        <property name="minimumSize">
-         <size>
-          <width>581</width>
-          <height>511</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QLineEdit" name="lineEditXCanvas">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>50</width>
-            <height>20</height>
-           </size>
-          </property>
-          <property name="placeholderText">
-           <string>X</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="lineEditYCanvas">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>50</width>
-            <height>20</height>
-           </size>
-          </property>
-          <property name="placeholderText">
-           <string>Y</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="lineEditSuportAngulation">
-          <property name="minimumSize">
-           <size>
-            <width>60</width>
-            <height>20</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>60</width>
-            <height>20</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QLineEdit {
-	border-color:black;
-    border-top: 4px;
-}</string>
-          </property>
-          <property name="placeholderText">
-           <string>Support º</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="checkBoxGrid">
-          <property name="text">
-           <string>Grid</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="lineEditXGrid">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>50</width>
-            <height>20</height>
-           </size>
-          </property>
-          <property name="placeholderText">
-           <string>X</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="lineEditYGrid">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>50</width>
-            <height>20</height>
-           </size>
-          </property>
-          <property name="placeholderText">
-           <string>Y</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="checkBoxGridSnap">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>Snap</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
+     <widget class="QGraphicsView" name="GraphicsView"/>
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>850</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
-     <string>File</string>
-    </property>
-    <addaction name="actionNew"/>
-    <addaction name="actionOpen"/>
-    <addaction name="actionSave"/>
-    <addaction name="separator"/>
-    <addaction name="actionExport"/>
-    <addaction name="separator"/>
-    <addaction name="actionExt"/>
-   </widget>
-   <widget class="QMenu" name="menuProject">
-    <property name="title">
-     <string>Project</string>
-    </property>
-    <addaction name="actionDefaults"/>
-    <addaction name="separator"/>
-   </widget>
-   <widget class="QMenu" name="menuSettings">
-    <property name="title">
-     <string>Settings</string>
-    </property>
-    <addaction name="actionOptions"/>
-   </widget>
-   <addaction name="menuFile"/>
-   <addaction name="menuProject"/>
-   <addaction name="menuSettings"/>
-  </widget>
-  <widget class="QToolBar" name="toolBarDraw">
+  <widget class="QToolBar" name="DrawingsToolBar">
    <property name="minimumSize">
     <size>
      <width>0</width>
@@ -204,7 +32,7 @@
     </size>
    </property>
    <property name="windowTitle">
-    <string>Supports</string>
+    <string>Drawings</string>
    </property>
    <property name="allowedAreas">
     <set>Qt::LeftToolBarArea|Qt::RightToolBarArea|Qt::TopToolBarArea</set>
@@ -224,117 +52,12 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="first_class_support"/>
-   <addaction name="second_class_support"/>
-   <addaction name="tird_class_support"/>
-   <addaction name="semi_rigid_class_support"/>
-   <addaction name="elementClass"/>
-   <addaction name="separator"/>
-   <addaction name="actionDraw"/>
-   <addaction name="actionProcess"/>
+   <addaction name="NodeAction"/>
+   <addaction name="ElementAction"/>
   </widget>
-  <widget class="QDockWidget" name="dockWidgetResults">
-   <property name="minimumSize">
-    <size>
-     <width>200</width>
-     <height>253</height>
-    </size>
-   </property>
-   <property name="maximumSize">
-    <size>
-     <width>200</width>
-     <height>524287</height>
-    </size>
-   </property>
-   <property name="toolTip">
-    <string>Results</string>
-   </property>
-   <property name="statusTip">
-    <string>Results</string>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="accessibleDescription">
-    <string>Results</string>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">QDockWidget{
-border:0px;
-}</string>
-   </property>
-   <property name="floating">
-    <bool>false</bool>
-   </property>
-   <property name="features">
-    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable</set>
-   </property>
+  <widget class="QToolBar" name="ToolsToolBar">
    <property name="windowTitle">
-    <string>Analysis Results</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>2</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContentsResults">
-    <layout class="QVBoxLayout" name="verticalLayout_2">
-     <item>
-      <widget class="QRadioButton" name="radioButton">
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Análise elastica:
-  Método da rigidez analítica</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QRadioButton" name="radioButton_2">
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Análise rígido plastica:
-  Mínima norma Euclidiana</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="comboBoxResultOptions">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>24</height>
-        </size>
-       </property>
-       <property name="editable">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QListWidget" name="listWidgetResults">
-       <property name="viewMode">
-        <enum>QListView::ListMode</enum>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-  </widget>
-  <widget class="QToolBar" name="toolBarLoadings">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="windowTitle">
-    <string>Forces</string>
+    <string>Tools</string>
    </property>
    <property name="iconSize">
     <size>
@@ -348,131 +71,9 @@ border:0px;
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="nodalForces"/>
+   <addaction name="DrawAction"/>
   </widget>
-  <action name="actionNew">
-   <property name="icon">
-    <iconset>
-     <normaloff>../icons/new_file.png</normaloff>../icons/new_file.png</iconset>
-   </property>
-   <property name="text">
-    <string>New...</string>
-   </property>
-  </action>
-  <action name="actionOpen">
-   <property name="icon">
-    <iconset>
-     <normaloff>../icons/open.png</normaloff>../icons/open.png</iconset>
-   </property>
-   <property name="text">
-    <string>Open...</string>
-   </property>
-  </action>
-  <action name="actionSave">
-   <property name="icon">
-    <iconset>
-     <normaloff>../icons/save.png</normaloff>../icons/save.png</iconset>
-   </property>
-   <property name="text">
-    <string>Save</string>
-   </property>
-  </action>
-  <action name="actionExport">
-   <property name="icon">
-    <iconset>
-     <normaloff>../icons/export.png</normaloff>../icons/export.png</iconset>
-   </property>
-   <property name="text">
-    <string>Export</string>
-   </property>
-  </action>
-  <action name="actionExt">
-   <property name="icon">
-    <iconset>
-     <normaloff>../icons/exit.png</normaloff>../icons/exit.png</iconset>
-   </property>
-   <property name="text">
-    <string>Exit</string>
-   </property>
-  </action>
-  <action name="first_class_support">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>../icons/apoio_primeiro_genero.png</normaloff>../icons/apoio_primeiro_genero.png</iconset>
-   </property>
-   <property name="text">
-    <string>first-class support</string>
-   </property>
-   <property name="toolTip">
-    <string>First-class support for drawing</string>
-   </property>
-  </action>
-  <action name="second_class_support">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>../icons/apoio_segundo_genero.png</normaloff>../icons/apoio_segundo_genero.png</iconset>
-   </property>
-   <property name="text">
-    <string>second-class support</string>
-   </property>
-   <property name="toolTip">
-    <string>Second-class support for drawing</string>
-   </property>
-  </action>
-  <action name="tird_class_support">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>../icons/apoio_terceiro_genero.png</normaloff>../icons/apoio_terceiro_genero.png</iconset>
-   </property>
-   <property name="text">
-    <string>tird-class support</string>
-   </property>
-   <property name="toolTip">
-    <string>Tird-class support for drawing</string>
-   </property>
-  </action>
-  <action name="semi_rigid_class_support">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>../icons/apoio_semi_rigido.png</normaloff>../icons/apoio_semi_rigido.png</iconset>
-   </property>
-   <property name="text">
-    <string>semi_rigid_class_support</string>
-   </property>
-   <property name="toolTip">
-    <string>Semi rigid support</string>
-   </property>
-  </action>
-  <action name="actionDraw">
-   <property name="icon">
-    <iconset>
-     <normaloff>../icons/draw.png</normaloff>../icons/draw.png</iconset>
-   </property>
-   <property name="text">
-    <string>Draw</string>
-   </property>
-   <property name="toolTip">
-    <string>Draw on Canvas</string>
-   </property>
-  </action>
-  <action name="actionDefaults">
-   <property name="text">
-    <string>Defaults</string>
-   </property>
-  </action>
-  <action name="elementClass">
+  <action name="ElementAction">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -481,42 +82,37 @@ border:0px;
      <normaloff>../icons/element.png</normaloff>../icons/element.png</iconset>
    </property>
    <property name="text">
-    <string>elementClass</string>
+    <string>element</string>
    </property>
    <property name="toolTip">
     <string>Element</string>
    </property>
   </action>
-  <action name="actionOptions">
-   <property name="text">
-    <string>Options</string>
-   </property>
-  </action>
-  <action name="nodalForces">
+  <action name="NodeAction">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>../icons/vertical_force.png</normaloff>../icons/vertical_force.png</iconset>
+     <normaloff>../icons/node.png</normaloff>../icons/node.png</iconset>
    </property>
    <property name="text">
-    <string>nodalForces</string>
+    <string>node</string>
    </property>
    <property name="toolTip">
-    <string>Vertical Force</string>
+    <string>Node</string>
    </property>
   </action>
-  <action name="actionProcess">
+  <action name="DrawAction">
    <property name="icon">
     <iconset>
-     <normaloff>../icons/process.png</normaloff>../icons/process.png</iconset>
+     <normaloff>../icons/draw.png</normaloff>../icons/draw.png</iconset>
    </property>
    <property name="text">
-    <string>Process</string>
+    <string>draw</string>
    </property>
    <property name="toolTip">
-    <string>Process Calculations</string>
+    <string>Draw Menu</string>
    </property>
   </action>
  </widget>

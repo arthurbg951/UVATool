@@ -12,7 +12,7 @@ n1.setSupport(Apoio.segundo_genero)
 n5.setSupport(Apoio.primeiro_genero)
 
 # DEFINIR OS FORÇAS NODAIS
-n3.setNodalForce(NodalForce(0, -60, 80))
+n3.setNodalForce(NodalForce(0, -60, -80))
 n4.setNodalForce(NodalForce(40, 0, 0))
 
 # DEFINIR SEÇÃO
@@ -26,7 +26,7 @@ young = 1
 e1 = Element(n1, n2, area, inercia, young)
 e2 = Element(n2, n3, area, inercia, young)
 e3 = Element(n3, n4, area, inercia, young)
-e4 = Element(n4, n5, area, inercia, young)
+e4 = Element(n5, n4, area, inercia, young)
 
 # DEFINIR A LISTA DE NOS E ELEMENTOS PARA CALCULO
 nodes = [n1, n2, n3, n4, n5]

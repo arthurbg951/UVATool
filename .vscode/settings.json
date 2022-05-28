@@ -1,0 +1,8 @@
+{
+    "python.terminal.executeInFileDir": true,
+    "python.formatting.autopep8Args": [
+        "--max-line-length",
+        "200",
+        "--experimental"
+      ],
+}

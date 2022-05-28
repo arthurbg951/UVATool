@@ -8,67 +8,52 @@ from PyQt5.QtWidgets import (
     QGraphicsScene,
     QGraphicsSceneMouseEvent,
     QDialog,
-    QToolBar,
+    QToolBar
 )
-from PyQt5.QtCore import Qt, QPointF
-from PyQt5.QtGui import QPixmap, QPen, QPolygonF, QBrush
+from PyQt5.QtCore import (
+    Qt, 
+    QPointF
+)
+from PyQt5.QtGui import (
+    QPixmap,
+    QPen,
+    QPolygonF,
+    QBrush,
+    QMouseEvent
+)
 from PyQt5 import uic
-from libs.UVATool import *
 from libs.Drawings import *
-from forms.FormDraw import FormDraw
 
 
 class FormUVATool(QMainWindow):
 
-    graphicsViewCanvas: QGraphicsView
+    GraphicsView: QGraphicsView
 
-    first_class_support: QAction
-    second_class_support: QAction
-    tird_class_support: QAction
-    semi_rigid_class_support: QAction
-    elementClass: QAction
-    separator: QAction
-    actionDraw: QAction
-    actionProcess: QAction
+    DrawingsToolBar: QToolBar
+    NodeAction: QAction
+    ElementAction: QAction
 
-    actionNew: QAction
-    actionOpen: QAction
-    actionSave: QAction
-    actionExport: QAction
-    actionExt: QAction
-
-    toolBarLoadings: QToolBar
-    nodalForces: QAction
+    ToolsToolBar: QToolBar
+    DrawAction: QAction
 
     def __init__(self):
         super().__init__()
         uic.loadUi("ui/FormUVATool.ui", self)
 
-        self.dockWidgetResults.hide()
-        self.lineEditSuportAngulation.setEnabled(False)
-        self.first_class_support.triggered.connect(self.primeiro_genero)
-        self.second_class_support.triggered.connect(self.segundo_genero)
-        self.tird_class_support.triggered.connect(self.terceiro_genero)
-        self.semi_rigid_class_support.triggered.connect(self.semi_rigido)
-        self.elementClass.triggered.connect(self.elementClassToggle)
-        self.checkBoxGrid.clicked.connect(self.activateGrid)
-        self.actionProcess.triggered.connect(self.actionProcessClicked)
-
-        self.actionDraw.triggered.connect(self.showDrawForm)
+        self.scene = UVAGraphicsScene(self.NodeAction, self.ElementAction)
+        self.GraphicsView.setScene(self.scene)
 
         self.canvas = Canvas()
         self.defaults = Defaults()
-        self.elementPoint1 = None
-        self.elementPoint2 = None
 
-        self.comboBoxResultOptions.addItem("Nodes")
-        self.comboBoxResultOptions.addItem("Elements")
+        self.show()
 
-        self.graphicsScene = QGraphicsScene()
-        self.graphicsScene.mousePressEvent = self.mousePressEventScene
-        self.graphicsScene.setSceneRect(0, 0, 1,  1)
-        self.graphicsScene.mousePressEvent = self.mousePressEventScene
-        self.graphicsViewCanvas.setScene(self.graphicsScene)
+    
+
+'''
+    ###############################################
+        Funções Desabilitadas momentaneamente
+    ###############################################
 
     def showDrawForm(self):
         drawForm = FormDraw()
@@ -79,12 +64,12 @@ class FormUVATool(QMainWindow):
         drawForm.show()
         drawForm.exec()
 
-    # def showResultsForm(self):
-    #     resultsForm = QtWidgets.QDialog()
-    #     ui = Ui_ResultForm()
-    #     ui.setupUi(resultsForm)
-    #     resultsForm.show()
-    #     resultsForm.exec()
+    def showResultsForm(self):
+        resultsForm = QtWidgets.QDialog()
+        ui = Ui_ResultForm()
+        ui.setupUi(resultsForm)
+        resultsForm.show()
+        resultsForm.exec()
 
     def mousePressEventScene(self, event: QGraphicsSceneMouseEvent):
         if Qt.MouseButton.LeftButton == event.button():
@@ -141,8 +126,7 @@ class FormUVATool(QMainWindow):
             self.canvas.nodes.append(node)
             self.canvas.drawnNodes.append(imagem)
         # Seta o item(imagem) desenhado para movimentar
-        # imagem.setFlag(
-        #  QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
+        imagem.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
 
     def drawNodalForce(self, pos: QPointF, ang: int):
         value = 5
@@ -242,8 +226,11 @@ class FormUVATool(QMainWindow):
             node1 = Node(p1.x(), p1.y())
             node2 = Node(p2.x(), p2.y())
             element = Element(node1, node2, 1, 1, 1)
-            line = self.graphicsScene.addLine(
-                p1.x(), p1.y(), p2.x(), p2.y(), QPen(Qt.GlobalColor.black, 2))
+            pen = QPen(Qt.GlobalColor.black, 2)
+            brush = QBrush(Qt.GlobalColor.gray, Qt.BrushStyle.SolidPattern)
+            line = self.graphicsScene.addLine(p1.x(), p1.y(), p2.x(), p2.y(), pen)
+            dnd1 = self.graphicsScene.addEllipse(p1.x(), p1.y(), 9, 9, pen, brush)
+            dnd2 = self.graphicsScene.addEllipse(p2.x(), p2.y(), 9, 9, pen, brush)
             self.canvas.elements.append(element)
             self.canvas.drawnElements.append(line)
             self.elementPoint1 = None
@@ -287,8 +274,6 @@ class FormUVATool(QMainWindow):
 
     def elementClassToggle(self):
         apoio = self.verifySuportChecked()
-        if apoio == None:
-            self.tird_class_support.toggle()
         if not self.elementClass.isChecked():
             if self.semi_rigid_class_support.isChecked():
                 self.semi_rigid_class_support.toggle()
@@ -344,3 +329,4 @@ class FormUVATool(QMainWindow):
             self.dockWidgetResults.show()
         else:
             self.dockWidgetResults.hide()
+'''
