@@ -16,10 +16,12 @@ from PyQt5.QtWidgets import (
     QGraphicsEllipseItem,
     QLineEdit,
     QRadioButton,
+    QGraphicsLineItem,
 )
 from PyQt5.QtCore import (
     Qt,
     QPointF,
+    QLineF,
 )
 from PyQt5.QtGui import (
     QPixmap,
@@ -27,10 +29,13 @@ from PyQt5.QtGui import (
     QPolygonF,
     QBrush,
     QMouseEvent,
-    QKeyEvent
+    QKeyEvent,
+    QColor,
+    QShowEvent
 )
 from PyQt5 import uic
 from libs.UVATool import *
+from libs.Drawing import *
 
 
 class FormUVATool(QMainWindow):
@@ -42,10 +47,9 @@ class FormUVATool(QMainWindow):
     ElementAction: QAction
 
     ToolsToolBar: QToolBar
-    DrawAction: QAction
+    ProcessCalculations: QAction
 
     ChangeValues: QDockWidget
-    NodeParameters: QGroupBox
     fx: QLineEdit
     fy: QLineEdit
     m: QLineEdit
@@ -57,6 +61,15 @@ class FormUVATool(QMainWindow):
     semApoio: QRadioButton
     confirmButton: QPushButton
 
+    ElementParameters: QDockWidget
+    area: QLineEdit
+    momentInertia: QLineEdit
+    youngModulus: QLineEdit
+    confirmButton_2: QPushButton
+
+    ERA: QRadioButton
+    MNE: QRadioButton
+
     def __init__(self):
         super().__init__()
         uic.loadUi("ui/FormUVATool.ui", self)
@@ -65,20 +78,23 @@ class FormUVATool(QMainWindow):
         self.scene.setSceneRect(0, 0, 1, 1)
         self.GraphicsView.setScene(self.scene)
 
-        self.ToolsToolBar.hide()
-
         self.ChangeValues.close()
-        self.NodeParameters.setHidden(True)
+        self.ElementParameters.close()
 
         self.confirmButton.clicked.connect(self.confirmClicked)
+        self.confirmButton_2.clicked.connect(self.confirmClicked_2)
         self.ChangeValues.visibilityChanged.connect(self.ChangeValuesClose)
+        self.p.textChanged.connect(self.pValueChanged)
+        self.ElementAction.toggled.connect(self.ElementActionTogled)
+        self.ProcessCalculations.triggered.connect(self.ProcessCalculationsTriggered)
 
+        self.resize(900, 700)
         self.show()
 
     def confirmClicked(self):
         for item in self.scene.items():
             if isinstance(item, NodeDraw):
-                if item.brush() == QBrush(Qt.GlobalColor.red):
+                if item.isSelected():
                     fx = float(self.fx.text())
                     fy = float(self.fy.text())
                     m = float(self.m.text())
@@ -93,6 +109,16 @@ class FormUVATool(QMainWindow):
                         item.node.setSupport(Apoio.terceiro_genero)
                     elif self.semiRigido.isChecked():
                         item.node.setSupport(Apoio.semi_rigido)
+                    elif self.semApoio.isChecked():
+                        item.node.setSupport(Apoio.sem_suporte)
+
+    def confirmClicked_2(self):
+        for item in self.scene.items():
+            if isinstance(item, ElementDraw):
+                if item.isSelected():
+                    item.element.area = float(self.area.text())
+                    item.element.moment_inertia = float(self.momentInertia.text())
+                    item.element.young_modulus = float(self.youngModulus.text())
 
     def ChangeValuesClose(self):
         if not self.ChangeValues.isVisible():
@@ -102,38 +128,52 @@ class FormUVATool(QMainWindow):
                 if isinstance(item, NodeDraw):
                     item.setColor(Qt.GlobalColor.gray)
 
+    def pValueChanged(self):
+        if self.p.text() != "":
+            self.semiRigido.setChecked(True)
 
-class NodeDraw(QGraphicsEllipseItem):
-    node: Node
+    def ElementActionTogled(self):
+        if self.ElementAction.isChecked():
+            print('Element Checked')
 
-    def __init__(self, node: Node):
-        super().__init__()
-        self.node = node
-        raio = 10
-        self.setRect(node.x, node.y, raio, raio)
-        self.setPen(QPen(Qt.GlobalColor.black, 1))
-        self.setBrush(QBrush(Qt.GlobalColor.gray, Qt.BrushStyle.SolidPattern))
-        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsFocusable)
-        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
+    def ProcessCalculationsTriggered(self):
 
-        self.setAcceptHoverEvents(True)
+        print()
+        print("----------------------------------------------")
+        print("            Processando Cálculos              ")
+        analise = 0
+        if self.MNE.isChecked():
+            analise = Analise.rigidoPlastica.viaMinimaNormaEuclidiana
+            print("         Via Mínima Norma Euclidiana          ")
 
-    def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
-        self.setColor(Qt.GlobalColor.red)
+        else:
+            analise = Analise.elastica.viaRigidezAnalitica
+            print("            Via Rigidez Analítica             ")
 
-    def keyPressEvent(self, event: QKeyEvent) -> None:
-        if event.key() == Qt.Key.Key_Delete:
-            if self.brush() == QBrush(Qt.GlobalColor.red):
-                print('Botão deletar não implementado')
+        print("----------------------------------------------")
+        try:
+            nodes = []
+            elements = []
 
-    def setColor(self, color: Qt.GlobalColor):
-        self.setBrush(QBrush(color))
+            for item in reversed(self.scene.items()):
+                if isinstance(item, NodeDraw):
+                    nodes.append(item.node)
 
-    def hoverEnterEvent(self, event: QGraphicsSceneHoverEvent) -> None:
-        self.setSelected(True)
+                if isinstance(item, ElementDraw):
+                    elements.append(item.element)
+                    # print("Comprimento do elemento: ", item.element.getLength())
 
-    def hoverLeaveEvent(self, event: QGraphicsSceneHoverEvent) -> None:
-        self.setSelected(False)
+            if len(nodes) == 0 and len(elements) == 0:
+                raise Exception("Não existe nenhuma estrutura!")
+
+            calc = Process(nodes, elements, analise)
+            plot = Print(calc)
+            plot.internalForces()
+        except Exception as e:
+            print(e.args[0])
+
+        print("----------------------------------------------")
+        print()
 
 
 class UVAGraphicsScene(QGraphicsScene):
@@ -141,19 +181,63 @@ class UVAGraphicsScene(QGraphicsScene):
     def __init__(self, form: FormUVATool):
         super().__init__()
         self.form = form
+        self.isDrawingLine = False
+        self.keyStack = []
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         if event.button() == Qt.MouseButton.LeftButton:
             if self.form.NodeAction.isChecked():
-                self.createNode(Node(event.scenePos().x(), event.scenePos().y()))
+                self.createNode(event.scenePos().x(), event.scenePos().y())
 
-            for item in self.items():
-                if isinstance(item, NodeDraw):
-                    item.setColor(Qt.GlobalColor.gray)
-                if item.isSelected():
-                    item.setColor(Qt.GlobalColor.red)
-                    item.setFocus()
-                    self.form.NodeParameters.show()
+            if self.form.ElementAction.isChecked():
+                p = event.scenePos()
+                node = NodeDraw(p.x(), p.y())
+                for item in self.items():
+                    if isinstance(item, NodeDraw):
+                        if item.hasFocus():
+                            node = item
+                            break
+                if not self.isDrawingLine:
+                    p1 = p
+                    self.isDrawingLine = True
+                    node1 = node
+                    self.addItem(node1)
+                    self.elementDraw = ElementDraw(QGraphicsLineItem(QLineF(p1, p1)))
+                    self.elementDraw.setPen(QPen(QColor(255, 140, 0), 2, Qt.PenStyle.DashLine))
+                    self.elementDraw.setNode1(node1)
+
+                    self.addItem(self.elementDraw)
+                else:
+                    self.elementDraw.setPen(QPen(Qt.GlobalColor.gray, 2, Qt.PenStyle.SolidLine))
+                    node2 = node
+                    self.addItem(node2)
+                    self.elementDraw.setNode2(node2)
+                    self.elementDraw.isDrawed = True
+                    self.isDrawingLine = False
+
+    def mouseDoubleClickEvent(self, event: QGraphicsSceneMouseEvent) -> None:
+        self.form.semApoio.setChecked(True)
+        self.form.fx.setText("")
+        self.form.fy.setText("")
+        self.form.m.setText("")
+        self.form.p.setText("")
+        self.form.area.setText("")
+        self.form.momentInertia.setText("")
+        self.form.youngModulus.setText("")
+        for item in self.items():
+            if isinstance(item, ElementDraw):
+                if item.hasFocus():
+                    item.setSelected(True)
+                    self.form.ChangeValues.close()
+                    self.form.ElementParameters.show()
+                    self.form.area.setText(str(item.element.area))
+                    self.form.momentInertia.setText(str(item.element.moment_inertia))
+                    self.form.youngModulus.setText(str(item.element.young_modulus))
+                else:
+                    item.setSelected(False)
+            elif isinstance(item, NodeDraw):
+                if item.hasFocus():
+                    item.setSelected(True)
                     self.form.fx.setText(str(item.node.getNodalForce().fx))
                     self.form.fy.setText(str(item.node.getNodalForce().fy))
                     self.form.m.setText(str(item.node.getNodalForce().m))
@@ -169,10 +253,37 @@ class UVAGraphicsScene(QGraphicsScene):
                     elif item.node.getSupport() == Apoio.sem_suporte:
                         self.form.semApoio.setChecked(True)
                     self.form.ChangeValues.show()
+                    self.form.ElementParameters.close()
+                else:
+                    item.setSelected(False)
 
-    def createNode(self, node: Node):
-        nodeDraw = NodeDraw(node)
-        self.addItem(nodeDraw)
+    def mouseMoveEvent(self, event: QGraphicsSceneMouseEvent) -> None:
+        super().mouseMoveEvent(event)
+        if event.buttons() == Qt.MouseButton.NoButton:
+            if self.isDrawingLine:
+                p1 = self.elementDraw.line().p1()
+                p2 = event.scenePos()
+                self.elementDraw.setLine(QLineF(p1, p2))
+                self.elementDraw.setNode2(NodeDraw(p2.x(), p2.y()))
+
+    def createNode(self, x: float, y: float):
+        node = NodeDraw(x, y)
+        self.addItem(node)
+
+    def keyPressEvent(self, event: QKeyEvent) -> None:
+        # if event.key() == Qt.Key.Key_P:
+        #     if len(self.items()) > 0:
+        #         print(self.items()[0].shape())
+
+        if not self.keyStack.__contains__(event.key()):
+            self.keyStack.insert(0, event.key())
+        if self.keyStack.__contains__(Qt.Key.Key_Control) and self.keyStack.__contains__(Qt.Key.Key_Z):
+            if len(self.items()) > 0:
+                self.removeItem(self.items()[0])
+
+    def keyReleaseEvent(self, event: QKeyEvent) -> None:
+        if self.keyStack.__contains__(event.key()):
+            self.keyStack.remove(event.key())
 
 
 '''

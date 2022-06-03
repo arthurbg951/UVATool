@@ -246,7 +246,6 @@ class Element:
     area: float
     moment_inertia: float
     young_modulus: float
-    # __deformations: numpy.array
     __internal_forces: numpy.array
     __angle: float
     __length: float
@@ -261,7 +260,6 @@ class Element:
         self.moment_inertia = moment_inertia
         self.young_modulus = young_modulus
         self.__angle = self.__setAngle()
-        self.__length = self.__setLength()
         self.__p1 = node1.getP()
         self.__p2 = node2.getP()
 
@@ -278,9 +276,6 @@ class Element:
             raise ValueError("node1 cant be equal to node2.")
 
     def getLength(self) -> float:
-        return self.__length
-
-    def __setLength(self) -> float:
         return math.sqrt(math.pow(self.node1.x - self.node2.x, 2) + math.pow(self.node1.y - self.node2.y, 2))
 
     def getAngle(self) -> float:
@@ -295,9 +290,6 @@ class Element:
         else:
             resposta = math.atan(deltaY/deltaX)
         return resposta
-
-    # def getDeformations(self) -> numpy.array:
-    #     return self.__deformations
 
     def setDeformations(self, deformations: numpy.array) -> None:
         self.__deformations = deformations
@@ -639,12 +631,14 @@ class Print:
         self.__process = process
 
     def internalForces(self) -> None:
-        for i in range(0, len(self.__process.getInternalForces()), 3):
+        nElement = len(self.__process.getInternalForces())
+        for i in range(0, nElement, 3):
             print('ELEMENT: {0}'.format(int(i/3+1)))
             print(" N={0:.2f}".format(self.__process.getInternalForces()[0 + i]))
             print("M1={0:.2f}".format(self.__process.getInternalForces()[1 + i]))
             print("M2={0:.2f}".format(self.__process.getInternalForces()[2 + i]))
-            print()
+            if i != nElement - 3:
+                print()
 
     def nodalDisplacement(self):
         deformacoes = self.__process.getNodalDisplacement()
