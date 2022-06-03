@@ -29,8 +29,8 @@ class NodeDraw(QGraphicsEllipseItem):
     def __init__(self, x: float, y: float):
         self.__sceneXPos = x
         self.__sceneYPos = y
-        raio = 10
-        rec = QRectF(x - raio/2, y - raio/2, raio, raio)
+        self.raio = 10
+        rec = QRectF(x - self.raio/2, y - self.raio/2, self.raio, self.raio)
         pen = QPen(Qt.GlobalColor.black, 1)
         brush = QBrush(Qt.GlobalColor.gray, Qt.BrushStyle.SolidPattern)
         super().__init__(rec)
@@ -82,7 +82,10 @@ class NodeDraw(QGraphicsEllipseItem):
     def __eq__(self, __o: object) -> bool:
         if not isinstance(__o, NodeDraw):
             return NotImplemented
-        return self.node == __o.node
+        testX = self.__sceneXPos + self.raio >= __o.__sceneXPos and self.__sceneXPos - self.raio <= __o.__sceneXPos
+        testY = self.__sceneYPos + self.raio >= __o.__sceneYPos and self.__sceneYPos - self.raio <= __o.__sceneYPos
+        return testX and testY
+        # return self.node == __o.node
 
 
 class ElementDraw(QGraphicsLineItem):
@@ -148,10 +151,12 @@ class ElementDraw(QGraphicsLineItem):
             return False
 
     def setSelected(self, selected: bool) -> None:
+        width = self.pen().width()
+        style = self.pen().style()
         if selected:
-            self.setPen(QPen(Qt.GlobalColor.red, self.pen().width(), self.pen().style()))
+            self.setPen(QPen(Qt.GlobalColor.red, width, style))
         else:
-            self.setPen(QPen(Qt.GlobalColor.gray, self.pen().width(), self.pen().style()))
+            self.setPen(QPen(Qt.GlobalColor.gray, width, style))
 
     def isSelected(self) -> bool:
         if self.pen().color() == Qt.GlobalColor.red:

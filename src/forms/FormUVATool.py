@@ -135,6 +135,15 @@ class FormUVATool(QMainWindow):
     def ElementActionTogled(self):
         if self.ElementAction.isChecked():
             print('Element Checked')
+        else:
+            self.scene.isDrawingLine = False
+            itemToRemove = None
+            for item in self.scene.items():
+                if isinstance(item, ElementDraw):
+                    if not item.isDrawed:
+                        itemToRemove = item
+                        break
+            self.scene.removeItem(itemToRemove)
 
     def ProcessCalculationsTriggered(self):
 
@@ -186,85 +195,78 @@ class UVAGraphicsScene(QGraphicsScene):
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         if event.button() == Qt.MouseButton.LeftButton:
-            if self.form.NodeAction.isChecked():
-                self.createNode(event.scenePos().x(), event.scenePos().y())
-
             if self.form.ElementAction.isChecked():
-                p = event.scenePos()
-                node = NodeDraw(p.x(), p.y())
+                node = NodeDraw(event.scenePos().x(), event.scenePos().y())
+                if not self.items().__contains__(node):
+                    self.addItem(node)
                 for item in self.items():
-                    if isinstance(item, NodeDraw):
-                        if item.hasFocus():
+                    if item.hasFocus():
+                        if isinstance(item, NodeDraw):
                             node = item
                             break
                 if not self.isDrawingLine:
-                    p1 = p
+                    p1 = QPointF(node.scenePos().x(), node.scenePos().y())
                     self.isDrawingLine = True
-                    node1 = node
-                    self.addItem(node1)
                     self.elementDraw = ElementDraw(QGraphicsLineItem(QLineF(p1, p1)))
                     self.elementDraw.setPen(QPen(QColor(255, 140, 0), 2, Qt.PenStyle.DashLine))
-                    self.elementDraw.setNode1(node1)
-
+                    self.elementDraw.setNode1(node)
                     self.addItem(self.elementDraw)
                 else:
                     self.elementDraw.setPen(QPen(Qt.GlobalColor.gray, 2, Qt.PenStyle.SolidLine))
-                    node2 = node
-                    self.addItem(node2)
-                    self.elementDraw.setNode2(node2)
+                    self.elementDraw.setNode2(node)
                     self.elementDraw.isDrawed = True
                     self.isDrawingLine = False
+            elif self.form.NodeAction.isChecked():
+                self.createNode(event.scenePos().x(), event.scenePos().y())
 
     def mouseDoubleClickEvent(self, event: QGraphicsSceneMouseEvent) -> None:
-        self.form.semApoio.setChecked(True)
-        self.form.fx.setText("")
-        self.form.fy.setText("")
-        self.form.m.setText("")
-        self.form.p.setText("")
-        self.form.area.setText("")
-        self.form.momentInertia.setText("")
-        self.form.youngModulus.setText("")
-        for item in self.items():
-            if isinstance(item, ElementDraw):
-                if item.hasFocus():
-                    item.setSelected(True)
-                    self.form.ChangeValues.close()
-                    self.form.ElementParameters.show()
-                    self.form.area.setText(str(item.element.area))
-                    self.form.momentInertia.setText(str(item.element.moment_inertia))
-                    self.form.youngModulus.setText(str(item.element.young_modulus))
-                else:
-                    item.setSelected(False)
-            elif isinstance(item, NodeDraw):
-                if item.hasFocus():
-                    item.setSelected(True)
-                    self.form.fx.setText(str(item.node.getNodalForce().fx))
-                    self.form.fy.setText(str(item.node.getNodalForce().fy))
-                    self.form.m.setText(str(item.node.getNodalForce().m))
-                    self.form.p.setText(str(item.node.getP()))
-                    if item.node.getSupport() == Apoio.primeiro_genero:
-                        self.form.primeiroGenero.setChecked(True)
-                    elif item.node.getSupport() == Apoio.segundo_genero:
-                        self.form.segundoGenero.setChecked(True)
-                    elif item.node.getSupport() == Apoio.terceiro_genero:
-                        self.form.terceiroGenero.setChecked(True)
-                    elif item.node.getSupport() == Apoio.semi_rigido:
-                        self.form.semiRigido.setChecked(True)
-                    elif item.node.getSupport() == Apoio.sem_suporte:
-                        self.form.semApoio.setChecked(True)
-                    self.form.ChangeValues.show()
-                    self.form.ElementParameters.close()
-                else:
-                    item.setSelected(False)
+        if not self.isDrawingLine:
+            self.form.semApoio.setChecked(True)
+            self.form.fx.setText("")
+            self.form.fy.setText("")
+            self.form.m.setText("")
+            self.form.p.setText("")
+            self.form.area.setText("")
+            self.form.momentInertia.setText("")
+            self.form.youngModulus.setText("")
+            for item in self.items():
+                if isinstance(item, ElementDraw):
+                    if item.hasFocus():
+                        item.setSelected(True)
+                        self.form.ChangeValues.close()
+                        self.form.ElementParameters.show()
+                        self.form.area.setText(str(item.element.area))
+                        self.form.momentInertia.setText(str(item.element.moment_inertia))
+                        self.form.youngModulus.setText(str(item.element.young_modulus))
+                    else:
+                        item.setSelected(False)
+                elif isinstance(item, NodeDraw):
+                    if item.hasFocus():
+                        self.form.fx.setText(str(item.node.getNodalForce().fx))
+                        self.form.fy.setText(str(item.node.getNodalForce().fy))
+                        self.form.m.setText(str(item.node.getNodalForce().m))
+                        self.form.p.setText(str(item.node.getP()))
+                        if item.node.getSupport() == Apoio.primeiro_genero:
+                            self.form.primeiroGenero.setChecked(True)
+                        elif item.node.getSupport() == Apoio.segundo_genero:
+                            self.form.segundoGenero.setChecked(True)
+                        elif item.node.getSupport() == Apoio.terceiro_genero:
+                            self.form.terceiroGenero.setChecked(True)
+                        elif item.node.getSupport() == Apoio.semi_rigido:
+                            self.form.semiRigido.setChecked(True)
+                        elif item.node.getSupport() == Apoio.sem_suporte:
+                            self.form.semApoio.setChecked(True)
+                        self.form.ChangeValues.show()
+                        self.form.ElementParameters.close()
+                        item.setSelected(True)
+                    else:
+                        item.setSelected(False)
 
     def mouseMoveEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         super().mouseMoveEvent(event)
         if event.buttons() == Qt.MouseButton.NoButton:
             if self.isDrawingLine:
-                p1 = self.elementDraw.line().p1()
-                p2 = event.scenePos()
-                self.elementDraw.setLine(QLineF(p1, p2))
-                self.elementDraw.setNode2(NodeDraw(p2.x(), p2.y()))
+                self.elementDraw.setLine(QLineF(self.elementDraw.line().p1(), event.scenePos()))
 
     def createNode(self, x: float, y: float):
         node = NodeDraw(x, y)
@@ -280,6 +282,11 @@ class UVAGraphicsScene(QGraphicsScene):
         if self.keyStack.__contains__(Qt.Key.Key_Control) and self.keyStack.__contains__(Qt.Key.Key_Z):
             if len(self.items()) > 0:
                 self.removeItem(self.items()[0])
+        if event.key() == Qt.Key.Key_Delete:
+            for i in range(len(self.items())):
+                if self.items()[i].isSelected():
+                    self.removeItem(self.items()[i])
+                    break
 
     def keyReleaseEvent(self, event: QKeyEvent) -> None:
         if self.keyStack.__contains__(event.key()):

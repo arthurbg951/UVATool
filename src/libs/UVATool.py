@@ -189,7 +189,7 @@ class Node:
         return self.x == other.x and self.y == other.y
 
     def __checkP(self, p) -> float:
-        if p == 0:
+        if p == 0 and self.__support != Support.middle_hinge:
             p = 1e-31
         if p >= 4:
             raise ValueError("P must be less than 4")
