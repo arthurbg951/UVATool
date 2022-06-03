@@ -17,6 +17,7 @@ from PyQt5.QtWidgets import (
     QLineEdit,
     QRadioButton,
     QGraphicsLineItem,
+    QGraphicsSceneWheelEvent,
 )
 from PyQt5.QtCore import (
     Qt,
@@ -31,7 +32,8 @@ from PyQt5.QtGui import (
     QMouseEvent,
     QKeyEvent,
     QColor,
-    QShowEvent
+    QShowEvent,
+    QWheelEvent
 )
 from PyQt5 import uic
 from libs.UVATool import *
@@ -88,8 +90,34 @@ class FormUVATool(QMainWindow):
         self.ElementAction.toggled.connect(self.ElementActionTogled)
         self.ProcessCalculations.triggered.connect(self.ProcessCalculationsTriggered)
 
+        self.GraphicsView.DragMode(1)
+
         self.resize(900, 700)
         self.show()
+
+    def wheelEvent(self, event: QWheelEvent) -> None:
+        """
+        Zoom in or out of the view.
+        """
+        zoomInFactor = 1.25
+        zoomOutFactor = 1 / zoomInFactor
+
+        # Save the scene pos
+        oldPos = self.GraphicsView.mapToScene(event.pos())
+
+        # Zoom
+        if event.angleDelta().y() > 0:
+            zoomFactor = zoomInFactor
+        else:
+            zoomFactor = zoomOutFactor
+        self.GraphicsView.scale(zoomFactor, zoomFactor)
+
+        # Get the new position
+        newPos = self.GraphicsView.mapToScene(event.pos())
+
+        # Move scene to old position
+        delta = newPos - oldPos
+        self.GraphicsView.translate(delta.x(), delta.y())
 
     def confirmClicked(self):
         for item in self.scene.items():
