@@ -18,11 +18,13 @@ from PyQt5.QtWidgets import (
     QRadioButton,
     QGraphicsLineItem,
     QGraphicsSceneWheelEvent,
+    QGraphicsSceneDragDropEvent
 )
 from PyQt5.QtCore import (
     Qt,
     QPointF,
     QLineF,
+    QEvent
 )
 from PyQt5.QtGui import (
     QPixmap,
@@ -92,7 +94,11 @@ class FormUVATool(QMainWindow):
 
         self.GraphicsView.DragMode(1)
 
-        self.resize(900, 700)
+        # self.startPos = None
+        # install the event filter on the application
+        # QApplication.instance().installEventFilter(self)
+
+        self.resize(900, 650)
         self.show()
 
     def wheelEvent(self, event: QWheelEvent) -> None:
@@ -118,6 +124,24 @@ class FormUVATool(QMainWindow):
         # Move scene to old position
         delta = newPos - oldPos
         self.GraphicsView.translate(delta.x(), delta.y())
+
+    # def eventFilter(self, source, event: QMouseEvent):
+    #     if (event.type() == QEvent.MouseButtonPress and event.button() == Qt.MiddleButton):
+    #         self.GraphicsView.setDragMode(QGraphicsView.DragMode.ScrollHandDrag)
+    #         self.startPos = event.pos()
+    #         return True
+    #     elif event.type() == QEvent.MouseMove and self.startPos is not None:
+    #         # self.scene.move(self.pos() + event.pos() - self.startPos)
+    #         p = self.GraphicsView.mapToScene(event.pos())
+    #         self.scene.setSceneRect(-p.x(), -p.y(), self.scene.width(), self.scene.height())
+    #         # pressEvent = QMouseEvent(QEvent.GraphicsSceneMousePress, event.pos(), Qt.MouseButton.MiddleButton, Qt.MouseButton.MiddleButton, Qt.KeyboardModifier.NoModifier)
+    #         # self.GraphicsView.mousePressEvent(pressEvent)
+    #         return True
+    #     elif event.type() == QEvent.MouseButtonRelease and self.startPos is not None:
+    #         self.GraphicsView.setDragMode(QGraphicsView.DragMode.NoDrag)
+    #         self.startPos = None
+    #         return True
+    #     return super(FormUVATool, self).eventFilter(source, event)
 
     def confirmClicked(self):
         for item in self.scene.items():
@@ -174,6 +198,8 @@ class FormUVATool(QMainWindow):
             self.scene.removeItem(itemToRemove)
 
     def ProcessCalculationsTriggered(self):
+        self.ChangeValues.close()
+        self.ElementParameters.close()
 
         print()
         print("----------------------------------------------")
@@ -295,6 +321,16 @@ class UVAGraphicsScene(QGraphicsScene):
         if event.buttons() == Qt.MouseButton.NoButton:
             if self.isDrawingLine:
                 self.elementDraw.setLine(QLineF(self.elementDraw.line().p1(), event.scenePos()))
+        # elif event.buttons() == Qt.MouseButton.MiddleButton:
+        #     self.form.GraphicsView.viewport().setCursor(Qt.CursorShape.OpenHandCursor)
+        #     self.setSceneRect(QRectF(-event.scenePos().x(), -event.scenePos().y(), 1, 1))
+        #     for item in self.items():
+        #         if isinstance(item, NodeDraw):
+        #             print(item.scenePos())
+
+    def mouseReleaseEvent(self, event: QGraphicsSceneMouseEvent) -> None:
+        super().mouseReleaseEvent(event)
+        self.form.GraphicsView.viewport().setCursor(Qt.CursorShape.ArrowCursor)
 
     def createNode(self, x: float, y: float):
         node = NodeDraw(x, y)
