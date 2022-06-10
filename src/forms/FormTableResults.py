@@ -33,16 +33,28 @@ class FormTableResults(QWidget):
         super().__init__()
         hbox = QVBoxLayout()
         equilibrium = process.getEquilibriumMatrix()
-        table = QTableWidget(equilibrium.shape[0], equilibrium.shape[1])
+        equilibriumTable = QTableWidget(equilibrium.shape[0], equilibrium.shape[1])
         try:
             for i in range(equilibrium.shape[0]):
                 for j in range(equilibrium.shape[1]):
                     content = QTableWidgetItem(str(equilibrium[i, j]))
-                    table.setItem(i, j, content)
-            table.resizeColumnsToContents()
+                    equilibriumTable.setItem(i, j, content)
+            equilibriumTable.resizeColumnsToContents()
         except Exception as e:
             QMessageBox.warning(self, "Warning", str(e))
-        hbox.addWidget(table)
+        # frameStiffness = process.getFrameStiffness()
+        # frameStiffnessTable = QTableWidget(frameStiffness.shape[0], frameStiffness.shape[1])
+        # try:
+        #     for i in range(frameStiffness.shape[0]):
+        #         for j in range(frameStiffness.shape[1]):
+        #             content = QTableWidgetItem(str(frameStiffness[i, j]))
+        #             frameStiffnessTable.setItem(i, j, content)
+        #     frameStiffnessTable.resizeColumnsToContents()
+        # except Exception as e:
+        #     QMessageBox.warning(self, "Warning", str(e))
+
+        hbox.addWidget(equilibriumTable)
+        # hbox.addWidget(frameStiffnessTable)
         self.setLayout(hbox)
-        self.resize(table.width(), table.height())
+        self.resize(equilibriumTable.width(), equilibriumTable.height())
         super().showMaximized()

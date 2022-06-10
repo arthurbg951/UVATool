@@ -298,6 +298,8 @@ class UVAGraphicsScene(QGraphicsScene):
         self.elements = []
         self.gridPoints = []
 
+        self.edificio3Andares()
+
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         if event.button() == Qt.MouseButton.LeftButton:
             self.clickPoint.setX(event.scenePos().x())
@@ -433,6 +435,37 @@ class UVAGraphicsScene(QGraphicsScene):
     def keyReleaseEvent(self, event: QKeyEvent) -> None:
         if self.keyStack.__contains__(event.key()):
             self.keyStack.remove(event.key())
+
+    def edificio3Andares(self):
+        n1 = NodeDraw(0, 0)
+        n2 = NodeDraw(150, 0)
+        n3 = NodeDraw(0, 30)
+        n4 = NodeDraw(150, 30)
+        n5 = NodeDraw(0, 60)
+        n6 = NodeDraw(150, 60)
+        n7 = NodeDraw(0, 90)
+        n8 = NodeDraw(150, 90)
+        n1.setSupport(Apoio.segundo_genero)
+        n2.setSupport(Apoio.primeiro_genero)
+        n3.setNodalForce(NodalForce(100, 0, 0))
+        n5.setNodalForce(NodalForce(100, 0, 0))
+        n7.setNodalForce(NodalForce(100, 0, 0))
+        e1 = ElementDraw(n1, n3, 1, 1, 1)
+        e2 = ElementDraw(n2, n4, 1, 1, 1)
+        e3 = ElementDraw(n3, n4, 1, 1, 1)
+        e4 = ElementDraw(n3, n5, 1, 1, 1)
+        e5 = ElementDraw(n4, n6, 1, 1, 1)
+        e6 = ElementDraw(n5, n6, 1, 1, 1)
+        e7 = ElementDraw(n5, n7, 1, 1, 1)
+        e8 = ElementDraw(n6, n8, 1, 1, 1)
+        e9 = ElementDraw(n7, n8, 1, 1, 1)
+        nodes = [n1, n2, n3, n4, n5, n6, n7, n8]
+        elements = [e1, e2, e3, e4, e5, e6, e7, e8, e9]
+
+        for node in nodes:
+            self.drawNode(node)
+        for element in elements:
+            self.drawElement(element)
 
 
 '''
