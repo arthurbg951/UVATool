@@ -117,6 +117,9 @@ class NodeDraw(Node):
     def getPoint(self) -> QPointF:
         return QPointF(self.x, self.y)
 
+    def setColor(self, color: QColor):
+        self.__item.setColor(color)
+
     def __eq__(self, __o: object) -> bool:
         if not isinstance(__o, NodeDraw):
             return NotImplemented
@@ -165,6 +168,10 @@ class ElementItem(QGraphicsLineItem):
         else:
             self.setPen(QPen(Qt.GlobalColor.gray, width, style))
 
+    def setColor(self, color: QColor):
+        line = QPen(color, self.pen().width(), self.pen().style())
+        self.setPen(line)
+
     def isSelected(self) -> bool:
         if self.pen().color() == Qt.GlobalColor.red:
             return True
@@ -173,7 +180,7 @@ class ElementItem(QGraphicsLineItem):
 
 
 class ElementDraw(Element):
-    __item: QGraphicsItem
+    __item: ElementItem
 
     def __init__(self, node1: NodeDraw, node2: NodeDraw, area: float, moment_inertia: float, young_modulus: float) -> None:
         super().__init__(node1, node2, area, moment_inertia, young_modulus)
@@ -183,6 +190,3 @@ class ElementDraw(Element):
 
     def getItem(self):
         return self.__item
-
-    def __eq__(self, other: object) -> bool:
-        return super().__eq__(other)

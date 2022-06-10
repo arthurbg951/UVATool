@@ -1,27 +1,11 @@
 from PyQt5.QtWidgets import (
-    QApplication,
     QWidget,
-    QPushButton,
+    QVBoxLayout,
+    QTableWidget,
+    QTableWidgetItem,
     QMainWindow,
-    QAction,
-    QGraphicsView,
-    QGraphicsScene,
-    QGraphicsSceneMouseEvent,
-    QDialog,
-    QToolBar,
-    QGroupBox,
-    QDockWidget,
-    QGraphicsItem,
-    QGraphicsSceneHoverEvent,
-    QGraphicsEllipseItem,
-    QLineEdit,
-    QRadioButton,
-    QGraphicsLineItem,
-    QGraphicsSceneWheelEvent,
-    QGraphicsSceneDragDropEvent,
-    QHBoxLayout,
-    QTableView,
-    QMessageBox
+    QMessageBox,
+    QDialog
 )
 from PyQt5.QtCore import (
     Qt,
@@ -40,28 +24,31 @@ from PyQt5.QtGui import (
     QShowEvent,
     QWheelEvent
 )
-from PyQt5 import uic
 from libs.UVATool import *
-from libs.Drawing import *
 
 
-class FormTableResults(QMainWindow):
-    calc: Process
+class FormTableResults(QWidget):
+    process: Process
 
-    def __init__(self, parent) -> None:
-        super().__init__(parent)
+    def __init__(self) -> None:
+        super().__init__()
 
-        hbox = QHBoxLayout()
-        table = QTableView()
-
+    def show(self) -> None:
+        hbox = QVBoxLayout()
+        equilibrium = self.process.getEquilibriumMatrix()
+        table = QTableWidget(equilibrium.shape[0], equilibrium.shape[1])
         try:
-            table.setLineWidth(equilibrium.shape[0])
-            equilibrium = self.calc.getEquilibriumMatrix()
-        except:
-            raise Exception("Equilibrium Matrix not Defined")
-
+            for i in range(equilibrium.shape[0]):
+                for j in range(equilibrium.shape[1]):
+                    content = QTableWidgetItem(str(equilibrium[i, j]))
+                    table.setItem(i, j, content)
+            table.resizeColumnsToContents()
+        except Exception as e:
+            QMessageBox.warning(self, "Warning", str(e))
         hbox.addWidget(table)
         self.setLayout(hbox)
+        self.resize(table.size())
+        super().show()
 
-    def setProcess(self, process: Process):
-        self.calc = process
+    def setProcess(self, process):
+        self.process = process

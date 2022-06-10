@@ -150,7 +150,7 @@ class Node:
             if support == sup:
                 test = False
         if test:
-            raise ValueError("Support needs to be from class Support.")
+            raise StructureError("Support needs to be from class Support.")
 
     def setSupport(self, support: Support) -> None:
         self.__checkSupport(support)
@@ -163,7 +163,7 @@ class Node:
 
     def setNodalForce(self, nodal_force: NodalForce) -> None:
         if not isinstance(nodal_force, NodalForce):
-            raise ValueError("Nodal Force must be from class NodalForce.")
+            raise StructureError("Nodal Force must be from class NodalForce.")
         self.__nodal_force = nodal_force
 
     def getNodalForce(self) -> NodalForce:

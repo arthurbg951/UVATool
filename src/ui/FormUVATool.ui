@@ -81,7 +81,7 @@
   <widget class="QDockWidget" name="ChangeValues">
    <property name="minimumSize">
     <size>
-     <width>200</width>
+     <width>250</width>
      <height>397</height>
     </size>
    </property>
@@ -316,7 +316,7 @@
   <widget class="QDockWidget" name="ElementParameters">
    <property name="minimumSize">
     <size>
-     <width>217</width>
+     <width>250</width>
      <height>217</height>
     </size>
    </property>
@@ -355,7 +355,7 @@
              <widget class="QLineEdit" name="area">
               <property name="maximumSize">
                <size>
-                <width>122</width>
+                <width>90</width>
                 <height>16777215</height>
                </size>
               </property>
@@ -379,7 +379,7 @@
              <widget class="QLineEdit" name="momentInertia">
               <property name="maximumSize">
                <size>
-                <width>122</width>
+                <width>90</width>
                 <height>16777215</height>
                </size>
               </property>
@@ -403,7 +403,7 @@
              <widget class="QLineEdit" name="youngModulus">
               <property name="maximumSize">
                <size>
-                <width>122</width>
+                <width>90</width>
                 <height>16777215</height>
                </size>
               </property>
@@ -485,7 +485,7 @@
   <widget class="QDockWidget" name="Options">
    <property name="minimumSize">
     <size>
-     <width>215</width>
+     <width>250</width>
      <height>129</height>
     </size>
    </property>

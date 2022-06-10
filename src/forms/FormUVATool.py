@@ -77,8 +77,8 @@ class FormUVATool(QMainWindow):
     ERA: QRadioButton
     MNE: QRadioButton
 
-    def __init__(self, parent=None):
-        super(FormUVATool, self).__init__(parent=None)
+    def __init__(self):
+        super().__init__()
         uic.loadUi("ui/FormUVATool.ui", self)
 
         self.scene = UVAGraphicsScene(self)
@@ -90,14 +90,19 @@ class FormUVATool(QMainWindow):
 
         self.confirmButton.clicked.connect(self.confirmClicked)
         self.confirmButton_2.clicked.connect(self.confirmClicked_2)
-        self.ChangeValues.visibilityChanged.connect(self.ChangeValuesClose)
-        self.p.textChanged.connect(self.pValueChanged)
+
         self.ElementAction.triggered.connect(self.elementActionClicked)
         self.ProcessCalculations.triggered.connect(self.ProcessCalculationsTriggered)
         self.actionTableResults.triggered.connect(self.showTableReultsForm)
         self.NodeAction.triggered.connect(self.nodeActionClicked)
 
-        self.GraphicsView.DragMode(1)
+        self.p.textChanged.connect(self.pValueChanged)
+
+        self.ChangeValues.visibilityChanged.connect(self.ChangeValuesClose)
+
+        self.formTableResults = FormTableResults()
+
+        # self.GraphicsView.DragMode(1)
 
         self.calc = None
 
@@ -126,24 +131,26 @@ class FormUVATool(QMainWindow):
 
     def confirmClicked(self):
         for item in self.scene.items():
-            if isinstance(item, NodeDraw):
+            if isinstance(item, NodeItem):
                 if item.isSelected():
-                    fx = float(self.fx.text())
-                    fy = float(self.fy.text())
-                    m = float(self.m.text())
-                    p = float(self.p.text())
-                    item.node.setNodalForce(NodalForce(fx, fy, m))
-                    item.node.setP(p)
-                    if self.primeiroGenero.isChecked():
-                        item.node.setSupport(Apoio.primeiro_genero)
-                    elif self.segundoGenero.isChecked():
-                        item.node.setSupport(Apoio.segundo_genero)
-                    elif self.terceiroGenero.isChecked():
-                        item.node.setSupport(Apoio.terceiro_genero)
-                    elif self.semiRigido.isChecked():
-                        item.node.setSupport(Apoio.semi_rigido)
-                    elif self.semApoio.isChecked():
-                        item.node.setSupport(Apoio.sem_suporte)
+                    for node in self.scene.nodes:
+                        if node.getItem() == item:
+                            fx = float(self.fx.text())
+                            fy = float(self.fy.text())
+                            m = float(self.m.text())
+                            p = float(self.p.text())
+                            node.setNodalForce(NodalForce(fx, fy, m))
+                            node.setP(p)
+                            if self.primeiroGenero.isChecked():
+                                node.setSupport(Apoio.primeiro_genero)
+                            elif self.segundoGenero.isChecked():
+                                node.setSupport(Apoio.segundo_genero)
+                            elif self.terceiroGenero.isChecked():
+                                node.setSupport(Apoio.terceiro_genero)
+                            elif self.semiRigido.isChecked():
+                                node.setSupport(Apoio.semi_rigido)
+                            elif self.semApoio.isChecked():
+                                node.setSupport(Apoio.sem_suporte)
 
     def confirmClicked_2(self):
         for item in self.scene.items():
@@ -164,6 +171,8 @@ class FormUVATool(QMainWindow):
     def pValueChanged(self):
         if self.p.text() != "":
             self.semiRigido.setChecked(True)
+        if self.p.text() == "1":
+            self.semApoio.setChecked(True)
 
     def ProcessCalculationsTriggered(self):
         self.ChangeValues.close()
@@ -186,13 +195,12 @@ class FormUVATool(QMainWindow):
             nodes = []
             elements = []
 
-            for item in reversed(self.scene.items()):
-                if isinstance(item, NodeDraw):
-                    nodes.append(item.node)
-
-                if isinstance(item, ElementDraw):
-                    elements.append(item.element)
-                    # print("Comprimento do elemento: ", item.element.getLength())
+            for node in reversed(self.scene.nodes):
+                nodes.append(node)
+                print('Node: support=', node.getSupport(), " p=", node.getP(), " node=", node.getPoint())
+            for element in reversed(self.scene.elements):
+                elements.append(element)
+                print('Element: node1=', element.node1, " node2=", element.node2)
 
             if len(nodes) == 0 and len(elements) == 0:
                 raise Exception("Não existe nenhuma estrutura!")
@@ -210,9 +218,8 @@ class FormUVATool(QMainWindow):
 
     def showTableReultsForm(self):
         try:
-            drawForm = FormTableResults(self)
-            drawForm.setProcess(self.calc)
-            drawForm.show()
+            self.formTableResults.setProcess(self.calc)
+            self.formTableResults.show()
         except Exception as e:
             QMessageBox.warning(self, "Warning", str(e))
 
@@ -265,6 +272,8 @@ class FormUVATool(QMainWindow):
 
 
 class UVAGraphicsScene(QGraphicsScene):
+    nodes: list[NodeDraw]
+    elements: list[ElementDraw]
 
     def __init__(self, form: FormUVATool):
         super().__init__()
@@ -290,39 +299,9 @@ class UVAGraphicsScene(QGraphicsScene):
         self.gridPoints = []
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
-        # if event.button() == Qt.MouseButton.LeftButton:
-        #     if self.form.ElementAction.isChecked():
-        #         node = NodeDraw(event.scenePos().x(), event.scenePos().y())
-        #         if self.verifyExistingNode(event) != None:
-        #             self.addItem(node.getItem())
-        #         for item in self.items():
-        #             if item.hasFocus():
-        #                 if isinstance(item, NodeDraw):
-        #                     node = item
-        #                     break
-        #         if not self.isDrawingLine:
-        #             p1 = QPointF(node.x, node.y)
-        #             print(p1.x(), p1.y())
-        #             self.isDrawingLine = True
-        #             line = QGraphicsLineItem(QLineF(p1, p1))
-        #             line.setPen(QPen(QColor(255, 140, 0), 2, Qt.PenStyle.DashLine))
-        #             self.elementDraw = ElementDraw(line)
-        #             self.elementDraw.setNode1(node)
-        #             self.addItem(self.elementDraw)
-        #         else:
-        #             self.elementDraw.setPen(QPen(Qt.GlobalColor.gray, 2, Qt.PenStyle.SolidLine))
-        #             self.elementDraw.setNode2(node)
-        #             self.elementDraw.isDrawed = True
-        #             self.isDrawingLine = False
-        #     elif self.form.NodeAction.isChecked():
-        #         # self.drawNode(NodeDraw(event.scenePos().x(), event.scenePos().y()))
-        #         if self.nodePreview.isVisible():
-        #             node = NodeDraw(event.scenePos().x(), event.scenePos().y())
-        #     #         self.drawNode(node)
-
-        self.clickPoint.setX(event.scenePos().x())
-        self.clickPoint.setY(event.scenePos().y())
         if event.button() == Qt.MouseButton.LeftButton:
+            self.clickPoint.setX(event.scenePos().x())
+            self.clickPoint.setY(event.scenePos().y())
             if self.canDrawNode:
                 existingNode = self.verifyExistingNode(event)
                 if existingNode == None:
@@ -360,61 +339,42 @@ class UVAGraphicsScene(QGraphicsScene):
                         self.elementNode1 = node
 
     def mouseDoubleClickEvent(self, event: QGraphicsSceneMouseEvent) -> None:
-        if not self.isDrawingLine:
-            self.form.semApoio.setChecked(True)
-            self.form.fx.setText("")
-            self.form.fy.setText("")
-            self.form.m.setText("")
-            self.form.p.setText("")
-            self.form.area.setText("")
-            self.form.momentInertia.setText("")
-            self.form.youngModulus.setText("")
-            for item in self.items():
-                if isinstance(item, ElementDraw):
-                    if item.hasFocus():
-                        item.setSelected(True)
-                        self.form.ChangeValues.close()
-                        self.form.ElementParameters.show()
-                        self.form.area.setText(str(item.element.area))
-                        self.form.momentInertia.setText(str(item.element.moment_inertia))
-                        self.form.youngModulus.setText(str(item.element.young_modulus))
-                    else:
-                        item.setSelected(False)
-                elif isinstance(item, NodeDraw):
-                    if item.hasFocus():
-                        self.form.fx.setText(str(item.node.getNodalForce().fx))
-                        self.form.fy.setText(str(item.node.getNodalForce().fy))
-                        self.form.m.setText(str(item.node.getNodalForce().m))
-                        self.form.p.setText(str(item.node.getP()))
-                        if item.node.getSupport() == Apoio.primeiro_genero:
-                            self.form.primeiroGenero.setChecked(True)
-                        elif item.node.getSupport() == Apoio.segundo_genero:
-                            self.form.segundoGenero.setChecked(True)
-                        elif item.node.getSupport() == Apoio.terceiro_genero:
-                            self.form.terceiroGenero.setChecked(True)
-                        elif item.node.getSupport() == Apoio.semi_rigido:
-                            self.form.semiRigido.setChecked(True)
-                        elif item.node.getSupport() == Apoio.sem_suporte:
-                            self.form.semApoio.setChecked(True)
-                        self.form.ChangeValues.show()
-                        self.form.ElementParameters.close()
-                        item.setSelected(True)
-                    else:
-                        item.setSelected(False)
+        for item in self.items():
+            if item.hasFocus():
+                if isinstance(item, NodeItem):
+                    item.setColor(Qt.GlobalColor.red)
+                    for node in self.nodes:
+                        if node.getItem() == item:
+                            self.form.fx.setText(str(node.getNodalForce().fx))
+                            self.form.fy.setText(str(node.getNodalForce().fy))
+                            self.form.m.setText(str(node.getNodalForce().m))
+                            self.form.p.setText(str(node.getP()))
+                            if node.getSupport() == Apoio.sem_suporte:
+                                self.form.semApoio.setChecked(True)
+                            elif node.getSupport() == Apoio.primeiro_genero:
+                                self.form.primeiroGenero.setChecked(True)
+                            elif node.getSupport() == Apoio.segundo_genero:
+                                self.form.segundoGenero.setChecked(True)
+                            elif node.getSupport() == Apoio.terceiro_genero:
+                                self.form.terceiroGenero.setChecked(True)
+                            elif node.getSupport() == Apoio.semi_rigido:
+                                self.form.semiRigido.setChecked(True)
+                            self.form.ElementParameters.hide()
+                            self.form.ChangeValues.show()
+                if isinstance(item, ElementItem):
+                    item.setColor(Qt.GlobalColor.red)
+                    for element in self.elements:
+                        if element.getItem() == item:
+                            self.form.ChangeValues.hide()
+                            self.form.ElementParameters.show()
+            else:
+                if isinstance(item, NodeItem):
+                    item.setColor(Qt.GlobalColor.gray)
+                if isinstance(item, ElementItem):
+                    item.setColor(Qt.GlobalColor.gray)
 
     def mouseMoveEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         super().mouseMoveEvent(event)
-        # self.verifyExistingNode(event)
-        # if event.buttons() == Qt.MouseButton.NoButton:
-        #     if self.isDrawingLine:
-        #         self.elementDraw.setLine(QLineF(self.elementDraw.line().p1(), event.scenePos()))
-        # elif event.buttons() == Qt.MouseButton.MiddleButton:
-        #     self.form.GraphicsView.viewport().setCursor(Qt.CursorShape.OpenHandCursor)
-        #     self.setSceneRect(QRectF(-event.scenePos().x(), -event.scenePos().y(), 1, 1))
-        #     for item in self.items():
-        #         if isinstance(item, NodeDraw):
-        #             print(item.scenePos())
-
         node = self.verifyExistingNode(event)
         if node == None:
             self.nodePreview.setPos(event.scenePos().x(), event.scenePos().y())
@@ -459,10 +419,6 @@ class UVAGraphicsScene(QGraphicsScene):
                 return e
 
     def keyPressEvent(self, event: QKeyEvent) -> None:
-        # if event.key() == Qt.Key.Key_P:
-        #     if len(self.items()) > 0:
-        #         print(self.items()[0].shape())
-
         if not self.keyStack.__contains__(event.key()):
             self.keyStack.insert(0, event.key())
         if self.keyStack.__contains__(Qt.Key.Key_Control) and self.keyStack.__contains__(Qt.Key.Key_Z):
