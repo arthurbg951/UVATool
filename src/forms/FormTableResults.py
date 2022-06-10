@@ -28,14 +28,11 @@ from libs.UVATool import *
 
 
 class FormTableResults(QWidget):
-    process: Process
 
-    def __init__(self) -> None:
+    def __init__(self, process: Process) -> None:
         super().__init__()
-
-    def show(self) -> None:
         hbox = QVBoxLayout()
-        equilibrium = self.process.getEquilibriumMatrix()
+        equilibrium = process.getEquilibriumMatrix()
         table = QTableWidget(equilibrium.shape[0], equilibrium.shape[1])
         try:
             for i in range(equilibrium.shape[0]):
@@ -47,8 +44,5 @@ class FormTableResults(QWidget):
             QMessageBox.warning(self, "Warning", str(e))
         hbox.addWidget(table)
         self.setLayout(hbox)
-        self.resize(table.size())
-        super().show()
-
-    def setProcess(self, process):
-        self.process = process
+        self.resize(table.width(), table.height())
+        super().showMaximized()

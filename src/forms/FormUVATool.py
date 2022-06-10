@@ -77,6 +77,8 @@ class FormUVATool(QMainWindow):
     ERA: QRadioButton
     MNE: QRadioButton
 
+    formTableResults: FormTableResults
+
     def __init__(self):
         super().__init__()
         uic.loadUi("ui/FormUVATool.ui", self)
@@ -99,8 +101,6 @@ class FormUVATool(QMainWindow):
         self.p.textChanged.connect(self.pValueChanged)
 
         self.ChangeValues.visibilityChanged.connect(self.ChangeValuesClose)
-
-        self.formTableResults = FormTableResults()
 
         # self.GraphicsView.DragMode(1)
 
@@ -218,7 +218,7 @@ class FormUVATool(QMainWindow):
 
     def showTableReultsForm(self):
         try:
-            self.formTableResults.setProcess(self.calc)
+            self.formTableResults = FormTableResults(self.calc)
             self.formTableResults.show()
         except Exception as e:
             QMessageBox.warning(self, "Warning", str(e))
