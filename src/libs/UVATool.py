@@ -87,7 +87,7 @@ class NodalForce:
     def __init__(self, fx: float, fy: float, m: float) -> None:
         self.fx = fx
         self.fy = fy
-        self.m = m
+        self.m = -m
 
     def getAsVector(self) -> numpy.array:
         return numpy.array([self.fx, self.fy, self.m])
@@ -176,7 +176,6 @@ class Element:
     area: float
     moment_inertia: float
     young_modulus: float
-    __angle: float
     __p1: float
     __p2: float
 
@@ -184,10 +183,10 @@ class Element:
         self.node1 = node1
         self.node2 = node2
         self.__verifyNodes()
+        # self.__verifyRoute()
         self.area = area
         self.moment_inertia = moment_inertia
         self.young_modulus = young_modulus
-        self.__angle = self.__setAngle()
         self.__p1 = node1.getP()
         self.__p2 = node2.getP()
 
@@ -206,21 +205,53 @@ class Element:
         if self.node1 == self.node2:
             raise StructureError("node1 cant be equal to node2.")
 
+    def __verifyRoute(self) -> None:
+        point = Point2d(self.node2.x - self.node1.x, self.node2.y - self.node1.y)
+        print(point)
+        inverter = (point.x < 0 and point.y < 0) or (point.x > 0 and point.y < 0)
+        if inverter:
+            newNode1 = self.node1
+            newNode2 = self.node2
+            self.node1 = newNode2
+            self.node2 = newNode1
+
     def getLength(self) -> float:
         return math.sqrt(math.pow(self.node1.x - self.node2.x, 2) + math.pow(self.node1.y - self.node2.y, 2))
 
     def getAngle(self) -> float:
-        return self.__angle
+        sinalQuadrante = 1
+        u = Point2d(1, 0)
+        v = Point2d(self.node2.x - self.node1.x, self.node2.y - self.node1.y)
+        if v.x > 0 and v.y > 0:
+            sinalQuadrante = 1
+        elif v.x < 0 and v.y > 0:
+            sinalQuadrante = 1
+        elif v.x < 0 and v.y < 0:
+            sinalQuadrante = -1
+        elif v.x > 0 and v.y < 0:
+            sinalQuadrante = -1
+        elif v.x > 0 and v.y == 0:
+            sinalQuadrante = 1
+        elif v.x == 0 and v.y > 0:
+            sinalQuadrante = 1
+        elif v.x <= 0 and v.y == 0:
+            sinalQuadrante = -1
+        elif v.x == 0 and v.y < 0:
+            sinalQuadrante = -1
+        # print("u=", u, "v=", v)
+        uv = u.x * v.x + u.y * v.y
+        modu = math.sqrt(math.pow(u.x, 2) + math.pow(u.y, 2))
+        modv = math.sqrt(math.pow(v.x, 2) + math.pow(v.y, 2))
+        # print("uv=", uv, "|u|=", modu, "|v|=", modv)
+        return sinalQuadrante * math.acos(uv/(modu * modv))
 
-    def __setAngle(self) -> float:
-        resposta = None
-        deltaX = self.node1.x - self.node2.x
-        deltaY = self.node1.y - self.node2.y
-        if deltaX == 0:
-            resposta = math.pi/2
-        else:
-            resposta = math.atan(deltaY/deltaX)
-        return resposta
+        # u = Point2d(0, 0)
+        # v = Point2d(self.node2.x - self.node1.x, self.node2.y - self.node1.y)
+        # sinal = 1
+        # if (v.x <= 0 and v.y >= 0) or (v.x <= 0 and v.y <= 0):
+        #     sinal = -1
+
+        # return sinal * math.acos(v.y/math.sqrt(math.pow(v.y, 2) + math.pow(v.x, 2)))
 
     def setP(self, p1: float, p2: float) -> None:
         self.__p1 = p1
@@ -247,6 +278,10 @@ class Process:
     __process_time: datetime
 
     def __init__(self, nodes: list[Node], elements: list[Element], analisys: Analise) -> None:
+        # self.__nodes = []
+        # self.__nodes.append(elements[0].node1)
+        # for element in elements:
+        #     self.__nodes.append(element.node2)
         self.__nodes = nodes
         self.__elements = elements
         self.__analisys = analisys
@@ -521,6 +556,9 @@ class Process:
 
     def getDeformations(self) -> numpy.array:
         return self.__deformations
+
+    def getNodalForces(self) -> numpy.array:
+        return self.__nodal_force
 
     def getInternalForces(self) -> numpy.array:
         return self.__internal_forces

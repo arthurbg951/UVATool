@@ -19,13 +19,15 @@ from PyQt5.QtWidgets import (
     QGraphicsLineItem,
     QGraphicsSceneWheelEvent,
     QGraphicsSceneDragDropEvent,
-    QMessageBox
+    QMessageBox,
+
 )
 from PyQt5.QtCore import (
     Qt,
     QPointF,
     QLineF,
-    QEvent
+    QEvent,
+
 )
 from PyQt5.QtGui import (
     QPixmap,
@@ -36,7 +38,9 @@ from PyQt5.QtGui import (
     QKeyEvent,
     QColor,
     QShowEvent,
-    QWheelEvent
+    QWheelEvent,
+    QPainter,
+
 )
 from PyQt5 import uic
 from libs.UVATool import *
@@ -151,6 +155,16 @@ class FormUVATool(QMainWindow):
                                 node.setSupport(Apoio.semi_rigido)
                             elif self.semApoio.isChecked():
                                 node.setSupport(Apoio.sem_suporte)
+            if isinstance(item, ElementDraw):
+                if item.isSelected():
+                    for element in self.scene.elements:
+                        if element.getItem() == item:
+                            area = float(self.area.text())
+                            inertia = float(self.momentInertia.text())
+                            young_modulus = float(self.youngModulus.text())
+                            element.area = area
+                            element.moment_inertia = inertia
+                            element.young_modulus = young_modulus
 
     def confirmClicked_2(self):
         for item in self.scene.items():
@@ -197,7 +211,7 @@ class FormUVATool(QMainWindow):
 
             for node in reversed(self.scene.nodes):
                 nodes.append(node)
-                print('Node: support=', node.getSupport(), " p=", node.getP(), " node=", node.getPoint())
+                print('Node: support=', node.getSupport(), " p=", node.getP(), " node=", node.getPoint(), "fx=", node.getNodalForce().fx)
             for element in reversed(self.scene.elements):
                 elements.append(element)
                 print('Element: node1=', element.node1, " node2=", element.node2)
@@ -221,7 +235,7 @@ class FormUVATool(QMainWindow):
             self.formTableResults = FormTableResults(self.calc)
             self.formTableResults.show()
         except Exception as e:
-            QMessageBox.warning(self, "Warning", str(e))
+            QMessageBox.warning(self, "Form Table Results Error", str(e))
 
     def nodeActionClicked(self):
         if self.ElementAction.isChecked():
@@ -270,6 +284,10 @@ class FormUVATool(QMainWindow):
             self.scene.canDrawLine = False
             self.scene.elementPreview.hide()
 
+    def close(self) -> bool:
+        self.formTableResults.close()
+        super().close()
+
 
 class UVAGraphicsScene(QGraphicsScene):
     nodes: list[NodeDraw]
@@ -299,6 +317,7 @@ class UVAGraphicsScene(QGraphicsScene):
         self.gridPoints = []
 
         self.edificio3Andares()
+        # self.balanco()
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         if event.button() == Qt.MouseButton.LeftButton:
@@ -367,6 +386,9 @@ class UVAGraphicsScene(QGraphicsScene):
                     item.setColor(Qt.GlobalColor.red)
                     for element in self.elements:
                         if element.getItem() == item:
+                            self.form.area.setText(str(element.area))
+                            self.form.momentInertia.setText(str(element.moment_inertia))
+                            self.form.youngModulus.setText(str(element.young_modulus))
                             self.form.ChangeValues.hide()
                             self.form.ElementParameters.show()
             else:
@@ -437,31 +459,47 @@ class UVAGraphicsScene(QGraphicsScene):
             self.keyStack.remove(event.key())
 
     def edificio3Andares(self):
-        n1 = NodeDraw(0, 0)
-        n2 = NodeDraw(150, 0)
-        n3 = NodeDraw(0, 30)
-        n4 = NodeDraw(150, 30)
-        n5 = NodeDraw(0, 60)
-        n6 = NodeDraw(150, 60)
-        n7 = NodeDraw(0, 90)
-        n8 = NodeDraw(150, 90)
+        secao = Rectangle(0.012, 0.001)
+        area = secao.area
+        inercia = secao.inertia
+        n1 = NodeDraw(0, -0)
+        n2 = NodeDraw(150, -0)
+        n3 = NodeDraw(0, -30)
+        n4 = NodeDraw(150, -30)
+        n5 = NodeDraw(0, -60)
+        n6 = NodeDraw(150, -60)
+        n7 = NodeDraw(0, -90)
+        n8 = NodeDraw(150, -90)
         n1.setSupport(Apoio.segundo_genero)
         n2.setSupport(Apoio.primeiro_genero)
-        n3.setNodalForce(NodalForce(100, 0, 0))
-        n5.setNodalForce(NodalForce(100, 0, 0))
-        n7.setNodalForce(NodalForce(100, 0, 0))
-        e1 = ElementDraw(n1, n3, 1, 1, 1)
-        e2 = ElementDraw(n2, n4, 1, 1, 1)
-        e3 = ElementDraw(n3, n4, 1, 1, 1)
-        e4 = ElementDraw(n3, n5, 1, 1, 1)
-        e5 = ElementDraw(n4, n6, 1, 1, 1)
-        e6 = ElementDraw(n5, n6, 1, 1, 1)
-        e7 = ElementDraw(n5, n7, 1, 1, 1)
-        e8 = ElementDraw(n6, n8, 1, 1, 1)
-        e9 = ElementDraw(n7, n8, 1, 1, 1)
+        n3.setNodalForce(NodalForce(-100, 0, 0))
+        n5.setNodalForce(NodalForce(-100, 0, 0))
+        n7.setNodalForce(NodalForce(-100, 0, 0))
+        e1 = ElementDraw(n1, n3, area, inercia, 1)
+        e2 = ElementDraw(n2, n4, area, inercia, 1)
+        e3 = ElementDraw(n3, n4, area, inercia, 1)
+        e4 = ElementDraw(n3, n5, area, inercia, 1)
+        e5 = ElementDraw(n4, n6, area, inercia, 1)
+        e6 = ElementDraw(n5, n6, area, inercia, 1)
+        e7 = ElementDraw(n5, n7, area, inercia, 1)
+        e8 = ElementDraw(n6, n8, area, inercia, 1)
+        e9 = ElementDraw(n7, n8, area, inercia, 1)
         nodes = [n1, n2, n3, n4, n5, n6, n7, n8]
         elements = [e1, e2, e3, e4, e5, e6, e7, e8, e9]
 
+        for node in nodes:
+            self.drawNode(node)
+        for element in elements:
+            self.drawElement(element)
+
+    def balanco(self):
+        n1 = NodeDraw(0, 0)
+        n2 = NodeDraw(100, 0)
+        n1.setSupport(Support.fixed)
+        n2.setNodalForce(NodalForce(0, 100, 0))
+        e1 = ElementDraw(n1, n2, 1, 1, 1)
+        nodes = [n1, n2]
+        elements = [e1]
         for node in nodes:
             self.drawNode(node)
         for element in elements:
