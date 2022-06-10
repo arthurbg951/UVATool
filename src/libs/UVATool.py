@@ -3,6 +3,11 @@ import math
 from datetime import datetime
 
 
+class StructureError(Exception):
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+
+
 class Support:
     roller = 0        # PRIMEIRO GENERO
     pinned = 1        # SEGUNDO GENERO
@@ -34,51 +39,31 @@ class Analise:
 
 
 class Point2d:
-    __x: float
-    __y: float
+    x: float
+    y: float
 
     def __init__(self, x: float, y: float) -> None:
-        self.__x = x
-        self.__y = y
+        self.x = x
+        self.y = y
 
     def __str__(self) -> str:
-        return "({0}, {1})".format(self.__x, self.__y)
+        return "({0}, {1})".format(self.x, self.y)
 
     def __eq__(self, __o: object) -> bool:
         if not isinstance(__o, Point2d):
             return NotImplemented
         return self.x == __o.x and self.y == __o.y
 
-    @property
-    def x(self) -> float:
-        return self.__x
-
-    @x.setter
-    def x(self, value):
-        if value is not float or value is not int:
-            raise ValueError("x value must be an float number.")
-        self.__x = value
-
-    @property
-    def y(self) -> float:
-        return self.__y
-
-    @x.setter
-    def y(self, value):
-        if value is not float or value is not int:
-            raise ValueError("y value must be an float number.")
-        self.__y = value
-
 
 class Rectangle:
-    __b: float
-    __h: float
+    b: float
+    h: float
     __area: float
     __inertia: float
 
     def __init__(self, b: float, h: float) -> None:
-        self.__b = b
-        self.__h = h
+        self.b = b
+        self.h = h
 
     def __eq__(self, __o: object) -> bool:
         if not isinstance(__o, Rectangle):
@@ -87,83 +72,28 @@ class Rectangle:
 
     @property
     def area(self) -> float:
-        return self.__b * self.__h
+        return self.b * self.h
 
     @property
     def inertia(self) -> float:
-        return self.__b * math.pow(self.__h, 3) / 12
-
-    @property
-    def b(self):
-        return self.__b
-
-    @b.setter
-    def b(self, value):
-        if value is not float:
-            raise ValueError("b must be an float number.")
-        else:
-            self.__b = value
-
-    @property
-    def h(self):
-        return self.__h
-
-    @h.setter
-    def h(self, value):
-        if value is not float:
-            raise ValueError("h must be an float number.")
-        else:
-            self.__h = value
+        return self.b * math.pow(self.h, 3) / 12
 
 
 class NodalForce:
-    __fx: float
-    __fy: float
-    __m: float
+    fx: float
+    fy: float
+    m: float
 
     def __init__(self, fx: float, fy: float, m: float) -> None:
-        self.__fx = fx
-        self.__fy = fy
-        self.__m = m
+        self.fx = fx
+        self.fy = fy
+        self.m = m
 
-    def getAsVector(self) -> list:
-        return numpy.array([self.__fx, self.__fy, self.__m])
+    def getAsVector(self) -> numpy.array:
+        return numpy.array([self.fx, self.fy, self.m])
 
     def __str__(self) -> str:
-        return "{0};{1};{2}".format(self.__fx, self.__fy, self.__m)
-
-    @property
-    def fx(self):
-        return self.__fx
-
-    @fx.setter
-    def fx(self, value):
-        if value is not float:
-            raise ValueError("fx must be an float number.")
-        else:
-            self.__fx = value
-
-    @property
-    def fy(self):
-        return self.__fy
-
-    @fy.setter
-    def fy(self, value):
-        if value is not float:
-            raise ValueError("m must be an float number.")
-        else:
-            self.__fy = value
-
-    @property
-    def m(self):
-        return self.__m
-
-    @m.setter
-    def m(self, value):
-        if value is not float:
-            raise ValueError("m must be an float number.")
-        else:
-            self.__m = value
+        return "{0};{1};{2}".format(self.fx, self.fy, self.m)
 
 
 class Node:
@@ -192,9 +122,9 @@ class Node:
         if p == 0 and self.__support != Support.middle_hinge:
             p = 1e-31
         if p >= 4:
-            raise ValueError("P must be less than 4")
+            raise StructureError("P must be less than 4")
         if p < 0:
-            raise ValueError("P must be greater than or equal to 0")
+            raise StructureError("P must be greater than or equal to 0")
         return p
 
     def setP(self, p: float) -> None:
@@ -246,9 +176,7 @@ class Element:
     area: float
     moment_inertia: float
     young_modulus: float
-    __internal_forces: numpy.array
     __angle: float
-    __length: float
     __p1: float
     __p2: float
 
@@ -267,13 +195,16 @@ class Element:
         return "Node1={0};Node2={1}".format(self.node1, self.node2)
 
     def __eq__(self, other: object) -> bool:
-        if not isinstance(other, Node):
+        if isinstance(other, Element):
+            normalDirection = self.node1 == other.node1 and self.node2 == other.node2
+            reverseDirection = self.node1 == other.node2 and self.node2 == other.node1
+            return normalDirection or reverseDirection
+        else:
             return NotImplemented
-        return self.node1.x == other.node1.x and self.node2.y == other.node2.y
 
     def __verifyNodes(self) -> None:
         if self.node1 == self.node2:
-            raise ValueError("node1 cant be equal to node2.")
+            raise StructureError("node1 cant be equal to node2.")
 
     def getLength(self) -> float:
         return math.sqrt(math.pow(self.node1.x - self.node2.x, 2) + math.pow(self.node1.y - self.node2.y, 2))
@@ -290,15 +221,6 @@ class Element:
         else:
             resposta = math.atan(deltaY/deltaX)
         return resposta
-
-    def setDeformations(self, deformations: numpy.array) -> None:
-        self.__deformations = deformations
-
-    def getInternalForces(self) -> numpy.array:
-        return self.__internal_forces
-
-    def setInternalForces(self, internal_forces: numpy.array) -> None:
-        self.__internal_forces = internal_forces
 
     def setP(self, p1: float, p2: float) -> None:
         self.__p1 = p1
@@ -446,7 +368,7 @@ class Process:
         shapeX = equilibrium_matrix_restriction.shape[0]
         shapeY = equilibrium_matrix_restriction.shape[1]
         if shapeX > shapeY:
-            raise ValueError("ESTRUTURA HIPOSTÁTICA")
+            raise StructureError("ESTRUTURA HIPOSTÁTICA")
         # Matriz de equilíbrio transposta com restrições
         equilibrium_matrix_transpose = self.__equilibrium.copy()  # Deep Copy
         equilibrium_matrix_transpose = equilibrium_matrix_transpose.transpose()  # Transpose

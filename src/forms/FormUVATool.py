@@ -18,7 +18,8 @@ from PyQt5.QtWidgets import (
     QRadioButton,
     QGraphicsLineItem,
     QGraphicsSceneWheelEvent,
-    QGraphicsSceneDragDropEvent
+    QGraphicsSceneDragDropEvent,
+    QMessageBox
 )
 from PyQt5.QtCore import (
     Qt,
@@ -40,6 +41,7 @@ from PyQt5.QtGui import (
 from PyQt5 import uic
 from libs.UVATool import *
 from libs.Drawing import *
+from forms.FormTableResults import FormTableResults
 
 
 class FormUVATool(QMainWindow):
@@ -52,6 +54,7 @@ class FormUVATool(QMainWindow):
 
     ToolsToolBar: QToolBar
     ProcessCalculations: QAction
+    actionTableResults: QAction
 
     ChangeValues: QDockWidget
     fx: QLineEdit
@@ -74,8 +77,8 @@ class FormUVATool(QMainWindow):
     ERA: QRadioButton
     MNE: QRadioButton
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super(FormUVATool, self).__init__(parent=None)
         uic.loadUi("ui/FormUVATool.ui", self)
 
         self.scene = UVAGraphicsScene(self)
@@ -89,14 +92,14 @@ class FormUVATool(QMainWindow):
         self.confirmButton_2.clicked.connect(self.confirmClicked_2)
         self.ChangeValues.visibilityChanged.connect(self.ChangeValuesClose)
         self.p.textChanged.connect(self.pValueChanged)
-        self.ElementAction.toggled.connect(self.ElementActionTogled)
+        self.ElementAction.triggered.connect(self.elementActionClicked)
         self.ProcessCalculations.triggered.connect(self.ProcessCalculationsTriggered)
+        self.actionTableResults.triggered.connect(self.showTableReultsForm)
+        self.NodeAction.triggered.connect(self.nodeActionClicked)
 
         self.GraphicsView.DragMode(1)
 
-        # self.startPos = None
-        # install the event filter on the application
-        # QApplication.instance().installEventFilter(self)
+        self.calc = None
 
         self.resize(900, 650)
         self.show()
@@ -107,41 +110,19 @@ class FormUVATool(QMainWindow):
         """
         zoomInFactor = 1.25
         zoomOutFactor = 1 / zoomInFactor
-
         # Save the scene pos
         oldPos = self.GraphicsView.mapToScene(event.pos())
-
         # Zoom
         if event.angleDelta().y() > 0:
             zoomFactor = zoomInFactor
         else:
             zoomFactor = zoomOutFactor
         self.GraphicsView.scale(zoomFactor, zoomFactor)
-
         # Get the new position
         newPos = self.GraphicsView.mapToScene(event.pos())
-
         # Move scene to old position
         delta = newPos - oldPos
         self.GraphicsView.translate(delta.x(), delta.y())
-
-    # def eventFilter(self, source, event: QMouseEvent):
-    #     if (event.type() == QEvent.MouseButtonPress and event.button() == Qt.MiddleButton):
-    #         self.GraphicsView.setDragMode(QGraphicsView.DragMode.ScrollHandDrag)
-    #         self.startPos = event.pos()
-    #         return True
-    #     elif event.type() == QEvent.MouseMove and self.startPos is not None:
-    #         # self.scene.move(self.pos() + event.pos() - self.startPos)
-    #         p = self.GraphicsView.mapToScene(event.pos())
-    #         self.scene.setSceneRect(-p.x(), -p.y(), self.scene.width(), self.scene.height())
-    #         # pressEvent = QMouseEvent(QEvent.GraphicsSceneMousePress, event.pos(), Qt.MouseButton.MiddleButton, Qt.MouseButton.MiddleButton, Qt.KeyboardModifier.NoModifier)
-    #         # self.GraphicsView.mousePressEvent(pressEvent)
-    #         return True
-    #     elif event.type() == QEvent.MouseButtonRelease and self.startPos is not None:
-    #         self.GraphicsView.setDragMode(QGraphicsView.DragMode.NoDrag)
-    #         self.startPos = None
-    #         return True
-    #     return super(FormUVATool, self).eventFilter(source, event)
 
     def confirmClicked(self):
         for item in self.scene.items():
@@ -184,19 +165,6 @@ class FormUVATool(QMainWindow):
         if self.p.text() != "":
             self.semiRigido.setChecked(True)
 
-    def ElementActionTogled(self):
-        if self.ElementAction.isChecked():
-            print('Element Checked')
-        else:
-            self.scene.isDrawingLine = False
-            itemToRemove = None
-            for item in self.scene.items():
-                if isinstance(item, ElementDraw):
-                    if not item.isDrawed:
-                        itemToRemove = item
-                        break
-            self.scene.removeItem(itemToRemove)
-
     def ProcessCalculationsTriggered(self):
         self.ChangeValues.close()
         self.ElementParameters.close()
@@ -230,13 +198,70 @@ class FormUVATool(QMainWindow):
                 raise Exception("Não existe nenhuma estrutura!")
 
             calc = Process(nodes, elements, analise)
+            self.calc = calc
             plot = Print(calc)
             plot.internalForces()
         except Exception as e:
-            print(e.args[0])
+            QMessageBox.warning(self, "Warning", str(e))
+            print(str(e))
 
         print("----------------------------------------------")
         print()
+
+    def showTableReultsForm(self):
+        try:
+            drawForm = FormTableResults(self)
+            drawForm.setProcess(self.calc)
+            drawForm.show()
+        except Exception as e:
+            QMessageBox.warning(self, "Warning", str(e))
+
+    def nodeActionClicked(self):
+        if self.ElementAction.isChecked():
+            self.ElementAction.toggle()
+            self.showElementPreview(False)
+        if self.NodeAction.isChecked():
+            self.showNodePreview(True)
+        else:
+            self.showNodePreview(False)
+
+    def elementActionClicked(self):
+        if self.NodeAction.isChecked():
+            self.NodeAction.toggle()
+
+        if self.ElementAction.isChecked():
+            self.showNodePreview(True)
+            self.showElementPreview(True)
+        else:
+            self.showNodePreview(False)
+            self.showElementPreview(False)
+
+    def elementActionClicked(self):
+        if self.NodeAction.isChecked():
+            self.NodeAction.toggle()
+
+        if self.ElementAction.isChecked():
+            self.showNodePreview(True)
+            self.showElementPreview(True)
+        else:
+            self.showNodePreview(False)
+            self.showElementPreview(False)
+
+    def showNodePreview(self, changer: bool) -> None:
+        if changer:
+            self.scene.canDrawNode = True
+            self.scene.nodePreview.show()
+        else:
+            self.scene.canDrawNode = False
+            self.scene.nodePreview.hide()
+
+    def showElementPreview(self, changer: bool) -> None:
+        if changer:
+            self.scene.canDrawLine = True
+            self.scene.elementPreview.show()
+        else:
+            self.scene.canDrawLine = False
+            self.scene.elementPreview.hide()
 
 
 class UVAGraphicsScene(QGraphicsScene):
@@ -244,34 +269,95 @@ class UVAGraphicsScene(QGraphicsScene):
     def __init__(self, form: FormUVATool):
         super().__init__()
         self.form = form
-        self.isDrawingLine = False
         self.keyStack = []
+        self.canDrawNode = False
+        self.canDrawLine = False
+        self.isDrawingLine = False
+        self.nodePreview = NodePreview(0, 0)
+        self.nodePreview.hide()
+        self.clickPoint = QPointF(0, 0)
+        self.mousePoint = QPointF(0, 0)
+        self.elementNode1 = NodeDraw(0, 0)
+        self.elementNode2 = NodeDraw(0, 0)
+        self.elementPreview = ElementPreview(QLineF(self.clickPoint, self.mousePoint))
+        self.elementPreview.hide()
+
+        self.addItem(self.nodePreview)
+        self.addItem(self.elementPreview)
+
+        self.nodes = []
+        self.elements = []
+        self.gridPoints = []
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
+        # if event.button() == Qt.MouseButton.LeftButton:
+        #     if self.form.ElementAction.isChecked():
+        #         node = NodeDraw(event.scenePos().x(), event.scenePos().y())
+        #         if self.verifyExistingNode(event) != None:
+        #             self.addItem(node.getItem())
+        #         for item in self.items():
+        #             if item.hasFocus():
+        #                 if isinstance(item, NodeDraw):
+        #                     node = item
+        #                     break
+        #         if not self.isDrawingLine:
+        #             p1 = QPointF(node.x, node.y)
+        #             print(p1.x(), p1.y())
+        #             self.isDrawingLine = True
+        #             line = QGraphicsLineItem(QLineF(p1, p1))
+        #             line.setPen(QPen(QColor(255, 140, 0), 2, Qt.PenStyle.DashLine))
+        #             self.elementDraw = ElementDraw(line)
+        #             self.elementDraw.setNode1(node)
+        #             self.addItem(self.elementDraw)
+        #         else:
+        #             self.elementDraw.setPen(QPen(Qt.GlobalColor.gray, 2, Qt.PenStyle.SolidLine))
+        #             self.elementDraw.setNode2(node)
+        #             self.elementDraw.isDrawed = True
+        #             self.isDrawingLine = False
+        #     elif self.form.NodeAction.isChecked():
+        #         # self.drawNode(NodeDraw(event.scenePos().x(), event.scenePos().y()))
+        #         if self.nodePreview.isVisible():
+        #             node = NodeDraw(event.scenePos().x(), event.scenePos().y())
+        #     #         self.drawNode(node)
+
+        self.clickPoint.setX(event.scenePos().x())
+        self.clickPoint.setY(event.scenePos().y())
         if event.button() == Qt.MouseButton.LeftButton:
-            if self.form.ElementAction.isChecked():
-                node = NodeDraw(event.scenePos().x(), event.scenePos().y())
-                if not self.items().__contains__(node):
-                    self.addItem(node)
-                for item in self.items():
-                    if item.hasFocus():
-                        if isinstance(item, NodeDraw):
-                            node = item
-                            break
-                if not self.isDrawingLine:
-                    p1 = QPointF(node.scenePos().x(), node.scenePos().y())
-                    self.isDrawingLine = True
-                    self.elementDraw = ElementDraw(QGraphicsLineItem(QLineF(p1, p1)))
-                    self.elementDraw.setPen(QPen(QColor(255, 140, 0), 2, Qt.PenStyle.DashLine))
-                    self.elementDraw.setNode1(node)
-                    self.addItem(self.elementDraw)
+            if self.canDrawNode:
+                existingNode = self.verifyExistingNode(event)
+                if existingNode == None:
+                    node = NodeDraw(event.scenePos().x(), event.scenePos().y())
+                    self.drawNode(node)
+                    print('Nodes:')
+                    for i in range(len(self.nodes)):
+                        print(i, ' ', self.nodes[i])
                 else:
-                    self.elementDraw.setPen(QPen(Qt.GlobalColor.gray, 2, Qt.PenStyle.SolidLine))
-                    self.elementDraw.setNode2(node)
-                    self.elementDraw.isDrawed = True
+                    self.clickPoint.setX(existingNode.x)
+                    self.clickPoint.setY(existingNode.y)
+                    self.elementPreview.setLine(QLineF(self.clickPoint, self.mousePoint))
+
+            if self.canDrawLine:
+                if self.isDrawingLine:
                     self.isDrawingLine = False
-            elif self.form.NodeAction.isChecked():
-                self.createNode(event.scenePos().x(), event.scenePos().y())
+                    self.elementPreview.hide()
+                    self.elementNode2 = NodeDraw(self.clickPoint.x(), self.clickPoint.y())
+                    node = self.verifyExistingNode(event)
+                    if node != None:
+                        self.elementNode2 = node
+                    element = ElementDraw(self.elementNode1, self.elementNode2, 1, 1, 1)
+                    if self.verifyExistingElement(element) == None:
+                        self.drawElement(element)
+                        print('Elements:')
+                        for i in range(len(self.elements)):
+                            print(i, " ", self.elements[i])
+                else:
+                    self.isDrawingLine = True
+                    self.elementPreview.setLine(QLineF(self.clickPoint, self.mousePoint))
+                    self.elementPreview.show()
+                    self.elementNode1 = NodeDraw(self.clickPoint.x(), self.clickPoint.y())
+                    node = self.verifyExistingNode(event)
+                    if node != None:
+                        self.elementNode1 = node
 
     def mouseDoubleClickEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         if not self.isDrawingLine:
@@ -318,9 +404,10 @@ class UVAGraphicsScene(QGraphicsScene):
 
     def mouseMoveEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         super().mouseMoveEvent(event)
-        if event.buttons() == Qt.MouseButton.NoButton:
-            if self.isDrawingLine:
-                self.elementDraw.setLine(QLineF(self.elementDraw.line().p1(), event.scenePos()))
+        # self.verifyExistingNode(event)
+        # if event.buttons() == Qt.MouseButton.NoButton:
+        #     if self.isDrawingLine:
+        #         self.elementDraw.setLine(QLineF(self.elementDraw.line().p1(), event.scenePos()))
         # elif event.buttons() == Qt.MouseButton.MiddleButton:
         #     self.form.GraphicsView.viewport().setCursor(Qt.CursorShape.OpenHandCursor)
         #     self.setSceneRect(QRectF(-event.scenePos().x(), -event.scenePos().y(), 1, 1))
@@ -328,13 +415,48 @@ class UVAGraphicsScene(QGraphicsScene):
         #         if isinstance(item, NodeDraw):
         #             print(item.scenePos())
 
+        node = self.verifyExistingNode(event)
+        if node == None:
+            self.nodePreview.setPos(event.scenePos().x(), event.scenePos().y())
+            self.mousePoint.setX(event.scenePos().x())
+            self.mousePoint.setY(event.scenePos().y())
+        else:
+            self.mousePoint.setX(node.x)
+            self.mousePoint.setY(node.y)
+
+        if self.isDrawingLine:
+            self.elementPreview.setLine(QLineF(self.clickPoint, self.mousePoint))
+
     def mouseReleaseEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         super().mouseReleaseEvent(event)
         self.form.GraphicsView.viewport().setCursor(Qt.CursorShape.ArrowCursor)
 
-    def createNode(self, x: float, y: float):
-        node = NodeDraw(x, y)
-        self.addItem(node)
+    def drawNode(self, node: NodeDraw):
+        self.addItem(node.getItem())
+        self.nodes.insert(0, node)
+
+    def drawElement(self, element: ElementDraw):
+        self.addItem(element.getItem())
+        self.elements.insert(0, element)
+
+    def verifyExistingNode(self, event: QGraphicsSceneMouseEvent) -> NodeDraw:
+        if self.canDrawNode:
+            for node in self.nodes:
+                x1 = node.x
+                y1 = node.y
+                x2 = event.scenePos().x()
+                y2 = event.scenePos().y()
+                pointDist = math.sqrt(math.pow((y2 - y1), 2) + math.pow((x2 - x1), 2))
+                if pointDist <= node.getDiameter():
+                    self.nodePreview.hide()
+                    return node
+                else:
+                    self.nodePreview.show()
+
+    def verifyExistingElement(self, element: ElementDraw):
+        for e in self.elements:
+            if e == element:
+                return e
 
     def keyPressEvent(self, event: QKeyEvent) -> None:
         # if event.key() == Qt.Key.Key_P:

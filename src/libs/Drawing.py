@@ -23,37 +23,49 @@ from PyQt5.QtGui import (
 )
 
 
-class NodeDraw(QGraphicsEllipseItem):
-    node: Node
-
+class Point(QPointF, QGraphicsEllipseItem):
     def __init__(self, x: float, y: float):
-        self.__sceneXPos = x
-        self.__sceneYPos = y
-        self.raio = 10
-        rec = QRectF(x - self.raio/2, y - self.raio/2, self.raio, self.raio)
-        pen = QPen(Qt.GlobalColor.black, 1)
-        brush = QBrush(Qt.GlobalColor.gray, Qt.BrushStyle.SolidPattern)
+        super().__init__(x, y)
+
+
+class NodePreview(QGraphicsEllipseItem):
+    def __init__(self, x: float, y: float):
+        __diameter = 10
+        self.__x = x
+        self.__y = y
+        self.__pos = QPointF(self.__x, self.__y)
+        super().__init__(QRectF(x - __diameter/2, y - __diameter/2, __diameter, __diameter))
+        self.setPen(QPen(Qt.GlobalColor.black, 1))
+        self.setBrush(QBrush(Qt.GlobalColor.gray, Qt.BrushStyle.SolidPattern))
+        self.setZValue(1)
+        # self.setAcceptHoverEvents(True)
+
+    def setSelected(self, selected: bool) -> None:
+        super().setSelected(False)
+
+    def scenePos(self) -> QPointF:
+        return self.__pos
+
+
+class NodeItem(QGraphicsEllipseItem):
+    def __init__(self, rec: QRectF):
         super().__init__(rec)
-        self.node = Node(x/100, y/100)
-        self.setPen(pen)
-        self.setBrush(brush)
+        self.__x = rec.x()
+        self.__y = rec.y()
+        self.__pos = QPointF(self.__x, self.__y)
+        self.setPen(QPen(Qt.GlobalColor.black, 1))
+        self.setBrush(QBrush(Qt.GlobalColor.gray, Qt.BrushStyle.SolidPattern))
         self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsFocusable)
-        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
         self.setZValue(1)
         self.setFocus()
-
         self.setAcceptHoverEvents(True)
-
-    # def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
-    #     super().mousePressEvent(event)
-    #     self.setColor(Qt.GlobalColor.red)
-    #     self.setSelected(True)
-    #     print('Element Clicked')
 
     def keyPressEvent(self, event: QKeyEvent) -> None:
         if event.key() == Qt.Key.Key_Delete:
             if self.isSelected():
                 print('Botão deletar não implementado')
+        if event.key() == Qt.Key.Key_Escape:
+            self.setSelected(False)
 
     def setColor(self, color: Qt.GlobalColor):
         self.setBrush(QBrush(color))
@@ -77,72 +89,67 @@ class NodeDraw(QGraphicsEllipseItem):
             return False
 
     def scenePos(self) -> QPointF:
-        return QPointF(self.__sceneXPos, self.__sceneYPos)
+        return self.__pos
+
+
+class NodeDraw(Node):
+    __item: NodeItem
+
+    def __init__(self, x: float, y: float) -> None:
+        super().__init__(x, y)
+        self.__diameter = 10
+        self.__rect = QRectF(self.x - self.__diameter/2, self.y - self.__diameter/2, self.__diameter, self.__diameter)
+        self.__item = NodeItem(self.getRect())
+
+    def updateDiameter(self, diameter: int) -> None:
+        self.__diameter = diameter
+        self.__item.setRect(self.getRect())
+
+    def getRect(self) -> QRectF:
+        return self.__rect
+
+    def getDiameter(self) -> float:
+        return self.__diameter
+
+    def getItem(self) -> QGraphicsItem:
+        return self.__item
+
+    def getPoint(self) -> QPointF:
+        return QPointF(self.x, self.y)
 
     def __eq__(self, __o: object) -> bool:
         if not isinstance(__o, NodeDraw):
             return NotImplemented
-        testX = self.__sceneXPos + self.raio >= __o.__sceneXPos and self.__sceneXPos - self.raio <= __o.__sceneXPos
-        testY = self.__sceneYPos + self.raio >= __o.__sceneYPos and self.__sceneYPos - self.raio <= __o.__sceneYPos
+        testX = self.x + self.__diameter/2 >= __o.x and self.x - self.__diameter/2 <= __o.x
+        testY = self.y + self.__diameter/2 >= __o.y and self.y - self.__diameter/2 <= __o.y
         return testX and testY
-        # return self.node == __o.node
 
 
-class ElementDraw(QGraphicsLineItem):
-    element: Element
+class ElementPreview(QGraphicsLineItem):
+    def __init__(self, line: QLineF):
+        super().__init__(line)
+        self.setPen(QPen(QColor(255, 140, 0), 2, Qt.PenStyle.DashLine))
 
+
+class ElementItem(QGraphicsLineItem):
     def __init__(self, line: QGraphicsLineItem) -> None:
         super().__init__()
-        node1, node2 = self.__verifyPointsAndGetNodes(line.line())
-        self.element = Element(node1.node, node2.node, 1, 1, 1)
         self.setPen(line.pen())
         self.setLine(line.line())
         self.setAcceptHoverEvents(True)
-        self.isDrawed = False
 
     def __eq__(self, __o: object) -> bool:
         if not isinstance(__o, ElementDraw):
             return NotImplemented
         return self.element == __o.element
 
-    def __verifyPointsAndGetNodes(self, line: QLineF) -> tuple[NodeDraw]:
-        node1 = NodeDraw(line.p1().x(), line.p1().y())
-        node2 = NodeDraw(line.p2().x(), line.p2().y())
-        if node1.node == node2.node:
-            range = 1e10-31
-            node2 = NodeDraw(line.p2().x() + range, line.p2().y() - range)
-        return node1, node2
-
-    def setArea(self, area: float) -> None:
-        self.element.area = area
-
-    def setInertia(self, moment_inertia: float) -> None:
-        self.element.moment_inertia = moment_inertia
-
-    def setYoungModulus(self, young_modulus: float) -> None:
-        self.element.young_modulus = young_modulus
-
-    def setNode1(self, node1: NodeDraw) -> None:
-        self.element.node1 = node1.node
-
-    def setNode2(self, node2: NodeDraw) -> None:
-        self.element.node2 = node2.node
-
     def hoverEnterEvent(self, event: QGraphicsSceneHoverEvent) -> None:
         self.setFocus()
-        if self.isDrawed:
-            self.setPen(QPen(self.pen().color(), 4, self.pen().style()))
+        self.setPen(QPen(self.pen().color(), 4, self.pen().style()))
 
     def hoverLeaveEvent(self, event: QGraphicsSceneHoverEvent) -> None:
         self.clearFocus()
-        if self.isDrawed:
-            self.setPen(QPen(self.pen().color(), 2, self.pen().style()))
-
-    # def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
-    #     super().mousePressEvent(event)
-    #     self.setPen(QPen(QPen(Qt.GlobalColor.red, 2, Qt.PenStyle.SolidLine)))
-    #     self.setSelected(True)
-    #     print('Element Clicked')
+        self.setPen(QPen(self.pen().color(), 2, self.pen().style()))
 
     def hasFocus(self) -> bool:
         if self.pen().width() == 4:
@@ -163,3 +170,19 @@ class ElementDraw(QGraphicsLineItem):
             return True
         else:
             return False
+
+
+class ElementDraw(Element):
+    __item: QGraphicsItem
+
+    def __init__(self, node1: NodeDraw, node2: NodeDraw, area: float, moment_inertia: float, young_modulus: float) -> None:
+        super().__init__(node1, node2, area, moment_inertia, young_modulus)
+        line = QGraphicsLineItem(QLineF(node1.getPoint(), node2.getPoint()))
+        line.setPen(QPen(Qt.GlobalColor.gray, 2, Qt.PenStyle.SolidLine))
+        self.__item = ElementItem(line)
+
+    def getItem(self):
+        return self.__item
+
+    def __eq__(self, other: object) -> bool:
+        return super().__eq__(other)

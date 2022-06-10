@@ -59,7 +59,7 @@
    <addaction name="NodeAction"/>
    <addaction name="ElementAction"/>
   </widget>
-  <widget class="QToolBar" name="ToolsToolBar">
+  <widget class="QToolBar" name="TableResults">
    <property name="windowTitle">
     <string>Tools</string>
    </property>
@@ -76,6 +76,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="ProcessCalculations"/>
+   <addaction name="actionTableResults"/>
   </widget>
   <widget class="QDockWidget" name="ChangeValues">
    <property name="minimumSize">
@@ -574,6 +575,18 @@ Rigidez Analítica</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionTableResults">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/table.png</normaloff>../icons/table.png</iconset>
+   </property>
+   <property name="text">
+    <string>TableResults</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Show Table Results&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
   <zorder>ChangeValues</zorder>
