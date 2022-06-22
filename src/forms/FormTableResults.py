@@ -50,7 +50,8 @@ class FormTableResults(QWidget):
         try:
             for i in range(equilibrium.shape[0]):
                 for j in range(equilibrium.shape[1]):
-                    content = QTableWidgetItem(str(equilibrium[i, j]))
+                    content = QTableWidgetItem("{0:.2f}".format(equilibrium[i, j]))
+                    content.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
                     self.equilibriumTable.setItem(i, j, content)
             self.equilibriumTable.resizeColumnsToContents()
         except Exception as e:
@@ -63,7 +64,8 @@ class FormTableResults(QWidget):
         try:
             for i in range(frameStiffness.shape[0]):
                 for j in range(frameStiffness.shape[1]):
-                    content = QTableWidgetItem(str(frameStiffness[i, j]))
+                    content = QTableWidgetItem("{0:.2f}".format(frameStiffness[i, j]))
+                    content.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
                     self.frameStiffnessTable.setItem(i, j, content)
             self.frameStiffnessTable.resizeColumnsToContents()
         except Exception as e:
@@ -76,7 +78,8 @@ class FormTableResults(QWidget):
         try:
             for i in range(globalFrameStiffnessTable.shape[0]):
                 for j in range(globalFrameStiffnessTable.shape[1]):
-                    content = QTableWidgetItem(str(globalFrameStiffnessTable[i, j]))
+                    content = QTableWidgetItem("{0:.2f}".format(globalFrameStiffnessTable[i, j]))
+                    content.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
                     self.globalFrameStiffnessTable.setItem(i, j, content)
             self.globalFrameStiffnessTable.resizeColumnsToContents()
         except Exception as e:
@@ -88,7 +91,8 @@ class FormTableResults(QWidget):
         self.nodalForcesVector.setColumnCount(1)
         try:
             for i in range(nodalForcesVector.shape[0]):
-                content = QTableWidgetItem(str(nodalForcesVector[i]))
+                content = QTableWidgetItem("{0:.2f}".format(nodalForcesVector[i]))
+                content.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
                 self.nodalForcesVector.setItem(i, 0, content)
             self.nodalForcesVector.resizeColumnsToContents()
         except Exception as e:
@@ -100,7 +104,8 @@ class FormTableResults(QWidget):
         self.nodalDisplacementVector.setColumnCount(1)
         try:
             for i in range(nodalDisplacementVector.shape[0]):
-                content = QTableWidgetItem(str(nodalDisplacementVector[i]))
+                content = QTableWidgetItem("{0:.2f}".format(nodalDisplacementVector[i]))
+                content.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
                 self.nodalDisplacementVector.setItem(i, 0, content)
             self.nodalDisplacementVector.resizeColumnsToContents()
         except Exception as e:
@@ -112,7 +117,8 @@ class FormTableResults(QWidget):
         self.nodalDeformationsVector.setColumnCount(1)
         try:
             for i in range(nodalDeformationsVector.shape[0]):
-                content = QTableWidgetItem(str(nodalDeformationsVector[i]))
+                content = QTableWidgetItem("{0:.2f}".format(nodalDeformationsVector[i]))
+                content.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
                 self.nodalDeformationsVector.setItem(i, 0, content)
             self.nodalDeformationsVector.resizeColumnsToContents()
         except Exception as e:
@@ -124,7 +130,8 @@ class FormTableResults(QWidget):
         self.InternalForcesVector.setColumnCount(1)
         try:
             for i in range(InternalForcesVector.shape[0]):
-                content = QTableWidgetItem(str(InternalForcesVector[i]))
+                content = QTableWidgetItem("{0:.2f}".format(InternalForcesVector[i]))
+                content.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
                 self.InternalForcesVector.setItem(i, 0, content)
             self.InternalForcesVector.resizeColumnsToContents()
         except Exception as e:
