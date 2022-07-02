@@ -11,15 +11,15 @@
 
 Recomenda-se que estudem um pouco sobre o <a href="https://pt.wikipedia.org/wiki/Git">git</a> e <a href="https://pt.wikipedia.org/wiki/GitHub">github</a> para utilização do projeto.
 
-Editor de código utilizado: <a href="https://code.visualstudio.com/download">Visual Studio Code</a>
+Recomenda-se instalar o <a href="https://git-scm.com/downloads">git</a> no pc.
+
+Editor de código utilizado: <a href="https://code.visualstudio.com/download">Visual Studio Code</a>.
 
 ## Instruções para utilização do UVATool pelo código fonte
 
-Instalar o <a href="https://git-scm.com/downloads">git</a> no pc.
-
 Para utilização do UVATool é necessário:
 
-Instalar <a href="https://www.python.org/downloads/">python3.9</a>.
+Baixar e instalar o <a href="https://www.python.org/downloads/">python3.9</a>.
 
 As dependências do projeto são:
 
