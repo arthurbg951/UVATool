@@ -283,6 +283,9 @@ class FormUVATool(QMainWindow):
         else:
             self.scene.canDrawLine = False
             self.scene.elementPreview.hide()
+            self.scene.elementPreview.setLine(QLineF(QPointF(0, 0), QPointF(0, 0)))
+            self.scene.mousePoint = QPointF(0, 0)
+            self.scene.clickPoint = QPointF(0, 0)
 
     def close(self) -> bool:
         self.formTableResults.close()
