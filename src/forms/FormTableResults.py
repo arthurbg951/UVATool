@@ -41,7 +41,6 @@ class FormTableResults(QWidget):
         super().__init__()
         uic.loadUi("ui/FormTableResults.ui", self)
         # super().show()
-        super().showMaximized()
 
         # Equilibrium
         equilibrium = process.getEquilibriumMatrix()

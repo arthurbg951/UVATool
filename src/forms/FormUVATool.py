@@ -233,7 +233,7 @@ class FormUVATool(QMainWindow):
     def showTableReultsForm(self):
         try:
             self.formTableResults = FormTableResults(self.calc)
-            self.formTableResults.show()
+            self.formTableResults.showMaximized()
         except Exception as e:
             QMessageBox.warning(self, "Form Table Results Error", str(e))
 
