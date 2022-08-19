@@ -470,6 +470,7 @@ class UVAGraphicsScene(QGraphicsScene):
         n6 = NodeDraw(150, -60)
         n7 = NodeDraw(0, -90)
         n8 = NodeDraw(150, -90)
+        print(n2.x, n2.y, n2.getItem().x(), n2.getItem().y())
         n1.setSupport(Apoio.segundo_genero)
         n2.setSupport(Apoio.primeiro_genero)
         n3.setNodalForce(NodalForce(-100, 0, 0))
@@ -496,7 +497,7 @@ class UVAGraphicsScene(QGraphicsScene):
         n1 = NodeDraw(0, 0)
         n2 = NodeDraw(100, 0)
         n1.setSupport(Support.fixed)
-        n2.setNodalForce(NodalForce(0, 100, 0))
+        n2.setNodalForce(NodalForce(0, 10, 0))
         e1 = ElementDraw(n1, n2, 1, 1, 1)
         nodes = [n1, n2]
         elements = [e1]

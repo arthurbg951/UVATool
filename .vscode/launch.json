@@ -9,6 +9,9 @@
         "request": "launch",
         "program": "${file}",
         "console": "integratedTerminal",
-        "cwd": "${fileDirname}"
+        "cwd": "${fileDirname}",
+        "env": {
+            "PYTHONPATH": "src\\libs"
+        }
     }]
 }

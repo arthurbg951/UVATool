@@ -91,14 +91,20 @@ class NodeItem(QGraphicsEllipseItem):
     def scenePos(self) -> QPointF:
         return self.__pos
 
+    def x(self):
+        return self.__x * 10
+
+    def y(self):
+        return - self.__y * 10
+
 
 class NodeDraw(Node):
     __item: NodeItem
 
     def __init__(self, x: float, y: float) -> None:
-        super().__init__(x, y)
+        super().__init__(x/10, -y/10)
         self.__diameter = 10
-        self.__rect = QRectF(self.x - self.__diameter/2, self.y - self.__diameter/2, self.__diameter, self.__diameter)
+        self.__rect = QRectF(x - self.__diameter/2, y - self.__diameter/2, self.__diameter, self.__diameter)
         self.__item = NodeItem(self.getRect())
 
     def updateDiameter(self, diameter: int) -> None:
@@ -115,7 +121,7 @@ class NodeDraw(Node):
         return self.__item
 
     def getPoint(self) -> QPointF:
-        return QPointF(self.x, self.y)
+        return QPointF(self.x*10, -self.y*10)
 
     def setColor(self, color: QColor):
         self.__item.setColor(color)
@@ -123,8 +129,8 @@ class NodeDraw(Node):
     def __eq__(self, __o: object) -> bool:
         if not isinstance(__o, NodeDraw):
             return NotImplemented
-        testX = self.x + self.__diameter/2 >= __o.x and self.x - self.__diameter/2 <= __o.x
-        testY = self.y + self.__diameter/2 >= __o.y and self.y - self.__diameter/2 <= __o.y
+        testX = self.getItem().x() + self.__diameter/2 >= __o.getItem().x() and self.getItem().x() - self.__diameter/2 <= __o.getItem().x()
+        testY = self.getItem().y() + self.__diameter/2 >= __o.getItem().y() and self.getItem().y() - self.__diameter/2 <= __o.getItem().y()
         return testX and testY
 
 
@@ -190,3 +196,11 @@ class ElementDraw(Element):
 
     def getItem(self):
         return self.__item
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Element):
+            normalDirection = self.node1 == other.node1 and self.node2 == other.node2
+            reverseDirection = self.node1 == other.node2 and self.node2 == other.node1
+            return normalDirection or reverseDirection
+        else:
+            return NotImplemented

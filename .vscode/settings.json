@@ -5,4 +5,5 @@
         "200",
         "--experimental"
       ],
+      "python.analysis.extraPaths": ["$(workspaceFolder)/src/libs/"]
 }
