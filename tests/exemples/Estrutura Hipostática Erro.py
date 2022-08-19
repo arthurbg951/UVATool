@@ -1,5 +1,4 @@
 from libs.UVATool import *
-from traceback import format_exc as error
 
 try:
     n1 = Node(0, 0)
@@ -23,8 +22,8 @@ try:
     plot = Print(calc)
     plot.internalForces()
 
-except numpy.linalg.LinAlgError:
-    print(error())
+except numpy.linalg.LinAlgError as e:
+    print(e.args[0])
     print("O ERRO ESTÁ DEVE SER INVESTIGADO PARA DEMONSTRAR QUE A ESTRUTRURA É HIPOSTÁTICA ...")
 
 
