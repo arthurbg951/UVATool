@@ -11,25 +11,27 @@
 
 Recomenda-se que estudem um pouco sobre o <a href="https://pt.wikipedia.org/wiki/Git">git</a> e <a href="https://pt.wikipedia.org/wiki/GitHub">github</a> para utilização do projeto.
 
-Entrem em contato com os desenvolvedores para mais informações.
+Recomenda-se instalar o <a href="https://git-scm.com/downloads">git</a> no pc.
 
-Editor de código utilizado: <a href="https://code.visualstudio.com/download">Visual Studio Code</a>
+Editor de código utilizado: <a href="https://code.visualstudio.com/download">Visual Studio Code</a>.
 
 ## Instruções para utilização do UVATool pelo código fonte
 
-Recomendações:
+Para utilização do UVATool é necessário:
 
-Instalar o sistema do <a href="https://git-scm.com/downloads">git</a> no pc.
+Baixar e instalar o <a href="https://www.python.org/downloads/">python3.9</a>.
 
-(opcional, mas interessante para acompanhar o desenvolvimento da melhor forma possível)
+As dependências do projeto são:
 
-Para utilização do UVATool é necessário: 
+1 - <a href="https://pypi.org/project/pyqt5-tools/">pyqt5-tools</a>
 
-1 - <a href="https://www.python.org/downloads/">python3.9</a>
+2 - <a href="https://pypi.org/project/numpy/">numpy</a>
 
-2 - <a href="https://pypi.org/project/pyqt5-tools/">pyqt5-tools</a>
+Para instalar basta utilizar o comando:
 
-3 - <a href="https://pypi.org/project/numpy/">numpy</a>
+    pip install -r requirements.txt
+
+Utilizando o vscode, a tarefa ja está automatizada com a task SetupDevelopment.
 
 ## Execução do programa
 

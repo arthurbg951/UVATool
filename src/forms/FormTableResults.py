@@ -51,7 +51,6 @@ class FormTableResults(QWidget):
             for i in range(equilibrium.shape[0]):
                 for j in range(equilibrium.shape[1]):
                     content = QTableWidgetItem(str(equilibrium[i, j]))
-                    content.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
                     self.equilibriumTable.setItem(i, j, content)
             self.equilibriumTable.resizeColumnsToContents()
         except Exception as e:
@@ -65,7 +64,6 @@ class FormTableResults(QWidget):
             for i in range(frameStiffness.shape[0]):
                 for j in range(frameStiffness.shape[1]):
                     content = QTableWidgetItem(str(frameStiffness[i, j]))
-                    content.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
                     self.frameStiffnessTable.setItem(i, j, content)
             self.frameStiffnessTable.resizeColumnsToContents()
         except Exception as e:
@@ -79,7 +77,6 @@ class FormTableResults(QWidget):
             for i in range(globalFrameStiffnessTable.shape[0]):
                 for j in range(globalFrameStiffnessTable.shape[1]):
                     content = QTableWidgetItem(str(globalFrameStiffnessTable[i, j]))
-                    content.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
                     self.globalFrameStiffnessTable.setItem(i, j, content)
             self.globalFrameStiffnessTable.resizeColumnsToContents()
         except Exception as e:
@@ -92,7 +89,6 @@ class FormTableResults(QWidget):
         try:
             for i in range(nodalForcesVector.shape[0]):
                 content = QTableWidgetItem(str(nodalForcesVector[i]))
-                content.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
                 self.nodalForcesVector.setItem(i, 0, content)
             self.nodalForcesVector.resizeColumnsToContents()
         except Exception as e:
@@ -105,7 +101,6 @@ class FormTableResults(QWidget):
         try:
             for i in range(nodalDisplacementVector.shape[0]):
                 content = QTableWidgetItem(str(nodalDisplacementVector[i]))
-                content.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
                 self.nodalDisplacementVector.setItem(i, 0, content)
             self.nodalDisplacementVector.resizeColumnsToContents()
         except Exception as e:
@@ -118,7 +113,6 @@ class FormTableResults(QWidget):
         try:
             for i in range(nodalDeformationsVector.shape[0]):
                 content = QTableWidgetItem(str(nodalDeformationsVector[i]))
-                content.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
                 self.nodalDeformationsVector.setItem(i, 0, content)
             self.nodalDeformationsVector.resizeColumnsToContents()
         except Exception as e:

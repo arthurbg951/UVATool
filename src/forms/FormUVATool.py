@@ -211,10 +211,10 @@ class FormUVATool(QMainWindow):
 
             for node in reversed(self.scene.nodes):
                 nodes.append(node)
-                print('Node: support=', node.getSupport(), " p=", node.getP(), " node=", node.getPoint(), "fx=", node.getNodalForce().fx)
+                # print('Node: support=', node.getSupport(), " p=", node.getP(), " node=", node.getPoint(), "fx=", node.getNodalForce().fx)
             for element in reversed(self.scene.elements):
                 elements.append(element)
-                print('Element: node1=', element.node1, " node2=", element.node2)
+                # print('Element: node1=', element.node1, " node2=", element.node2)
 
             if len(nodes) == 0 and len(elements) == 0:
                 raise Exception("Não existe nenhuma estrutura!")
@@ -283,6 +283,9 @@ class FormUVATool(QMainWindow):
         else:
             self.scene.canDrawLine = False
             self.scene.elementPreview.hide()
+            self.scene.elementPreview.setLine(QLineF(QPointF(0, 0), QPointF(0, 0)))
+            self.scene.mousePoint = QPointF(0, 0)
+            self.scene.clickPoint = QPointF(0, 0)
 
     def close(self) -> bool:
         self.formTableResults.close()
@@ -318,6 +321,7 @@ class UVAGraphicsScene(QGraphicsScene):
 
         self.edificio3Andares()
         # self.balanco()
+        # self.porticosSucessivos()
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         if event.button() == Qt.MouseButton.LeftButton:
@@ -459,9 +463,10 @@ class UVAGraphicsScene(QGraphicsScene):
             self.keyStack.remove(event.key())
 
     def edificio3Andares(self):
-        secao = Rectangle(0.012, 0.001)
+        secao = Rectangle(0.12, 0.01)
         area = secao.area
         inercia = secao.inertia
+        young = 200e9
         n1 = NodeDraw(0, -0)
         n2 = NodeDraw(150, -0)
         n3 = NodeDraw(0, -30)
@@ -476,15 +481,15 @@ class UVAGraphicsScene(QGraphicsScene):
         n3.setNodalForce(NodalForce(-100, 0, 0))
         n5.setNodalForce(NodalForce(-100, 0, 0))
         n7.setNodalForce(NodalForce(-100, 0, 0))
-        e1 = ElementDraw(n1, n3, area, inercia, 1)
-        e2 = ElementDraw(n2, n4, area, inercia, 1)
-        e3 = ElementDraw(n3, n4, area, inercia, 1)
-        e4 = ElementDraw(n3, n5, area, inercia, 1)
-        e5 = ElementDraw(n4, n6, area, inercia, 1)
-        e6 = ElementDraw(n5, n6, area, inercia, 1)
-        e7 = ElementDraw(n5, n7, area, inercia, 1)
-        e8 = ElementDraw(n6, n8, area, inercia, 1)
-        e9 = ElementDraw(n7, n8, area, inercia, 1)
+        e1 = ElementDraw(n1, n3, area, inercia, young)
+        e2 = ElementDraw(n2, n4, area, inercia, young)
+        e3 = ElementDraw(n3, n4, area, inercia, young)
+        e4 = ElementDraw(n3, n5, area, inercia, young)
+        e5 = ElementDraw(n4, n6, area, inercia, young)
+        e6 = ElementDraw(n5, n6, area, inercia, young)
+        e7 = ElementDraw(n5, n7, area, inercia, young)
+        e8 = ElementDraw(n6, n8, area, inercia, young)
+        e9 = ElementDraw(n7, n8, area, inercia, young)
         nodes = [n1, n2, n3, n4, n5, n6, n7, n8]
         elements = [e1, e2, e3, e4, e5, e6, e7, e8, e9]
 
@@ -501,6 +506,54 @@ class UVAGraphicsScene(QGraphicsScene):
         e1 = ElementDraw(n1, n2, 1, 1, 1)
         nodes = [n1, n2]
         elements = [e1]
+        for node in nodes:
+            self.drawNode(node)
+        for element in elements:
+            self.drawElement(element)
+
+    def porticosSucessivos(self):
+        nodes = []
+        elements = []
+
+        rec = Rectangle(0.012, 0.001)
+        area = rec.area
+        inercia = rec.inertia
+
+        n1 = NodeDraw(0, 0)
+        n1.setSupport(Apoio.terceiro_genero)
+        n2 = NodeDraw(0, 10)
+        n3 = NodeDraw(10, 10)
+        n4 = NodeDraw(10, 0)
+        n4.setSupport(Apoio.terceiro_genero)
+
+        e1 = ElementDraw(n1, n2, area, inercia, 1)
+        e2 = ElementDraw(n2, n3, area, inercia, 1)
+        e3 = ElementDraw(n3, n4, area, inercia, 1)
+
+        nodes.append(n1)
+        nodes.append(n2)
+        nodes.append(n3)
+        nodes.append(n4)
+
+        elements.append(e1)
+        elements.append(e2)
+        elements.append(e3)
+
+        for i in range(2, 100, 1):
+            n2, n3 = NodeDraw(0, -i*10), NodeDraw(1*10, -i*10)
+
+            e1 = ElementDraw(nodes[len(nodes)-4], n2, area, inercia, 1)
+            e2 = ElementDraw(n2, n3, area, inercia, 1)
+            e3 = ElementDraw(n3, nodes[len(nodes)-1], area, inercia, 1)
+
+            nodes.append(n2)
+            nodes.append(n3)
+            elements.append(e1)
+            elements.append(e2)
+            elements.append(e3)
+
+        nodes[len(nodes)-2].setNodalForce(NodalForce(100, 0, 0))
+
         for node in nodes:
             self.drawNode(node)
         for element in elements:
