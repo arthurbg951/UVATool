@@ -319,9 +319,10 @@ class UVAGraphicsScene(QGraphicsScene):
         self.elements = []
         self.gridPoints = []
 
-        self.edificio3Andares()
+        # self.edificio3Andares()
         # self.balanco()
         # self.porticosSucessivos()
+        self.modelotcc()
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         if event.button() == Qt.MouseButton.LeftButton:
@@ -558,6 +559,52 @@ class UVAGraphicsScene(QGraphicsScene):
             self.drawNode(node)
         for element in elements:
             self.drawElement(element)
+            
+    def modelotcc(self):
+            
+        secao = Rectangle(0.20, 0.40)
+        area = secao.area
+        inercia = secao.inertia
+        young = 25e9
+            
+        n1 = NodeDraw(0, 0)
+        n2 = NodeDraw(400, 0)
+        n3 = NodeDraw(0, 150)
+        n4 = NodeDraw(100, 150)
+        n5 = NodeDraw(300, 150)
+        n6 = NodeDraw(400, 150)
+        n7 = NodeDraw(0, 300)
+        n8 = NodeDraw(400, 300)
+
+        print(n2.x, n2.y, n2.getItem().x(), n2.getItem().y())
+
+        n1.setSupport(Apoio.terceiro_genero)
+        n2.setSupport(Apoio.terceiro_genero)
+        n7.setSupport(Apoio.terceiro_genero)
+        n8.setSupport(Apoio.terceiro_genero)
+        
+        n3.setP(1)
+        n6.setP(1)
+            
+        n4.setNodalForce(NodalForce(-100e3, 0, 0))
+        n5.setNodalForce(NodalForce(-100e3, 0, 0))
+
+        e1 = ElementDraw(n1, n3, area, inercia, young)
+        e2 = ElementDraw(n3, n4, area, inercia, young)
+        e3 = ElementDraw(n4, n5, area, inercia, young)
+        e4 = ElementDraw(n5, n6, area, inercia, young)
+        e5 = ElementDraw(n2, n6, area, inercia, young)
+        e6 = ElementDraw(n3, n7, area, inercia, young)
+        e7 = ElementDraw(n6, n8, area, inercia, young)
+        
+        nodes = [n1, n2, n3, n4, n5, n6, n7, n8]
+        elements = [e1, e2, e3, e4, e5, e6, e7]
+
+        for node in nodes:
+            self.drawNode(node)
+        for element in elements:
+            self.drawElement(element)
+            
 
 
 '''
