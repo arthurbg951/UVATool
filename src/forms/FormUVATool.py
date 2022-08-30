@@ -183,9 +183,9 @@ class FormUVATool(QMainWindow):
                     item.setColor(Qt.GlobalColor.gray)
 
     def pValueChanged(self):
-        if self.p.text() != "":
-            self.semiRigido.setChecked(True)
-        if self.p.text() == "1":
+        if self.p.text() == "0":
+            self.semApoio.setChecked(True)
+        elif self.p.text() == "1":
             self.semApoio.setChecked(True)
 
     def ProcessCalculationsTriggered(self):

@@ -130,8 +130,6 @@ class Node:
     def setP(self, p: float) -> None:
         if p == 0:
             self.__support = Support.middle_hinge
-        elif p != 1:
-            self.__support = Support.semi_fixed
         p = self.__checkP(p)
         self.__p = p
 
