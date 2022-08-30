@@ -90,6 +90,7 @@ class FormUVATool(QMainWindow):
         self.scene = UVAGraphicsScene(self)
         self.scene.setSceneRect(0, 0, 1, 1)
         self.GraphicsView.setScene(self.scene)
+        self.scene.fitStructure()
 
         self.ChangeValues.close()
         self.ElementParameters.close()
@@ -463,6 +464,17 @@ class UVAGraphicsScene(QGraphicsScene):
         if self.keyStack.__contains__(event.key()):
             self.keyStack.remove(event.key())
 
+    def fitStructure(self):
+        x = self.nodes[0].x
+        y = self.nodes[0].y
+        for node in self.nodes:
+            if node.x > x:
+                x = node.x
+            if node.y > y:
+                y = node.y
+        print(f'Changing view to {x*10} {y*10}')
+        self.form.GraphicsView.setSceneRect(x*10/2, -y*10/2, 1, 1)
+
     def edificio3Andares(self):
         secao = Rectangle(0.12, 0.01)
         area = secao.area
@@ -559,14 +571,14 @@ class UVAGraphicsScene(QGraphicsScene):
             self.drawNode(node)
         for element in elements:
             self.drawElement(element)
-            
+
     def modelotcc(self):
-            
+
         secao = Rectangle(0.20, 0.40)
         area = secao.area
         inercia = secao.inertia
         young = 25e9
-            
+
         n1 = NodeDraw(0, -0)
         n2 = NodeDraw(400, -0)
         n3 = NodeDraw(0, -150)
@@ -582,10 +594,10 @@ class UVAGraphicsScene(QGraphicsScene):
         n2.setSupport(Apoio.terceiro_genero)
         n7.setSupport(Apoio.terceiro_genero)
         n8.setSupport(Apoio.terceiro_genero)
-        
+
         n3.setP(1)
         n6.setP(1)
-            
+
         n4.setNodalForce(NodalForce(-100e3, 0, 0))
         n5.setNodalForce(NodalForce(-100e3, 0, 0))
 
@@ -596,7 +608,7 @@ class UVAGraphicsScene(QGraphicsScene):
         e5 = ElementDraw(n2, n6, area, inercia, young)
         e6 = ElementDraw(n3, n7, area, inercia, young)
         e7 = ElementDraw(n6, n8, area, inercia, young)
-        
+
         nodes = [n1, n2, n3, n4, n5, n6, n7, n8]
         elements = [e1, e2, e3, e4, e5, e6, e7]
 
@@ -604,7 +616,6 @@ class UVAGraphicsScene(QGraphicsScene):
             self.drawNode(node)
         for element in elements:
             self.drawElement(element)
-            
 
 
 '''
