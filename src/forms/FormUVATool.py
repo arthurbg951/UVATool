@@ -567,14 +567,14 @@ class UVAGraphicsScene(QGraphicsScene):
         inercia = secao.inertia
         young = 25e9
             
-        n1 = NodeDraw(0, 0)
-        n2 = NodeDraw(400, 0)
-        n3 = NodeDraw(0, 150)
-        n4 = NodeDraw(100, 150)
-        n5 = NodeDraw(300, 150)
-        n6 = NodeDraw(400, 150)
-        n7 = NodeDraw(0, 300)
-        n8 = NodeDraw(400, 300)
+        n1 = NodeDraw(0, -0)
+        n2 = NodeDraw(400, -0)
+        n3 = NodeDraw(0, -150)
+        n4 = NodeDraw(100, -150)
+        n5 = NodeDraw(300, -150)
+        n6 = NodeDraw(400, -150)
+        n7 = NodeDraw(0, -300)
+        n8 = NodeDraw(400, -300)
 
         print(n2.x, n2.y, n2.getItem().x(), n2.getItem().y())
 
