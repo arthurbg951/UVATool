@@ -136,36 +136,40 @@ class FormUVATool(QMainWindow):
 
     def confirmClicked(self):
         for item in self.scene.items():
-            if isinstance(item, NodeItem):
-                if item.isSelected():
-                    for node in self.scene.nodes:
-                        if node.getItem() == item:
-                            fx = float(self.fx.text())
-                            fy = float(self.fy.text())
-                            m = float(self.m.text())
-                            p = float(self.p.text())
-                            node.setNodalForce(NodalForce(fx, fy, m))
-                            node.setP(p)
-                            if self.primeiroGenero.isChecked():
-                                node.setSupport(Apoio.primeiro_genero)
-                            elif self.segundoGenero.isChecked():
-                                node.setSupport(Apoio.segundo_genero)
-                            elif self.terceiroGenero.isChecked():
-                                node.setSupport(Apoio.terceiro_genero)
-                            elif self.semiRigido.isChecked():
-                                node.setSupport(Apoio.semi_rigido)
-                            elif self.semApoio.isChecked():
-                                node.setSupport(Apoio.sem_suporte)
-            if isinstance(item, ElementDraw):
-                if item.isSelected():
-                    for element in self.scene.elements:
-                        if element.getItem() == item:
-                            area = float(self.area.text())
-                            inertia = float(self.momentInertia.text())
-                            young_modulus = float(self.youngModulus.text())
-                            element.area = area
-                            element.moment_inertia = inertia
-                            element.young_modulus = young_modulus
+            try:
+                if isinstance(item, NodeItem):
+                    if item.isSelected():
+                        for node in self.scene.nodes:
+                            if node.getItem() == item:
+                                fx = float(self.fx.text())
+                                fy = float(self.fy.text())
+                                m = float(self.m.text())
+                                p = float(self.p.text())
+                                node.setNodalForce(NodalForce(fx, fy, m))
+                                node.setP(p)
+                                if self.primeiroGenero.isChecked():
+                                    node.setSupport(Apoio.primeiro_genero)
+                                elif self.segundoGenero.isChecked():
+                                    node.setSupport(Apoio.segundo_genero)
+                                elif self.terceiroGenero.isChecked():
+                                    node.setSupport(Apoio.terceiro_genero)
+                                elif self.semiRigido.isChecked():
+                                    node.setSupport(Apoio.semi_rigido)
+                                elif self.semApoio.isChecked():
+                                    node.setSupport(Apoio.sem_suporte)
+                if isinstance(item, ElementDraw):
+                    if item.isSelected():
+                        for element in self.scene.elements:
+                            if element.getItem() == item:
+                                area = float(self.area.text())
+                                inertia = float(self.momentInertia.text())
+                                young_modulus = float(self.youngModulus.text())
+                                element.area = area
+                                element.moment_inertia = inertia
+                                element.young_modulus = young_modulus
+            except StructureError as se:
+                QMessageBox.warning(self, "Warning", str(se))
+                self.p.setText("")
 
     def confirmClicked_2(self):
         for item in self.scene.items():
