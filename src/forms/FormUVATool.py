@@ -372,28 +372,8 @@ class UVAGraphicsScene(QGraphicsScene):
     def mouseDoubleClickEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         for item in self.items():
             if item.hasFocus():
-                if isinstance(item, NodeItem):
-                    item.setColor(Qt.GlobalColor.red)
-                    for node in self.nodes:
-                        if node.getItem() == item:
-                            self.form.fx.setText(str(node.getNodalForce().fx))
-                            self.form.fy.setText(str(node.getNodalForce().fy))
-                            self.form.m.setText(str(node.getNodalForce().m))
-                            self.form.p.setText(str(node.getP()))
-                            if node.getSupport() == Apoio.sem_suporte:
-                                self.form.semApoio.setChecked(True)
-                            elif node.getSupport() == Apoio.primeiro_genero:
-                                self.form.primeiroGenero.setChecked(True)
-                            elif node.getSupport() == Apoio.segundo_genero:
-                                self.form.segundoGenero.setChecked(True)
-                            elif node.getSupport() == Apoio.terceiro_genero:
-                                self.form.terceiroGenero.setChecked(True)
-                            elif node.getSupport() == Apoio.semi_rigido:
-                                self.form.semiRigido.setChecked(True)
-                            self.form.ElementParameters.hide()
-                            self.form.ChangeValues.show()
                 if isinstance(item, ElementItem):
-                    item.setColor(Qt.GlobalColor.red)
+                    item.setSelected(True)
                     for element in self.elements:
                         if element.getItem() == item:
                             self.form.area.setText(str(element.area))
@@ -401,11 +381,35 @@ class UVAGraphicsScene(QGraphicsScene):
                             self.form.youngModulus.setText(str(element.young_modulus))
                             self.form.ChangeValues.hide()
                             self.form.ElementParameters.show()
+                else:
+                    isNode = isinstance(item, NodeItem)
+                    isRoller = isinstance(item, RollerItem)
+                    isPinned = isinstance(item, PinnedItem)
+                    isFixed = isinstance(item, FixedItem)
+                    isMiddleRinge = isinstance(item, MiddleRingeItem)
+                    isSemiFixed = isinstance(item, SemiFixedItem)
+                    if isNode or isRoller or isPinned or isFixed or isMiddleRinge or isSemiFixed:
+                        item.setSelected(True)
+                        for node in self.nodes:
+                            if node.getItem() == item:
+                                self.form.fx.setText(str(node.getNodalForce().fx))
+                                self.form.fy.setText(str(node.getNodalForce().fy))
+                                self.form.m.setText(str(node.getNodalForce().m))
+                                self.form.p.setText(str(node.getP()))
+                                if node.getSupport() == Apoio.sem_suporte:
+                                    self.form.semApoio.setChecked(True)
+                                elif node.getSupport() == Apoio.primeiro_genero:
+                                    self.form.primeiroGenero.setChecked(True)
+                                elif node.getSupport() == Apoio.segundo_genero:
+                                    self.form.segundoGenero.setChecked(True)
+                                elif node.getSupport() == Apoio.terceiro_genero:
+                                    self.form.terceiroGenero.setChecked(True)
+                                elif node.getSupport() == Apoio.semi_rigido:
+                                    self.form.semiRigido.setChecked(True)
+                                self.form.ElementParameters.hide()
+                                self.form.ChangeValues.show()
             else:
-                if isinstance(item, NodeItem):
-                    item.setColor(Qt.GlobalColor.gray)
-                if isinstance(item, ElementItem):
-                    item.setColor(Qt.GlobalColor.gray)
+                item.setSelected(False)
 
     def mouseMoveEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         super().mouseMoveEvent(event)
@@ -592,14 +596,13 @@ class UVAGraphicsScene(QGraphicsScene):
         n7 = NodeDraw(0, -300)
         n8 = NodeDraw(400, -300)
 
-        print(n2.x, n2.y, n2.getItem().x(), n2.getItem().y())
-
         n1.setSupport(Apoio.terceiro_genero)
         n2.setSupport(Apoio.terceiro_genero)
         n7.setSupport(Apoio.terceiro_genero)
         n8.setSupport(Apoio.terceiro_genero)
 
         n3.setP(1)
+        n3.setSupport(Apoio.rotula)
         n6.setP(1)
 
         n4.setNodalForce(NodalForce(-100e3, 0, 0))

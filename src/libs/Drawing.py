@@ -4,14 +4,16 @@ from PyQt5.QtWidgets import (
     QGraphicsItem,
     QGraphicsSceneHoverEvent,
     QGraphicsEllipseItem,
+    QGraphicsRectItem,
     QGraphicsLineItem,
+    QGraphicsPixmapItem
 
 )
 from PyQt5.QtCore import (
     Qt,
     QPointF,
     QLineF,
-    QRectF
+    QRectF,
 )
 from PyQt5.QtGui import (
     QPen,
@@ -19,7 +21,8 @@ from PyQt5.QtGui import (
     QKeyEvent,
     QColor,
     QFocusEvent,
-    QGradient
+    QGradient,
+    QPixmap
 )
 
 
@@ -47,14 +50,15 @@ class NodePreview(QGraphicsEllipseItem):
         return self.__pos
 
 
-class NodeItem(QGraphicsEllipseItem):
+class NodeItem(QGraphicsRectItem):
+    # ESSE ITEM REPRESENTA O NÓ PADRÃO
     def __init__(self, rec: QRectF):
         super().__init__(rec)
         self.__x = rec.x()
         self.__y = rec.y()
         self.__pos = QPointF(self.__x, self.__y)
         self.setPen(QPen(Qt.GlobalColor.black, 1))
-        self.setBrush(QBrush(Qt.GlobalColor.gray, Qt.BrushStyle.SolidPattern))
+        self.setBrush(QBrush(Qt.GlobalColor.black, Qt.BrushStyle.SolidPattern))
         self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsFocusable)
         self.setZValue(1)
         self.setFocus()
@@ -80,7 +84,7 @@ class NodeItem(QGraphicsEllipseItem):
         if selected:
             self.setColor(Qt.GlobalColor.red)
         else:
-            self.setColor(Qt.GlobalColor.gray)
+            self.setColor(Qt.GlobalColor.black)
 
     def isSelected(self) -> bool:
         if self.brush() == QBrush(Qt.GlobalColor.red):
@@ -98,18 +102,359 @@ class NodeItem(QGraphicsEllipseItem):
         return - self.__y * 10
 
 
+class MiddleRingeItem(QGraphicsEllipseItem):
+    # REPRESENTA O NÓ ROTULADO
+    def __init__(self, rec: QRectF):
+        super().__init__(rec)
+        self.__x = rec.x()
+        self.__y = rec.y()
+        self.__pos = QPointF(self.__x, self.__y)
+        self.setPen(QPen(Qt.GlobalColor.black, 1))
+        self.setBrush(QBrush(Qt.GlobalColor.white, Qt.BrushStyle.SolidPattern))
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsFocusable)
+        self.setZValue(1)
+        self.setFocus()
+        self.setAcceptHoverEvents(True)
+
+    def keyPressEvent(self, event: QKeyEvent) -> None:
+        if event.key() == Qt.Key.Key_Delete:
+            if self.isSelected():
+                print('Botão deletar não implementado')
+        if event.key() == Qt.Key.Key_Escape:
+            self.setSelected(False)
+
+    def setColor(self, color: Qt.GlobalColor):
+        self.setBrush(QBrush(color))
+
+    def hoverEnterEvent(self, event: QGraphicsSceneHoverEvent) -> None:
+        self.setFocus()
+
+    def hoverLeaveEvent(self, event: QGraphicsSceneHoverEvent) -> None:
+        self.clearFocus()
+
+    def setSelected(self, selected: bool) -> None:
+        if selected:
+            self.setColor(Qt.GlobalColor.red)
+        else:
+            self.setColor(Qt.GlobalColor.white)
+
+    def isSelected(self) -> bool:
+        if self.brush() == QBrush(Qt.GlobalColor.red):
+            return True
+        else:
+            return False
+
+    def scenePos(self) -> QPointF:
+        return self.__pos
+
+    def x(self):
+        return self.__x * 10
+
+    def y(self):
+        return - self.__y * 10
+
+
+class SemiFixedNodeItem(QGraphicsPixmapItem):
+    # REPRESENTA O NÓ SEMI RIGIDO
+    def __init__(self, x: float, y: float):
+        super().__init__(QPixmap("icons/apoio_semi_rigido_node.png"))
+        self.__x = x - self.pixmap().width()/2
+        self.__y = y - self.pixmap().height()/2
+        self.__pos = QPointF(self.__x, self.__y)
+        self.setPos(QPointF(self.__x, self.__y))
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsFocusable)
+        self.setZValue(1)
+        self.setFocus()
+        self.setAcceptHoverEvents(True)
+
+    def keyPressEvent(self, event: QKeyEvent) -> None:
+        if event.key() == Qt.Key.Key_Delete:
+            if self.isSelected():
+                print('Botão deletar não implementado')
+        if event.key() == Qt.Key.Key_Escape:
+            self.setSelected(False)
+
+    def setColor(self, color: Qt.GlobalColor):
+        # self.setBrush(QBrush(color))
+        pass
+
+    def hoverEnterEvent(self, event: QGraphicsSceneHoverEvent) -> None:
+        self.setFocus()
+
+    def hoverLeaveEvent(self, event: QGraphicsSceneHoverEvent) -> None:
+        self.clearFocus()
+
+    def setSelected(self, selected: bool) -> None:
+        # VERIFICAR A CORRETA SELEÇÃO PARA FUNCIONAMENTO ADEQUADO
+        # if selected:
+        #     self.setColor(Qt.GlobalColor.red)
+        #     print("item selecionado")
+        # else:
+        #     self.setColor(Qt.GlobalColor.white)
+        #     print("item não selecionado")
+        pass
+
+    def isSelected(self) -> bool:
+        # MODIFICAR A SELEÇÃO PARA FUNCIONAMENTO ADEQUADO DA CLASSE
+        # if self.brush() == QBrush(Qt.GlobalColor.red):
+        #     return True
+        # else:
+        #     return False
+        pass
+
+    def scenePos(self) -> QPointF:
+        return self.__pos
+
+    def x(self):
+        return self.__x * 10
+
+    def y(self):
+        return - self.__y * 10
+
+
+class RollerItem(QGraphicsPixmapItem):
+    # REPRESENTA O APOIO DE PRIMEIRO GENERO
+    def __init__(self, x: float, y: float):
+        super().__init__(QPixmap("icons/apoio_primeiro_genero.png"))
+        self.__x = x - 17
+        self.__y = y - 6
+        self.__pos = QPointF(self.__x, self.__y)
+        self.setPos(QPointF(self.__x, self.__y))
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsFocusable)
+        self.setZValue(1)
+        self.setFocus()
+        self.setAcceptHoverEvents(True)
+
+    def keyPressEvent(self, event: QKeyEvent) -> None:
+        if event.key() == Qt.Key.Key_Delete:
+            if self.isSelected():
+                print('Botão deletar não implementado')
+        if event.key() == Qt.Key.Key_Escape:
+            self.setSelected(False)
+
+    def setColor(self, color: Qt.GlobalColor):
+        # self.setBrush(QBrush(color))
+        pass
+
+    def hoverEnterEvent(self, event: QGraphicsSceneHoverEvent) -> None:
+        self.setFocus()
+
+    def hoverLeaveEvent(self, event: QGraphicsSceneHoverEvent) -> None:
+        self.clearFocus()
+
+    def setSelected(self, selected: bool) -> None:
+        # VERIFICAR A CORRETA SELEÇÃO PARA FUNCIONAMENTO ADEQUADO
+        # if selected:
+        #     self.setColor(Qt.GlobalColor.red)
+        #     print("item selecionado")
+        # else:
+        #     self.setColor(Qt.GlobalColor.white)
+        #     print("item não selecionado")
+        pass
+
+    def isSelected(self) -> bool:
+        # MODIFICAR A SELEÇÃO PARA FUNCIONAMENTO ADEQUADO DA CLASSE
+        # if self.brush() == QBrush(Qt.GlobalColor.red):
+        #     return True
+        # else:
+        #     return False
+        pass
+
+    def scenePos(self) -> QPointF:
+        return self.__pos
+
+    def x(self):
+        return self.__x * 10
+
+    def y(self):
+        return - self.__y * 10
+
+
+class PinnedItem(QGraphicsPixmapItem):
+    # REPRESENTA O APOIO DE SEGUNDO GENERO
+    def __init__(self, x: float, y: float):
+        super().__init__(QPixmap("icons/apoio_segundo_genero.png"))
+        self.__x = x - 17
+        self.__y = y - 7
+        self.__pos = QPointF(self.__x, self.__y)
+        self.setPos(QPointF(self.__x, self.__y))
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsFocusable)
+        self.setZValue(1)
+        self.setFocus()
+        self.setAcceptHoverEvents(True)
+
+    def keyPressEvent(self, event: QKeyEvent) -> None:
+        if event.key() == Qt.Key.Key_Delete:
+            if self.isSelected():
+                print('Botão deletar não implementado')
+        if event.key() == Qt.Key.Key_Escape:
+            self.setSelected(False)
+
+    def setColor(self, color: Qt.GlobalColor):
+        # self.setBrush(QBrush(color))
+        pass
+
+    def hoverEnterEvent(self, event: QGraphicsSceneHoverEvent) -> None:
+        self.setFocus()
+
+    def hoverLeaveEvent(self, event: QGraphicsSceneHoverEvent) -> None:
+        self.clearFocus()
+
+    def setSelected(self, selected: bool) -> None:
+        # VERIFICAR A CORRETA SELEÇÃO PARA FUNCIONAMENTO ADEQUADO
+        # if selected:
+        #     self.setColor(Qt.GlobalColor.red)
+        #     print("item selecionado")
+        # else:
+        #     self.setColor(Qt.GlobalColor.white)
+        #     print("item não selecionado")
+        pass
+
+    def isSelected(self) -> bool:
+        # MODIFICAR A SELEÇÃO PARA FUNCIONAMENTO ADEQUADO DA CLASSE
+        # if self.brush() == QBrush(Qt.GlobalColor.red):
+        #     return True
+        # else:
+        #     return False
+        pass
+
+    def scenePos(self) -> QPointF:
+        return self.__pos
+
+    def x(self):
+        return self.__x * 10
+
+    def y(self):
+        return - self.__y * 10
+
+
+class FixedItem(QGraphicsPixmapItem):
+    # REPRESENTA O APOIO DE TERCEIRO GENERO
+    def __init__(self, x: float, y: float):
+        super().__init__(QPixmap("icons/apoio_terceiro_genero.png"))
+        self.__x = x - 16
+        self.__y = y - 15
+        self.__pos = QPointF(self.__x, self.__y)
+        self.setPos(QPointF(self.__x, self.__y))
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsFocusable)
+        self.setZValue(1)
+        self.setFocus()
+        self.setAcceptHoverEvents(True)
+        self.__isSelected = False
+
+    def keyPressEvent(self, event: QKeyEvent) -> None:
+        if event.key() == Qt.Key.Key_Delete:
+            if self.isSelected():
+                print('Botão deletar não implementado')
+        if event.key() == Qt.Key.Key_Escape:
+            self.setSelected(False)
+
+    def setColor(self, color: QColor):
+        tmp = self.pixmap().toImage()
+        for y in range(tmp.height()):
+            for x in range(tmp.width()):
+                color.setAlpha(tmp.pixelColor(x, y).alpha())
+                tmp.setPixelColor(x, y, color)
+        self.setPixmap(QPixmap.fromImage(tmp))
+
+    def hoverEnterEvent(self, event: QGraphicsSceneHoverEvent) -> None:
+        self.setFocus()
+
+    def hoverLeaveEvent(self, event: QGraphicsSceneHoverEvent) -> None:
+        self.clearFocus()
+
+    def setSelected(self, selected: bool) -> None:
+        if selected:
+            self.setColor(QColor(255, 0, 0))
+            self.__isSelected = True
+        else:
+            self.setColor(QColor(0, 0, 0))
+            self.__isSelected = False
+
+    def isSelected(self) -> bool:
+        if self.__isSelected:
+            return True
+        else:
+            return False
+
+    def scenePos(self) -> QPointF:
+        return self.__pos
+
+    def x(self):
+        return self.__x * 10
+
+    def y(self):
+        return - self.__y * 10
+
+
+class SemiFixedItem(QGraphicsPixmapItem):
+    # REPRESENTA O APOIO DE SEMI RIGIDO
+    def __init__(self, x: float, y: float):
+        super().__init__(QPixmap("icons/apoio_semi_rigido.png"))
+        self.__x = x - 15
+        self.__y = y - 11
+        self.__pos = QPointF(self.__x, self.__y)
+        self.setPos(QPointF(self.__x, self.__y))
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsFocusable)
+        self.setZValue(1)
+        self.setFocus()
+        self.setAcceptHoverEvents(True)
+
+    def keyPressEvent(self, event: QKeyEvent) -> None:
+        if event.key() == Qt.Key.Key_Delete:
+            if self.isSelected():
+                print('Botão deletar não implementado')
+        if event.key() == Qt.Key.Key_Escape:
+            self.setSelected(False)
+
+    def setColor(self, color: Qt.GlobalColor):
+        # self.setBrush(QBrush(color))
+        pass
+
+    def hoverEnterEvent(self, event: QGraphicsSceneHoverEvent) -> None:
+        self.setFocus()
+
+    def hoverLeaveEvent(self, event: QGraphicsSceneHoverEvent) -> None:
+        self.clearFocus()
+
+    def setSelected(self, selected: bool) -> None:
+        # VERIFICAR A CORRETA SELEÇÃO PARA FUNCIONAMENTO ADEQUADO
+        # if selected:
+        #     self.setColor(Qt.GlobalColor.red)
+        #     print("item selecionado")
+        # else:
+        #     self.setColor(Qt.GlobalColor.white)
+        #     print("item não selecionado")
+        pass
+
+    def isSelected(self) -> bool:
+        # MODIFICAR A SELEÇÃO PARA FUNCIONAMENTO ADEQUADO DA CLASSE
+        # if self.brush() == QBrush(Qt.GlobalColor.red):
+        #     return True
+        # else:
+        #     return False
+        pass
+
+    def scenePos(self) -> QPointF:
+        return self.__pos
+
+    def x(self):
+        return self.__x * 10
+
+    def y(self):
+        return - self.__y * 10
+
+
 class NodeDraw(Node):
-    __item: NodeItem
+    __item: QGraphicsItem
 
     def __init__(self, x: float, y: float) -> None:
         super().__init__(x/10, -y/10)
+        self.xDraw = x
+        self.yDraw = y
         self.__diameter = 10
         self.__rect = QRectF(x - self.__diameter/2, y - self.__diameter/2, self.__diameter, self.__diameter)
         self.__item = NodeItem(self.getRect())
-
-    def updateDiameter(self, diameter: int) -> None:
-        self.__diameter = diameter
-        self.__item.setRect(self.getRect())
 
     def getRect(self) -> QRectF:
         return self.__rect
@@ -125,6 +470,26 @@ class NodeDraw(Node):
 
     def setColor(self, color: QColor):
         self.__item.setColor(color)
+
+    def setSupport(self, support: Support) -> None:
+        super().setSupport(support)
+        if support == Support.roller:
+            self.__item = RollerItem(self.xDraw, self.yDraw)
+        elif support == Support.pinned:
+            self.__item = PinnedItem(self.xDraw, self.yDraw)
+        elif support == Support.fixed:
+            self.__item = FixedItem(self.xDraw, self.yDraw)
+        elif support == Support.middle_hinge:
+            self.__item = MiddleRingeItem(self.getRect())
+        elif support == Support.semi_fixed:
+            self.__item = SemiFixedItem(self.xDraw, self.yDraw)
+
+    def setP(self, p: float) -> None:
+        super().setP(p)
+        if p > 0 and p != 1:
+            self.__item = SemiFixedNodeItem(self.xDraw, self.yDraw)
+        if p == 0:
+            self.__item = MiddleRingeItem(self.getRect())
 
     def __eq__(self, __o: object) -> bool:
         if not isinstance(__o, NodeDraw):
@@ -153,12 +518,12 @@ class ElementItem(QGraphicsLineItem):
         return self.element == __o.element
 
     def hoverEnterEvent(self, event: QGraphicsSceneHoverEvent) -> None:
-        self.setFocus()
         self.setPen(QPen(self.pen().color(), 4, self.pen().style()))
+        self.setFocus()
 
     def hoverLeaveEvent(self, event: QGraphicsSceneHoverEvent) -> None:
-        self.clearFocus()
         self.setPen(QPen(self.pen().color(), 2, self.pen().style()))
+        self.clearFocus()
 
     def hasFocus(self) -> bool:
         if self.pen().width() == 4:
@@ -175,8 +540,9 @@ class ElementItem(QGraphicsLineItem):
             self.setPen(QPen(Qt.GlobalColor.gray, width, style))
 
     def setColor(self, color: QColor):
-        line = QPen(color, self.pen().width(), self.pen().style())
-        self.setPen(line)
+        # line = QPen(color, self.pen().width(), self.pen().style())
+        # self.setPen(line)
+        self.pen().setColor(Qt.GlobalColor.red)
 
     def isSelected(self) -> bool:
         if self.pen().color() == Qt.GlobalColor.red:
