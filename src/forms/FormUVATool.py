@@ -298,6 +298,7 @@ class FormUVATool(QMainWindow):
 
 
 class UVAGraphicsScene(QGraphicsScene):
+    form: FormUVATool
     nodes: list[NodeDraw]
     elements: list[ElementDraw]
 
@@ -320,6 +321,8 @@ class UVAGraphicsScene(QGraphicsScene):
         self.addItem(self.nodePreview)
         self.addItem(self.elementPreview)
 
+        # NODAL FORCES É UMA LISTA DE LISTAS (UMA FORÇA PODE POSSUIR VÁRIOS ITENS)
+        self.nodalForces = []
         self.nodes = []
         self.elements = []
         self.gridPoints = []
@@ -432,6 +435,13 @@ class UVAGraphicsScene(QGraphicsScene):
     def drawNode(self, node: NodeDraw):
         self.addItem(node.getItem())
         self.nodes.insert(0, node)
+        forcesItens = []
+        forces = node.getNodalForceItems()
+        for i in range(len(forces)):
+            if forces[i] is not None:
+                self.addItem(forces[i])
+                forcesItens.append(forces[i])
+        self.nodalForces.insert(0, forcesItens)
 
     def drawElement(self, element: ElementDraw):
         self.addItem(element.getItem())
@@ -605,7 +615,7 @@ class UVAGraphicsScene(QGraphicsScene):
         n3.setSupport(Apoio.rotula)
         n6.setP(1)
 
-        n4.setNodalForce(NodalForce(-100e3, 0, 0))
+        n4.setNodalForce(NodalForce(100e3, -100e3, 0))
         n5.setNodalForce(NodalForce(-100e3, 0, 0))
 
         e1 = ElementDraw(n1, n3, area, inercia, young)

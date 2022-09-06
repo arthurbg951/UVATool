@@ -6,7 +6,8 @@ from PyQt5.QtWidgets import (
     QGraphicsEllipseItem,
     QGraphicsRectItem,
     QGraphicsLineItem,
-    QGraphicsPixmapItem
+    QGraphicsPixmapItem,
+    QGraphicsPolygonItem
 
 )
 from PyQt5.QtCore import (
@@ -22,8 +23,15 @@ from PyQt5.QtGui import (
     QColor,
     QFocusEvent,
     QGradient,
-    QPixmap
+    QPixmap,
+    QPolygonF
 )
+
+
+class NodalForceType:
+    x = 0
+    y = 1
+    m = 2
 
 
 class Point(QPointF, QGraphicsEllipseItem):
@@ -174,9 +182,13 @@ class SemiFixedNodeItem(QGraphicsPixmapItem):
         if event.key() == Qt.Key.Key_Escape:
             self.setSelected(False)
 
-    def setColor(self, color: Qt.GlobalColor):
-        # self.setBrush(QBrush(color))
-        pass
+    def setColor(self, color: QColor):
+        tmp = self.pixmap().toImage()
+        for y in range(tmp.height()):
+            for x in range(tmp.width()):
+                color.setAlpha(tmp.pixelColor(x, y).alpha())
+                tmp.setPixelColor(x, y, color)
+        self.setPixmap(QPixmap.fromImage(tmp))
 
     def hoverEnterEvent(self, event: QGraphicsSceneHoverEvent) -> None:
         self.setFocus()
@@ -185,22 +197,18 @@ class SemiFixedNodeItem(QGraphicsPixmapItem):
         self.clearFocus()
 
     def setSelected(self, selected: bool) -> None:
-        # VERIFICAR A CORRETA SELEÇÃO PARA FUNCIONAMENTO ADEQUADO
-        # if selected:
-        #     self.setColor(Qt.GlobalColor.red)
-        #     print("item selecionado")
-        # else:
-        #     self.setColor(Qt.GlobalColor.white)
-        #     print("item não selecionado")
-        pass
+        if selected:
+            self.setColor(QColor(255, 0, 0))
+            self.__isSelected = True
+        else:
+            self.setColor(QColor(0, 0, 0))
+            self.__isSelected = False
 
     def isSelected(self) -> bool:
-        # MODIFICAR A SELEÇÃO PARA FUNCIONAMENTO ADEQUADO DA CLASSE
-        # if self.brush() == QBrush(Qt.GlobalColor.red):
-        #     return True
-        # else:
-        #     return False
-        pass
+        if self.__isSelected:
+            return True
+        else:
+            return False
 
     def scenePos(self) -> QPointF:
         return self.__pos
@@ -232,9 +240,13 @@ class RollerItem(QGraphicsPixmapItem):
         if event.key() == Qt.Key.Key_Escape:
             self.setSelected(False)
 
-    def setColor(self, color: Qt.GlobalColor):
-        # self.setBrush(QBrush(color))
-        pass
+    def setColor(self, color: QColor):
+        tmp = self.pixmap().toImage()
+        for y in range(tmp.height()):
+            for x in range(tmp.width()):
+                color.setAlpha(tmp.pixelColor(x, y).alpha())
+                tmp.setPixelColor(x, y, color)
+        self.setPixmap(QPixmap.fromImage(tmp))
 
     def hoverEnterEvent(self, event: QGraphicsSceneHoverEvent) -> None:
         self.setFocus()
@@ -243,22 +255,18 @@ class RollerItem(QGraphicsPixmapItem):
         self.clearFocus()
 
     def setSelected(self, selected: bool) -> None:
-        # VERIFICAR A CORRETA SELEÇÃO PARA FUNCIONAMENTO ADEQUADO
-        # if selected:
-        #     self.setColor(Qt.GlobalColor.red)
-        #     print("item selecionado")
-        # else:
-        #     self.setColor(Qt.GlobalColor.white)
-        #     print("item não selecionado")
-        pass
+        if selected:
+            self.setColor(QColor(255, 0, 0))
+            self.__isSelected = True
+        else:
+            self.setColor(QColor(0, 0, 0))
+            self.__isSelected = False
 
     def isSelected(self) -> bool:
-        # MODIFICAR A SELEÇÃO PARA FUNCIONAMENTO ADEQUADO DA CLASSE
-        # if self.brush() == QBrush(Qt.GlobalColor.red):
-        #     return True
-        # else:
-        #     return False
-        pass
+        if self.__isSelected:
+            return True
+        else:
+            return False
 
     def scenePos(self) -> QPointF:
         return self.__pos
@@ -290,9 +298,13 @@ class PinnedItem(QGraphicsPixmapItem):
         if event.key() == Qt.Key.Key_Escape:
             self.setSelected(False)
 
-    def setColor(self, color: Qt.GlobalColor):
-        # self.setBrush(QBrush(color))
-        pass
+    def setColor(self, color: QColor):
+        tmp = self.pixmap().toImage()
+        for y in range(tmp.height()):
+            for x in range(tmp.width()):
+                color.setAlpha(tmp.pixelColor(x, y).alpha())
+                tmp.setPixelColor(x, y, color)
+        self.setPixmap(QPixmap.fromImage(tmp))
 
     def hoverEnterEvent(self, event: QGraphicsSceneHoverEvent) -> None:
         self.setFocus()
@@ -301,22 +313,18 @@ class PinnedItem(QGraphicsPixmapItem):
         self.clearFocus()
 
     def setSelected(self, selected: bool) -> None:
-        # VERIFICAR A CORRETA SELEÇÃO PARA FUNCIONAMENTO ADEQUADO
-        # if selected:
-        #     self.setColor(Qt.GlobalColor.red)
-        #     print("item selecionado")
-        # else:
-        #     self.setColor(Qt.GlobalColor.white)
-        #     print("item não selecionado")
-        pass
+        if selected:
+            self.setColor(QColor(255, 0, 0))
+            self.__isSelected = True
+        else:
+            self.setColor(QColor(0, 0, 0))
+            self.__isSelected = False
 
     def isSelected(self) -> bool:
-        # MODIFICAR A SELEÇÃO PARA FUNCIONAMENTO ADEQUADO DA CLASSE
-        # if self.brush() == QBrush(Qt.GlobalColor.red):
-        #     return True
-        # else:
-        #     return False
-        pass
+        if self.__isSelected:
+            return True
+        else:
+            return False
 
     def scenePos(self) -> QPointF:
         return self.__pos
@@ -407,9 +415,13 @@ class SemiFixedItem(QGraphicsPixmapItem):
         if event.key() == Qt.Key.Key_Escape:
             self.setSelected(False)
 
-    def setColor(self, color: Qt.GlobalColor):
-        # self.setBrush(QBrush(color))
-        pass
+    def setColor(self, color: QColor):
+        tmp = self.pixmap().toImage()
+        for y in range(tmp.height()):
+            for x in range(tmp.width()):
+                color.setAlpha(tmp.pixelColor(x, y).alpha())
+                tmp.setPixelColor(x, y, color)
+        self.setPixmap(QPixmap.fromImage(tmp))
 
     def hoverEnterEvent(self, event: QGraphicsSceneHoverEvent) -> None:
         self.setFocus()
@@ -418,22 +430,18 @@ class SemiFixedItem(QGraphicsPixmapItem):
         self.clearFocus()
 
     def setSelected(self, selected: bool) -> None:
-        # VERIFICAR A CORRETA SELEÇÃO PARA FUNCIONAMENTO ADEQUADO
-        # if selected:
-        #     self.setColor(Qt.GlobalColor.red)
-        #     print("item selecionado")
-        # else:
-        #     self.setColor(Qt.GlobalColor.white)
-        #     print("item não selecionado")
-        pass
+        if selected:
+            self.setColor(QColor(255, 0, 0))
+            self.__isSelected = True
+        else:
+            self.setColor(QColor(0, 0, 0))
+            self.__isSelected = False
 
     def isSelected(self) -> bool:
-        # MODIFICAR A SELEÇÃO PARA FUNCIONAMENTO ADEQUADO DA CLASSE
-        # if self.brush() == QBrush(Qt.GlobalColor.red):
-        #     return True
-        # else:
-        #     return False
-        pass
+        if self.__isSelected:
+            return True
+        else:
+            return False
 
     def scenePos(self) -> QPointF:
         return self.__pos
@@ -445,8 +453,74 @@ class SemiFixedItem(QGraphicsPixmapItem):
         return - self.__y * 10
 
 
+class NodalForceItem(QGraphicsPolygonItem):
+    def __init__(self, nodalForceType: NodalForceType, forceValue: float, xDraw, yDraw):
+        self.xDraw = xDraw
+        self.yDraw = yDraw
+        self.__arrowSizeOffset = 15  # px
+        self.__arrow = QPolygonF()
+        if nodalForceType == NodalForceType.x:
+            if forceValue > 0:
+                self.__setArrowLeft()
+            else:
+                self.__setArrowRight()
+        elif nodalForceType == NodalForceType.y:
+            if forceValue > 0:
+                self.__setArrowUp()
+            else:
+                self.__setArrowDown()
+        elif nodalForceType == NodalForceType.m:
+            if forceValue > 0:
+                self.__setCounterclockwise()
+            else:
+                self.__setClockwise()
+        super().__init__(self.__arrow)
+        self.setPen(QPen(Qt.GlobalColor.blue, 2))
+        self.setBrush(QBrush(Qt.GlobalColor.blue, Qt.BrushStyle.SolidPattern))
+        self.setZValue(1)
+
+    def __setArrowDown(self):
+        self.__arrow.append(QPointF(self.xDraw, self.yDraw - self.__arrowSizeOffset))
+        self.__arrow.append(QPointF(self.xDraw + self.__arrowSizeOffset/2, self.yDraw - 2*self.__arrowSizeOffset))
+        self.__arrow.append(QPointF(self.xDraw, self.yDraw - 2*self.__arrowSizeOffset))
+        self.__arrow.append(QPointF(self.xDraw, self.yDraw - 2*self.__arrowSizeOffset - self.__arrowSizeOffset))
+        self.__arrow.append(QPointF(self.xDraw, self.yDraw - 2*self.__arrowSizeOffset))
+        self.__arrow.append(QPointF(self.xDraw - self.__arrowSizeOffset/2, self.yDraw - 2*self.__arrowSizeOffset))
+
+    def __setArrowUp(self):
+        self.__arrow.append(QPointF(self.xDraw, self.yDraw + self.__arrowSizeOffset))
+        self.__arrow.append(QPointF(self.xDraw + self.__arrowSizeOffset/2, self.yDraw + 2*self.__arrowSizeOffset))
+        self.__arrow.append(QPointF(self.xDraw, self.yDraw + 2*self.__arrowSizeOffset))
+        self.__arrow.append(QPointF(self.xDraw, self.yDraw + 2*self.__arrowSizeOffset + self.__arrowSizeOffset))
+        self.__arrow.append(QPointF(self.xDraw, self.yDraw + 2*self.__arrowSizeOffset))
+        self.__arrow.append(QPointF(self.xDraw - self.__arrowSizeOffset/2, self.yDraw + 2*self.__arrowSizeOffset))
+
+    def __setArrowRight(self):
+        self.__arrow.append(QPointF(self.xDraw + self.__arrowSizeOffset, self.yDraw))
+        self.__arrow.append(QPointF(self.xDraw + 2*self.__arrowSizeOffset, self.yDraw - self.__arrowSizeOffset/2))
+        self.__arrow.append(QPointF(self.xDraw + 2*self.__arrowSizeOffset, self.yDraw))
+        self.__arrow.append(QPointF(self.xDraw + 2*self.__arrowSizeOffset + self.__arrowSizeOffset, self.yDraw))
+        self.__arrow.append(QPointF(self.xDraw + 2*self.__arrowSizeOffset, self.yDraw))
+        self.__arrow.append(QPointF(self.xDraw + 2*self.__arrowSizeOffset, self.yDraw + self.__arrowSizeOffset/2))
+
+    def __setArrowLeft(self):
+        self.__arrow.append(QPointF(self.xDraw - self.__arrowSizeOffset, self.yDraw))
+        self.__arrow.append(QPointF(self.xDraw - 2*self.__arrowSizeOffset, self.yDraw - self.__arrowSizeOffset/2))
+        self.__arrow.append(QPointF(self.xDraw - 2*self.__arrowSizeOffset, self.yDraw))
+        self.__arrow.append(QPointF(self.xDraw - 2*self.__arrowSizeOffset - self.__arrowSizeOffset, self.yDraw))
+        self.__arrow.append(QPointF(self.xDraw - 2*self.__arrowSizeOffset, self.yDraw))
+        self.__arrow.append(QPointF(self.xDraw - 2*self.__arrowSizeOffset, self.yDraw + self.__arrowSizeOffset/2))
+
+    def __setClockwise(self):
+        raise NotImplementedError
+
+    def __setCounterclockwise(self):
+        raise NotImplementedError
+
+
 class NodeDraw(Node):
     __item: QGraphicsItem
+    __nodalForceItems: list[NodalForceItem]
 
     def __init__(self, x: float, y: float) -> None:
         super().__init__(x/10, -y/10)
@@ -455,6 +529,7 @@ class NodeDraw(Node):
         self.__diameter = 10
         self.__rect = QRectF(x - self.__diameter/2, y - self.__diameter/2, self.__diameter, self.__diameter)
         self.__item = NodeItem(self.getRect())
+        self.__nodalForceItems = [None, None, None]
 
     def getRect(self) -> QRectF:
         return self.__rect
@@ -490,6 +565,18 @@ class NodeDraw(Node):
             self.__item = SemiFixedNodeItem(self.xDraw, self.yDraw)
         if p == 0:
             self.__item = MiddleRingeItem(self.getRect())
+
+    def setNodalForce(self, nodalForce: NodalForce) -> None:
+        super().setNodalForce(nodalForce)
+        if nodalForce.fx != 0:
+            self.__nodalForceItems[0] = NodalForceItem(NodalForceType.x, nodalForce.fx, self.xDraw, self.yDraw)
+        if nodalForce.fy != 0:
+            self.__nodalForceItems[1] = NodalForceItem(NodalForceType.y, nodalForce.fy, self.xDraw, self.yDraw)
+        if nodalForce.m != 0:
+            self.__nodalForceItems[2] = NodalForceItem(NodalForceType.m, nodalForce.m, self.xDraw, self.yDraw)
+
+    def getNodalForceItems(self) -> list[NodalForceItem]:
+        return self.__nodalForceItems
 
     def __eq__(self, __o: object) -> bool:
         if not isinstance(__o, NodeDraw):

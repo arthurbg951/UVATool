@@ -30,6 +30,7 @@ class Apoio:
     sem_suporte_semi_rigido = 6
 
 
+
 class Analise:
     class elastica:
         viaRigidezAnalitica = 0
@@ -94,6 +95,11 @@ class NodalForce:
 
     def __str__(self) -> str:
         return "{0};{1};{2}".format(self.fx, self.fy, self.m)
+
+    def __eq__(self, __o: object) -> bool:
+        if not isinstance(__o, NodalForce):
+            return NotImplemented
+        return self.fx == __o.fx and self.fy == __o.fy and self.m == __o.m
 
 
 class Node:
