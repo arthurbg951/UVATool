@@ -318,6 +318,8 @@ class UVAGraphicsScene(QGraphicsScene):
         self.elementPreview = ElementPreview(QLineF(self.clickPoint, self.mousePoint))
         self.elementPreview.hide()
 
+        self.canMoveScene = False
+
         self.addItem(self.nodePreview)
         self.addItem(self.elementPreview)
 
@@ -371,6 +373,8 @@ class UVAGraphicsScene(QGraphicsScene):
                     node = self.verifyExistingNode(event)
                     if node != None:
                         self.elementNode1 = node
+        if event.button() == Qt.MouseButton.MiddleButton:
+            self.canMoveScene = True
 
     def mouseDoubleClickEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         for item in self.items():
@@ -428,8 +432,15 @@ class UVAGraphicsScene(QGraphicsScene):
         if self.isDrawingLine:
             self.elementPreview.setLine(QLineF(self.clickPoint, self.mousePoint))
 
+        # FUNÇÃO COM BUG
+        if self.canMoveScene:
+            # print(self.form.GraphicsView.sceneRect())
+            self.form.GraphicsView.setSceneRect(event.scenePos().x() * 0.5, event.scenePos().y() * 0.5, 1, 1)
+
     def mouseReleaseEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         super().mouseReleaseEvent(event)
+        if event.button() == Qt.MouseButton.MiddleButton:
+            self.canMoveScene = False
         self.form.GraphicsView.viewport().setCursor(Qt.CursorShape.ArrowCursor)
 
     def drawNode(self, node: NodeDraw):
