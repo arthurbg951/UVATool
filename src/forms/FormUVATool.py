@@ -332,7 +332,9 @@ class UVAGraphicsScene(QGraphicsScene):
         # self.edificio3Andares()
         # self.balanco()
         # self.porticosSucessivos()
-        self.modelotcc()
+        # self.modelotcc()
+        # self.momentorotacaoVigaBalanco()
+        self.momentorotacaoPortico()
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         if event.button() == Qt.MouseButton.LeftButton:
@@ -644,6 +646,89 @@ class UVAGraphicsScene(QGraphicsScene):
             self.drawNode(node)
         for element in elements:
             self.drawElement(element)
+
+    def momentorotacaoVigaBalanco(self):
+        # Materiais ----------------------------------------------------------------------------------
+        secao_p = Rectangle(0.2 * 10, 0.2 * 10)  # hy x hx
+        area_p = secao_p.area
+        inercia_p = secao_p.inertia
+        secao_v = Rectangle(0.15 * 10, 0.6 * 10) # base x altura
+        area_v = secao_v.area
+        inercia_v = secao_v.inertia
+        young = 27e9 / 10e3
+
+        # Nós ----------------------------------------------------------------------------------------
+        n1 = NodeDraw(0, -0)
+        n2 = NodeDraw(0, -3 * 10)
+        n3 = NodeDraw(2 * 10, -3 * 10)
+
+        # Apoios -------------------------------------------------------------------------------------
+        n1.setSupport(Apoio.terceiro_genero)
+
+        # Fator Pi -----------------------------------------------------------------------------------
+        n2.setP(1)
+
+        # Cargas -------------------------------------------------------------------------------------
+        n3.setNodalForce(NodalForce(0, -10e3, 0))
+
+        # --------------------------------------------------------------------------------------------
+        e1 = ElementDraw(n1, n2, area_p, inercia_p, young)
+        e2 = ElementDraw(n2, n3, area_v, inercia_v, young)
+
+        nodes = [n1, n2, n3]
+        elements = [e1, e2]
+
+        for node in nodes:
+            self.drawNode(node)
+        for element in elements:
+            self.drawElement(element)
+
+
+    def momentorotacaoPortico(self):
+        # Materiais ----------------------------------------------------------------------------------
+        secao_p = Rectangle(0.2 * 10, 0.8 * 10)  # hy x hx
+        area_p = secao_p.area
+        inercia_p = secao_p.inertia
+        secao_v = Rectangle(0.15 * 10, 0.6 * 10) # base x altura
+        area_v = secao_v.area
+        inercia_v = secao_v.inertia
+        young = 27e9 / 10e3
+
+        # Nós ----------------------------------------------------------------------------------------
+        n1 = NodeDraw(0 * 10, -0 * 10)
+        n2 = NodeDraw(0 * 10, -3 * 10)
+        n3 = NodeDraw(2 * 10, -3 * 10)
+        n4 = NodeDraw(4 * 10, -3 * 10)
+        n5 = NodeDraw(6 * 10, -3 * 10)
+        n6 = NodeDraw(6 * 10, -0 * 10)
+
+        # Apoios -------------------------------------------------------------------------------------
+        n1.setSupport(Apoio.terceiro_genero)
+        n6.setSupport(Apoio.terceiro_genero)
+
+        # Fator Pi -----------------------------------------------------------------------------------
+        n2.setP(1)
+        n5.setP(1)
+
+        # Cargas -------------------------------------------------------------------------------------
+        n3.setNodalForce(NodalForce(0, -10e3, 0))
+        n4.setNodalForce(NodalForce(0, -10e3, 0))
+
+        # --------------------------------------------------------------------------------------------
+        e1 = ElementDraw(n1, n2, area_p, inercia_p, young)
+        e2 = ElementDraw(n2, n3, area_v, inercia_v, young)
+        e3 = ElementDraw(n3, n4, area_v, inercia_v, young)
+        e4 = ElementDraw(n4, n5, area_v, inercia_v, young)
+        e5 = ElementDraw(n5, n6, area_p, inercia_p, young)
+
+        nodes = [n1, n2, n3, n4, n5, n6]
+        elements = [e1, e2, e3, e4, e5]
+
+        for node in nodes:
+            self.drawNode(node)
+        for element in elements:
+            self.drawElement(element)
+
 
 
 '''

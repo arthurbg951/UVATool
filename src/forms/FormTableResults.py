@@ -103,20 +103,20 @@ class FormTableResults(QWidget):
         self.nodalDisplacementVector.setColumnCount(1)
         try:
             for i in range(nodalDisplacementVector.shape[0]):
-                content = QTableWidgetItem(f"{nodalDisplacementVector[i]:.2f}")
+                content = QTableWidgetItem(f"{nodalDisplacementVector[i]:.15f}")
                 content.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
                 self.nodalDisplacementVector.setItem(i, 0, content)
             self.nodalDisplacementVector.resizeColumnsToContents()
         except Exception as e:
             QMessageBox.warning(self, "Nodal Displacement Warning", str(e))
 
-        # Nodal Deformations
+        # Element Deformations
         nodalDeformationsVector = process.getDeformations()
         self.nodalDeformationsVector.setRowCount(nodalDeformationsVector.shape[0])
         self.nodalDeformationsVector.setColumnCount(1)
         try:
             for i in range(nodalDeformationsVector.shape[0]):
-                content = QTableWidgetItem(f"{nodalDeformationsVector[i]:.2f}")
+                content = QTableWidgetItem(f"{nodalDeformationsVector[i]:.9f}")
                 content.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
                 self.nodalDeformationsVector.setItem(i, 0, content)
             self.nodalDeformationsVector.resizeColumnsToContents()
