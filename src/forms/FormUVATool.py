@@ -686,7 +686,7 @@ class UVAGraphicsScene(QGraphicsScene):
 
     def momentorotacaoPortico(self):
         # Materiais ----------------------------------------------------------------------------------
-        secao_p = Rectangle(0.2 * 10, 0.8 * 10)  # hy x hx
+        secao_p = Rectangle(0.2 * 10, 0.2 * 10)  # hy x hx
         area_p = secao_p.area
         inercia_p = secao_p.inertia
         secao_v = Rectangle(0.15 * 10, 0.6 * 10) # base x altura
