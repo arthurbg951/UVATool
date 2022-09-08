@@ -8,12 +8,12 @@
         "type": "python",
         "request": "launch",
         // "program": "${file}",
-        "program": "${workspaceFolder}/src/UVAToolUI.py",
+        "program": "${workspaceFolder}//src//UVAToolUI.py",
         "console": "integratedTerminal",
         // "cwd": "${fileDirname}",
-        "cwd": "${workspaceFolder}/src",
+        "cwd": "${workspaceFolder}//src",
         "env": {
-            "PYTHONPATH": "src\\libs"
+            "PYTHONPATH": "${workspaceFolder}//src//libs"
         }
     }]
 }
