@@ -625,8 +625,8 @@ class Print:
         nElement = len(self.__process.getInternalForces())
         for i in range(0, nElement, 3):
             print('ELEMENT: {0}'.format(int(i/3+1)))
-            print(" N = {0:.2f} kN".format(self.__process.getInternalForces()[0 + i] * 1e-3))
-            print("M1 = {0:.2f} kNm".format(self.__process.getInternalForces()[1 + i] * 1e-3))
-            print("M2 = {0:.2f} kNm".format(self.__process.getInternalForces()[2 + i] * 1e-3))
+            print(" N = {0:.1f} kN".format(self.__process.getInternalForces()[0 + i] * 1e-3))
+            print("M1 = {0:.1f} kNm".format(self.__process.getInternalForces()[1 + i] * 1e-3))
+            print("M2 = {0:.1f} kNm".format(self.__process.getInternalForces()[2 + i] * 1e-3))
             if i != nElement - 3:
                 print()
