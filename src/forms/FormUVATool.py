@@ -231,7 +231,7 @@ class FormUVATool(QMainWindow):
             plot.internalForces()
         except Exception as e:
             QMessageBox.warning(self, "Warning", str(e))
-            print(str(e))
+            print("Error: " + str(e))
 
         print("----------------------------------------------")
         print()
@@ -330,7 +330,7 @@ class UVAGraphicsScene(QGraphicsScene):
         self.elements = []
         self.gridPoints = []
 
-        self.loadStructure(Structures.porticoSimples())
+        self.loadStructure(Structures.modeloBielasETirantes())
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         if event.button() == Qt.MouseButton.LeftButton:
@@ -442,6 +442,22 @@ class UVAGraphicsScene(QGraphicsScene):
             self.canMoveScene = False
         self.form.GraphicsView.viewport().setCursor(Qt.CursorShape.ArrowCursor)
 
+    def keyPressEvent(self, event: QKeyEvent) -> None:
+        if not self.keyStack.__contains__(event.key()):
+            self.keyStack.insert(0, event.key())
+        if self.keyStack.__contains__(Qt.Key.Key_Control) and self.keyStack.__contains__(Qt.Key.Key_Z):
+            if len(self.items()) > 0:
+                self.removeItem(self.items()[0])
+        if event.key() == Qt.Key.Key_Delete:
+            for i in range(len(self.items())):
+                if self.items()[i].isSelected():
+                    self.removeItem(self.items()[i])
+                    break
+
+    def keyReleaseEvent(self, event: QKeyEvent) -> None:
+        if self.keyStack.__contains__(event.key()):
+            self.keyStack.remove(event.key())
+
     def drawNode(self, node: NodeDraw) -> None:
         self.addItem(node.getItem())
         self.nodes.insert(0, node)
@@ -476,40 +492,30 @@ class UVAGraphicsScene(QGraphicsScene):
             if e == element:
                 return e
 
-    def keyPressEvent(self, event: QKeyEvent) -> None:
-        if not self.keyStack.__contains__(event.key()):
-            self.keyStack.insert(0, event.key())
-        if self.keyStack.__contains__(Qt.Key.Key_Control) and self.keyStack.__contains__(Qt.Key.Key_Z):
-            if len(self.items()) > 0:
-                self.removeItem(self.items()[0])
-        if event.key() == Qt.Key.Key_Delete:
-            for i in range(len(self.items())):
-                if self.items()[i].isSelected():
-                    self.removeItem(self.items()[i])
-                    break
-
-    def keyReleaseEvent(self, event: QKeyEvent) -> None:
-        if self.keyStack.__contains__(event.key()):
-            self.keyStack.remove(event.key())
-
     def fitStructure(self) -> None:
-        x = self.nodes[0].x
-        y = self.nodes[0].y
-        for node in self.nodes:
-            if node.x > x:
-                x = node.x
-            if node.y > y:
-                y = node.y
-        print(f'Changing view to {x*10} {y*10}')
-        self.form.GraphicsView.setSceneRect(x*10/2, -y*10/2, 1, 1)
+        try:
+            x = self.nodes[0].x
+            y = self.nodes[0].y
+            for node in self.nodes:
+                if node.x > x:
+                    x = node.x
+                if node.y > y:
+                    y = node.y
+            print(f'Changing view to {x*10} {y*10}')
+            self.form.GraphicsView.setSceneRect(x*10/2, -y*10/2, 1, 1)
+        except:
+            print("Ocurred an error while trying to fit structure")
 
     def loadStructure(self, structure: Structures):
-        nodes = structure[0]
-        elements = structure[1]
         try:
+            nodes = structure[0]
+            elements = structure[1]
+            nodes.append(NodeDraw(200))
             for node in nodes:
                 self.drawNode(node)
             for element in elements:
                 self.drawElement(element)
-        except:
-            print("Ocurred an error while trying to load a structure")
+        except Exception as e:
+            msg = "Ocurred an error whyle trying to load the writed structure.\nSkipping the load.\Error: " + str(e)
+            QMessageBox.warning(self.form, "Warning", msg)
+            print(msg)
