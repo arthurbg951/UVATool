@@ -49,7 +49,8 @@ from PyQt5.QtGui import (
 from PyQt5 import uic
 from libs.UVATool import *
 from libs.Drawing import *
-from libs.NodeParameters import NodeParameters
+from libs.DockWidgets.NodeParameters import NodeParameters
+from libs.DockWidgets.Browser import Browser
 from libs.Structures import Structures
 from forms.FormTableResults import FormTableResults
 from time import sleep
@@ -101,12 +102,17 @@ class FormUVATool(QMainWindow):
         self.scene.setSceneRect(0, 0, 1, 1)
         self.GraphicsView.setScene(self.scene)
 
+        """# DOCK WIDGETS AREA #"""
         self.ChangeValues.close()
         self.ElementParameters.close()
         self.Options.close()
+        # DOCK PARA ADICIONAR NOVO NODE
         self.nodePatameters = NodeParameters(self.scene)
         self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.nodePatameters)
         self.nodePatameters.close()
+        # DOCK BROWSER
+        self.browser = Browser(self.scene)
+        self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.browser)
 
         self.confirmButton.clicked.connect(self.confirmClicked)
         self.confirmButton_2.clicked.connect(self.confirmClicked_2)

@@ -3,17 +3,19 @@
     // Focalizar para exibir as descrições dos atributos existentes.
     // Para obter mais informações, acesse: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-    "configurations": [{
-        "name": "Python: Current File (Integrated Terminal)",
-        "type": "python",
-        "request": "launch",
-        // "program": "${file}",
-        "program": "${workspaceFolder}//src//UVAToolUi.py",
-        "console": "integratedTerminal",
-        // "cwd": "${fileDirname}",
-        "cwd": "${workspaceFolder}//src",
-        "env": {
-            "PYTHONPATH": "${workspaceFolder}//src//libs"
+    "configurations": [
+        {
+            "name": "Python: Current File (Integrated Terminal)",
+            "type": "python",
+            "request": "launch",
+            // "program": "${file}",
+            "program": "${workspaceFolder}//src//UVAToolUi.py",
+            "console": "integratedTerminal",
+            // "cwd": "${fileDirname}",
+            "cwd": "${workspaceFolder}//src",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}//src//libs",
+            }
         }
-    }]
+    ]
 }

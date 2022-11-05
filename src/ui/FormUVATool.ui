@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>814</width>
-    <height>831</height>
+    <width>1000</width>
+    <height>800</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -189,6 +189,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionBrowser"/>
    <addaction name="ProcessCalculations"/>
    <addaction name="actionTableResults"/>
   </widget>
@@ -701,6 +702,21 @@ Rigidez Analítica</string>
    </property>
    <property name="toolTip">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Show Table Results&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="actionBrowser">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/browser.png</normaloff>../icons/browser.png</iconset>
+   </property>
+   <property name="text">
+    <string>Browser</string>
+   </property>
+   <property name="toolTip">
+    <string>Browser Navigator</string>
    </property>
   </action>
   <zorder>ChangeValues</zorder>
