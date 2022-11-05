@@ -48,8 +48,10 @@ class NodeParameters(QDockWidget):
         self.xLabel = QLabel("X", self)
         self.yLabel = QLabel("Y", self)
         self.xInput = QLineEdit(self)
+        self.xInput.setPlaceholderText(str("0.00"))
         self.xInput.textEdited.connect(lambda arg, text=None: self.checkInputData(self.xInput))
         self.yInput = QLineEdit(self)
+        self.yInput.setPlaceholderText(str("0.00"))
         self.yInput.textEdited.connect(lambda arg, text=None: self.checkInputData(self.yInput))
 
         self.hbox = QHBoxLayout()
@@ -108,8 +110,15 @@ class NodeParameters(QDockWidget):
             return False
 
     def CreateNodeClicked(self):
-        x = float(self.xInput.text())
-        y = float(self.yInput.text())
+        if self.xInput.text() == "":
+            x = float(self.xInput.placeholderText())
+        else:
+            x = float(self.xInput.text())
+        if self.yInput.text() == "":
+            y = float(self.yInput.placeholderText())
+        else:
+            y = float(self.yInput.text())
+
         node = self.scene.verifyExistingNode(x, y)
         if node == None:
             try:
@@ -122,4 +131,4 @@ class NodeParameters(QDockWidget):
             except Exception as e:
                 QMessageBox.warning(self, "Warning", str(e))
         else:
-            QMessageBox.warning(self, "Warning", "Already exist a nothe in this place")
+            QMessageBox.warning(self, "Warning", f"Already exist a nothe in this place.\nPoint=({x}, {y})")

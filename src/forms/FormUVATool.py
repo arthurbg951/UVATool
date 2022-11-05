@@ -88,6 +88,9 @@ class FormUVATool(QMainWindow):
     ERA: QRadioButton
     MNE: QRadioButton
 
+    XCoordinate: QLineEdit
+    YCoordinate: QLineEdit
+
     formTableResults: FormTableResults
 
     def __init__(self):
@@ -350,6 +353,8 @@ class UVAGraphicsScene(QGraphicsScene):
     def mouseMoveEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         self.mousePoint.setX(event.scenePos().x())
         self.mousePoint.setY(event.scenePos().y())
+        self.form.XCoordinate.setText(f"{self.mousePoint.x() / 100:.2f}")
+        self.form.YCoordinate.setText(f"{-self.mousePoint.y() / 100:.2f}")
         super().mouseMoveEvent(event)
         if self.canMoveScene:
             velocityFactor = 0.6
