@@ -523,11 +523,12 @@ class NodeDraw(Node):
     __nodalForceItems: list[NodalForceItem]
 
     def __init__(self, x: float, y: float) -> None:
-        super().__init__(x/10, -y/10)
-        self.xDraw = x
-        self.yDraw = y
+        super().__init__(x, y)
+        self.scaleFactor = 100
+        self.xDraw = x * self.scaleFactor
+        self.yDraw = - y * self.scaleFactor
         self.__diameter = 10
-        self.__rect = QRectF(x - self.__diameter/2, y - self.__diameter/2, self.__diameter, self.__diameter)
+        self.__rect = QRectF(x * self.scaleFactor - self.__diameter/2, -y*self.scaleFactor - self.__diameter/2, self.__diameter, self.__diameter)
         self.__item = NodeItem(self.getRect())
         self.__nodalForceItems = [None, None, None]
 
@@ -541,7 +542,7 @@ class NodeDraw(Node):
         return self.__item
 
     def getPoint(self) -> QPointF:
-        return QPointF(self.x*10, -self.y*10)
+        return QPointF(self.x * self.scaleFactor, - self.y * self.scaleFactor)
 
     def setColor(self, color: QColor):
         self.__item.setColor(color)

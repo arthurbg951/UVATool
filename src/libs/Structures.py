@@ -1,4 +1,4 @@
-from Drawing import(
+from libs.Drawing import(
     NodeDraw, ElementDraw, Support, Apoio, NodalForce, Rectangle
 )
 
@@ -7,7 +7,7 @@ class Structures:
     @staticmethod
     def balanco() -> tuple[list[NodeDraw], list[ElementDraw]]:
         n1 = NodeDraw(0, 0)
-        n2 = NodeDraw(100, 0)
+        n2 = NodeDraw(10, 0)
         n1.setSupport(Support.fixed)
         n2.setNodalForce(NodalForce(0, 10, 0))
         e1 = ElementDraw(n1, n2, 1, 1, 1)
@@ -22,15 +22,14 @@ class Structures:
         area = secao.area
         inercia = secao.inertia
         young = 200e9
-        n1 = NodeDraw(0, -0)
-        n2 = NodeDraw(150, -0)
-        n3 = NodeDraw(0, -30)
-        n4 = NodeDraw(150, -30)
-        n5 = NodeDraw(0, -60)
-        n6 = NodeDraw(150, -60)
-        n7 = NodeDraw(0, -90)
-        n8 = NodeDraw(150, -90)
-        print(n2.x, n2.y, n2.getItem().x(), n2.getItem().y())
+        n1 = NodeDraw(0, 0)
+        n2 = NodeDraw(15, 0)
+        n3 = NodeDraw(0, 3)
+        n4 = NodeDraw(15, 3)
+        n5 = NodeDraw(0, 6)
+        n6 = NodeDraw(15, 6)
+        n7 = NodeDraw(0, 9)
+        n8 = NodeDraw(15, 9)
         n1.setSupport(Apoio.segundo_genero)
         n2.setSupport(Apoio.primeiro_genero)
         n3.setNodalForce(NodalForce(-100, 0, 0))
@@ -51,54 +50,56 @@ class Structures:
         return nodes, elements
 
     @staticmethod
-    def porticosSucessivos() -> tuple[list[NodeDraw], list[ElementDraw]]:
-        nodes = []
-        elements = []
+    def porticosSucessivos(n_andares=20, n_pilares_por_andar=7, distancia_pilares=6, pe_direito=3) -> tuple[list[NodeDraw], list[ElementDraw]]:
+        # CONDIÇÕES INICIAIS
+        # n_andares = 20
+        # n_pilares_por_andar = 7
+        # distancia_pilares = 6
+        # pe_direito = 3
 
-        rec = Rectangle(0.012, 0.001)
-        area = rec.area
-        inercia = rec.inertia
+        # SEÇÃO DOS PILARES
+        rec = Rectangle(0.20, 0.20)
+        area_p = rec.area
+        inercia_p = rec.inertia
 
-        n1 = NodeDraw(0, 0)
-        n1.setSupport(Apoio.terceiro_genero)
-        n2 = NodeDraw(0, 10)
-        n3 = NodeDraw(10, 10)
-        n4 = NodeDraw(10, 0)
-        n4.setSupport(Apoio.terceiro_genero)
+        # SEÇÃO DAS VIGAS
+        rec = Rectangle(0.15, 0.60)
+        area_v = rec.area
+        inercia_v = rec.inertia
 
-        e1 = ElementDraw(n1, n2, area, inercia, 1)
-        e2 = ElementDraw(n2, n3, area, inercia, 1)
-        e3 = ElementDraw(n3, n4, area, inercia, 1)
+        # CONCRETO 30 MPa
+        young_modulus = 27_000_000_000
 
-        nodes.append(n1)
-        nodes.append(n2)
-        nodes.append(n3)
-        nodes.append(n4)
+        nodes: list[NodeDraw] = []
+        elements: list[ElementDraw] = []
 
-        elements.append(e1)
-        elements.append(e2)
-        elements.append(e3)
+        for x in range(n_pilares_por_andar):
+            for y in range(n_andares):
+                nodes.append(NodeDraw(x * distancia_pilares, y * pe_direito))
 
-        for i in range(2, 100, 1):
-            n2, n3 = NodeDraw(0, -i*10), NodeDraw(1*10, -i*10)
+        # PILARES
+        for pilar in range(n_pilares_por_andar):
+            for i in range(n_andares-1):
+                node_pos = i + pilar * n_andares
+                elements.append(ElementDraw(nodes[node_pos], nodes[node_pos + 1], area_p, inercia_p, young_modulus))
 
-            e1 = ElementDraw(nodes[len(nodes)-4], n2, area, inercia, 1)
-            e2 = ElementDraw(n2, n3, area, inercia, 1)
-            e3 = ElementDraw(n3, nodes[len(nodes)-1], area, inercia, 1)
+        # VIGAS
+        for qtpilares in range(1, n_pilares_por_andar, 1):
+            for i in range(1, n_andares, 1):
+                elements.append(ElementDraw(nodes[i + (qtpilares - 1) * n_andares], nodes[i + qtpilares * n_andares], area_v, inercia_v, young_modulus))
 
-            nodes.append(n2)
-            nodes.append(n3)
-            elements.append(e1)
-            elements.append(e2)
-            elements.append(e3)
+        # APOIOS DOS PILARES MAIS INFERIORES
+        for i in range(n_pilares_por_andar):
+            nodes[i * n_andares].setSupport(Apoio.terceiro_genero)
 
-        nodes[len(nodes)-2].setNodalForce(NodalForce(100, 0, 0))
+        # FORÇA DE VENTO A CADA ANDAR
+        for i in range(1, n_andares, 1):
+            nodes[i].setNodalForce(NodalForce(i * i * 10, 0, 0))
 
         return nodes, elements
 
     @staticmethod
     def modelotcc() -> tuple[list[NodeDraw], list[ElementDraw]]:
-
         secao = Rectangle(0.20, 0.40)
         area = secao.area
         inercia = secao.inertia
@@ -175,21 +176,21 @@ class Structures:
     @staticmethod
     def momentorotacaoPortico() -> tuple[list[NodeDraw], list[ElementDraw]]:
         # Materiais ----------------------------------------------------------------------------------
-        secao_p = Rectangle(0.2 * 10, 0.2 * 10)  # hy x hx
+        secao_p = Rectangle(0.2, 0.2)  # hy x hx
         area_p = secao_p.area
         inercia_p = secao_p.inertia
-        secao_v = Rectangle(0.15 * 10, 0.6 * 10)  # base x altura
+        secao_v = Rectangle(0.15, 0.6)  # base x altura
         area_v = secao_v.area
         inercia_v = secao_v.inertia
         young = 27e9 / 10e3
 
         # Nós ----------------------------------------------------------------------------------------
-        n1 = NodeDraw(0 * 10, -0 * 10)
-        n2 = NodeDraw(0 * 10, -3 * 10)
-        n3 = NodeDraw(2 * 10, -3 * 10)
-        n4 = NodeDraw(4 * 10, -3 * 10)
-        n5 = NodeDraw(6 * 10, -3 * 10)
-        n6 = NodeDraw(6 * 10, -0 * 10)
+        n1 = NodeDraw(0, 0)
+        n2 = NodeDraw(0, 3)
+        n3 = NodeDraw(2, 3)
+        n4 = NodeDraw(4, 3)
+        n5 = NodeDraw(6, 3)
+        n6 = NodeDraw(6, 0)
 
         # Apoios -------------------------------------------------------------------------------------
         n1.setSupport(Apoio.terceiro_genero)
@@ -227,21 +228,21 @@ class Structures:
         young = 1
 
         # Nós ----------------------------------------------------------------------------------------
-        n1 = NodeDraw(0 * 10, -0 * 10)
-        n2 = NodeDraw(10 * 10, -0 * 10)
-        n3 = NodeDraw(20 * 10, -0 * 10)
-        n4 = NodeDraw(30 * 10, -0 * 10)
-        n5 = NodeDraw(60 * 10, -0 * 10)
-        n6 = NodeDraw(70 * 10, -0 * 10)
-        n7 = NodeDraw(80 * 10, -0 * 10)
-        n8 = NodeDraw(90 * 10, -0 * 10)
+        n1 = NodeDraw(0, 0)
+        n2 = NodeDraw(1, 0)
+        n3 = NodeDraw(2, 0)
+        n4 = NodeDraw(3, 0)
+        n5 = NodeDraw(6, 0)
+        n6 = NodeDraw(7, 0)
+        n7 = NodeDraw(8, 0)
+        n8 = NodeDraw(9, 0)
 
-        n9 = NodeDraw(10 * 10, -11.7 * 10)
-        n10 = NodeDraw(20 * 10, -11.7 * 10)
-        n11 = NodeDraw(30 * 10, -11.7 * 10)
-        n12 = NodeDraw(60 * 10, -11.7 * 10)
-        n13 = NodeDraw(70 * 10, -11.7 * 10)
-        n14 = NodeDraw(80 * 10, -11.7 * 10)
+        n9 = NodeDraw(1, 1.17)
+        n10 = NodeDraw(2, 1.17)
+        n11 = NodeDraw(3, 1.17)
+        n12 = NodeDraw(6, 1.17)
+        n13 = NodeDraw(7, 1.17)
+        n14 = NodeDraw(8, 1.17)
 
         # Apoios -------------------------------------------------------------------------------------
         n1.setSupport(Apoio.segundo_genero)
@@ -303,7 +304,7 @@ class Structures:
 
     @staticmethod
     def porticoSimples() -> tuple[list[NodeDraw], list[ElementDraw]]:
-        # ESTRUTURA EXEMPLO APRESENTADA NA IC UVA 2022.2
+        """ ESTRUTURA EXEMPLO APRESENTADA NA IC UVA 2022.2 """
         # Seções --------------------------------------------------------------------------------------
         secao_p = Rectangle(0.2, 0.6)  # hy x hx
         area_p = secao_p.area
@@ -315,11 +316,11 @@ class Structures:
         young = 27_000_000_000
         # Nos -----------------------------------------------------------------------------------------
         n1 = NodeDraw(0, 0)
-        n2 = NodeDraw(0, -30)
-        n3 = NodeDraw(30, -30)
-        n4 = NodeDraw(50, -30)
-        n5 = NodeDraw(80, -30)
-        n6 = NodeDraw(80, 0)
+        n2 = NodeDraw(0, 3)
+        n3 = NodeDraw(3, 3)
+        n4 = NodeDraw(5, 3)
+        n5 = NodeDraw(8, 3)
+        n6 = NodeDraw(8, 0)
         # Elementos -----------------------------------------------------------------------------------
         e1 = ElementDraw(n1, n2, area_p, inercia_p, young)
         e2 = ElementDraw(n2, n3, area_v, inercia_v, young)
