@@ -138,21 +138,22 @@ class FormUVATool(QMainWindow):
         """
         Zoom in or out of the view.
         """
-        zoomInFactor = 1.25
-        zoomOutFactor = 1 / zoomInFactor
-        # Save the scene pos
-        oldPos = self.GraphicsView.mapToScene(event.pos())
-        # Zoom
-        if event.angleDelta().y() > 0:
-            zoomFactor = zoomInFactor
-        else:
-            zoomFactor = zoomOutFactor
-        self.GraphicsView.scale(zoomFactor, zoomFactor)
-        # Get the new position
-        newPos = self.GraphicsView.mapToScene(event.pos())
-        # Move scene to old position
-        delta = newPos - oldPos
-        self.GraphicsView.translate(delta.x(), delta.y())
+        if self.GraphicsView.underMouse():
+            zoomInFactor = 1.25
+            zoomOutFactor = 1 / zoomInFactor
+            # Save the scene pos
+            oldPos = self.GraphicsView.mapToScene(event.pos())
+            # Zoom
+            if event.angleDelta().y() > 0:
+                zoomFactor = zoomInFactor
+            else:
+                zoomFactor = zoomOutFactor
+            self.GraphicsView.scale(zoomFactor, zoomFactor)
+            # Get the new position
+            newPos = self.GraphicsView.mapToScene(event.pos())
+            # Move scene to old position
+            delta = newPos - oldPos
+            self.GraphicsView.translate(delta.x(), delta.y())
 
     def confirmClicked(self):
         for item in self.scene.items():
@@ -254,6 +255,7 @@ class FormUVATool(QMainWindow):
 
         print("----------------------------------------------")
         print()
+        QMessageBox.warning(self, "Success", "A solution was founded.")
 
     def showTableReultsForm(self):
         try:
@@ -282,7 +284,6 @@ class FormUVATool(QMainWindow):
         self.formTableResults.close()
         super().close()
 
-
 class UVAGraphicsScene(QGraphicsScene):
     nodes: list[NodeDraw]
     elements: list[ElementDraw]
@@ -302,7 +303,7 @@ class UVAGraphicsScene(QGraphicsScene):
         self.elements: list[ElementDraw] = []
         self.gridPoints = []
 
-        self.loadStructure(Structures.porticosSucessivos())
+        self.loadStructure(Structures.porticosSucessivos(n_pilares_por_andar=4, n_andares=50))
         # self.printStructure()
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
@@ -400,6 +401,10 @@ class UVAGraphicsScene(QGraphicsScene):
                 self.addItem(forces[i])
                 forcesItens.append(forces[i])
         self.nodalForces.insert(0, forcesItens)
+
+    def removeNode(self, node: NodeDraw) -> None:
+        self.removeItem(node.getItem())
+        self.nodes.remove(node)
 
     def drawElement(self, element: ElementDraw) -> None:
         self.addItem(element.getItem())

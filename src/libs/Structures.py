@@ -52,7 +52,7 @@ class Structures:
     @staticmethod
     def porticosSucessivos(n_andares=20, n_pilares_por_andar=7, distancia_pilares=6, pe_direito=3) -> tuple[list[NodeDraw], list[ElementDraw]]:
         # CONDIÇÕES INICIAIS
-        # n_andares = 20
+        n_andares = n_andares + 1
         # n_pilares_por_andar = 7
         # distancia_pilares = 6
         # pe_direito = 3

@@ -13,9 +13,10 @@ from PyQt5.QtWidgets import (
     QMessageBox,
 )
 
-
+from PyQt5.QtCore import QObject, QThread, pyqtSignal
 from libs.Drawing import *
 from PyQt5 import QtCore, QtGui, QtWidgets
+from time import sleep
 
 
 class Browser(QDockWidget):
@@ -25,6 +26,8 @@ class Browser(QDockWidget):
     def __init__(self, scene: QGraphicsScene) -> None:
         super().__init__()
         self.scene = scene
+        self.nodes: list[NodeDraw] = self.scene.nodes
+        self.elements: list[ElementDraw] = self.scene.elements
         self.dockWidget = self
         self.setWindowTitle("Browser")
         self.setFeatures(self.DockWidgetFeature.DockWidgetClosable)
@@ -94,7 +97,8 @@ class Browser(QDockWidget):
         self.comboBox.setObjectName("comboBox")
         self.comboBox.addItem("Nodes")
         self.comboBox.addItem("Elements")
-        self.comboBox.currentIndexChanged.connect(self.setItens)
+        # self.comboBox.currentIndexChanged.connect(self.setItens)
+        self.comboBox.currentIndexChanged.connect(self.runLongTask)
         self.gridLayout.addWidget(self.comboBox, 0, 0, 1, 1)
         self.tabWidget.addTab(self.tab, "Data")
         self.widget = QtWidgets.QWidget()
@@ -103,13 +107,74 @@ class Browser(QDockWidget):
         self.gridLayout_2.addWidget(self.tabWidget, 0, 0, 1, 1)
         self.dockWidget.setWidget(self.dockWidgetContents)
 
-        self.setItens()
+        # self.setItens()
+        self.runLongTask()
 
     def setItens(self):
         self.listWidget.clear()
         if self.comboBox.currentText() == "Nodes":
-            for node in range(len(self.scene.nodes)):
-                self.listWidget.addItem(f"n{node+1}")
+            for index in range(len(self.nodes)):
+                self.listWidget.addItem(f"id:{index+1} - coord:({self.nodes[index].x}, {self.nodes[index].y})")
         if self.comboBox.currentText() == "Elements":
-            for element in range(len(self.scene.elements)):
-                self.listWidget.addItem(f"e{element+1}")
+            for index in range(len(self.elements)):
+                self.listWidget.addItem(f"id:{index+1} - nodes:({self.nodes.index(self.elements[index].node1) + 1} -> {self.nodes.index(self.elements[index].node2) + 1})")
+
+    def runLongTask(self):
+        # Step 2: Create a QThread object
+        self.thread = QThread()
+        # Step 3: Create a worker object
+        self.worker = Worker()
+        self.worker.setFunction(self.setItens)
+        # Step 4: Move worker to the thread
+        self.worker.moveToThread(self.thread)
+        # Step 5: Connect signals and slots
+        self.thread.started.connect(self.worker.run)
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+        # Step 6: Start the thread
+        self.thread.start()
+
+
+class Worker(QObject):
+    finished = pyqtSignal()
+    progress = pyqtSignal(int)
+
+    def run(self):
+        """Long-running task."""
+        self.function()
+        self.finished.emit()
+
+    def setFunction(self, function):
+        self.function = function
+
+
+"""
+EXEMPLO UTILIZAÇÃO LISTWIDGET COM CLICK
+
+from PyQt5.QtWidgets import *
+import sys
+
+class Window(QWidget):
+    def __init__(self):
+        QWidget.__init__(self)
+        layout = QGridLayout()
+        self.setLayout(layout)
+        self.listwidget = QListWidget()
+        self.listwidget.insertItem(0, "Red")
+        self.listwidget.insertItem(1, "Orange")
+        self.listwidget.insertItem(2, "Blue")
+        self.listwidget.insertItem(3, "White")
+        self.listwidget.insertItem(4, "Green")
+        self.listwidget.clicked.connect(self.clicked)
+        layout.addWidget(self.listwidget)
+
+    def clicked(self, qmodelindex):
+        item = self.listwidget.currentItem()
+        print(item.text())
+
+app = QApplication(sys.argv)
+screen = Window()
+screen.show()
+sys.exit(app.exec_())
+"""
