@@ -10,14 +10,14 @@ from PyQt5.QtWidgets import (
     QSpacerItem,
     QSizePolicy,
     QGraphicsScene,
-    QMessageBox
+    QMessageBox,
 )
 
 from PyQt5.QtCore import Qt
 from libs.Drawing import *
 
 
-class NodeParameters(QDockWidget):
+class CreateNode(QDockWidget):
     scene: QGraphicsScene
 
     Coordinates: QGroupBox
@@ -39,7 +39,7 @@ class NodeParameters(QDockWidget):
         super().__init__()
         self.scene = scene
         # QDockWidget - QDockWidget #
-        self.setWindowTitle("Node")
+        self.setWindowTitle("Create Node")
         self.setFeatures(self.DockWidgetFeature.DockWidgetClosable)
 
         # QGroupBox - Coordinates #

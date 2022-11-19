@@ -49,7 +49,7 @@ from PyQt5.QtGui import (
 from PyQt5 import uic
 from libs.UVATool import *
 from libs.Drawing import *
-from libs.DockWidgets.NodeParameters import NodeParameters
+from libs.DockWidgets.CreateNode import CreateNode
 from libs.DockWidgets.Browser import Browser
 from libs.Structures import Structures
 from forms.FormTableResults import FormTableResults
@@ -107,8 +107,8 @@ class FormUVATool(QMainWindow):
         self.ElementParameters.close()
         self.Options.close()
         # DOCK PARA ADICIONAR NOVO NODE
-        self.nodePatameters = NodeParameters(self.scene)
-        self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.nodePatameters)
+        self.nodePatameters = CreateNode(self.scene)
+        self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, self.nodePatameters)
         self.nodePatameters.close()
         # DOCK BROWSER
         self.browser = Browser(self.scene)
@@ -129,6 +129,7 @@ class FormUVATool(QMainWindow):
         # self.GraphicsView.DragMode(1)
 
         self.calc = None
+        self.totalScale: float = 1
 
         # self.resize(900, 650)
         self.showMaximized()
@@ -148,6 +149,7 @@ class FormUVATool(QMainWindow):
                 zoomFactor = zoomInFactor
             else:
                 zoomFactor = zoomOutFactor
+            self.totalScale *= zoomFactor
             self.GraphicsView.scale(zoomFactor, zoomFactor)
             # Get the new position
             newPos = self.GraphicsView.mapToScene(event.pos())
@@ -284,6 +286,7 @@ class FormUVATool(QMainWindow):
         self.formTableResults.close()
         super().close()
 
+
 class UVAGraphicsScene(QGraphicsScene):
     nodes: list[NodeDraw]
     elements: list[ElementDraw]
@@ -303,7 +306,7 @@ class UVAGraphicsScene(QGraphicsScene):
         self.elements: list[ElementDraw] = []
         self.gridPoints = []
 
-        self.loadStructure(Structures.porticosSucessivos(n_pilares_por_andar=4, n_andares=50))
+        self.loadStructure(Structures.porticosSucessivos(n_pilares_por_andar=4, n_andares=3))
         # self.printStructure()
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
@@ -316,46 +319,51 @@ class UVAGraphicsScene(QGraphicsScene):
             self.canMoveScene = True
 
     def mouseDoubleClickEvent(self, event: QGraphicsSceneMouseEvent) -> None:
-        for item in self.items():
-            if item.hasFocus():
-                if isinstance(item, ElementItem):
-                    item.setSelected(True)
-                    for element in self.elements:
-                        if element.getItem() == item:
-                            self.form.area.setText(str(element.area))
-                            self.form.momentInertia.setText(str(element.moment_inertia))
-                            self.form.youngModulus.setText(str(element.young_modulus))
-                            self.form.ChangeValues.hide()
-                            self.form.ElementParameters.show()
-                else:
-                    isNode = isinstance(item, NodeItem)
-                    isRoller = isinstance(item, RollerItem)
-                    isPinned = isinstance(item, PinnedItem)
-                    isFixed = isinstance(item, FixedItem)
-                    isMiddleRinge = isinstance(item, MiddleRingeItem)
-                    isSemiFixed = isinstance(item, SemiFixedItem)
-                    if isNode or isRoller or isPinned or isFixed or isMiddleRinge or isSemiFixed:
-                        item.setSelected(True)
-                        for node in self.nodes:
-                            if node.getItem() == item:
-                                self.form.fx.setText(str(node.getNodalForce().fx))
-                                self.form.fy.setText(str(node.getNodalForce().fy))
-                                self.form.m.setText(str(node.getNodalForce().m))
-                                self.form.p.setText(str(node.getP()))
-                                if node.getSupport() == Apoio.sem_suporte:
-                                    self.form.semApoio.setChecked(True)
-                                elif node.getSupport() == Apoio.primeiro_genero:
-                                    self.form.primeiroGenero.setChecked(True)
-                                elif node.getSupport() == Apoio.segundo_genero:
-                                    self.form.segundoGenero.setChecked(True)
-                                elif node.getSupport() == Apoio.terceiro_genero:
-                                    self.form.terceiroGenero.setChecked(True)
-                                elif node.getSupport() == Apoio.semi_rigido:
-                                    self.form.semiRigido.setChecked(True)
-                                self.form.ElementParameters.hide()
-                                self.form.ChangeValues.show()
-            else:
-                item.setSelected(False)
+        # for item in self.items():
+        #     if item.hasFocus():
+        #         if isinstance(item, ElementItem):
+        #             item.setSelected(True)
+        #             for element in self.elements:
+        #                 if element.getItem() == item:
+        #                     self.form.area.setText(str(element.area))
+        #                     self.form.momentInertia.setText(str(element.moment_inertia))
+        #                     self.form.youngModulus.setText(str(element.young_modulus))
+        #                     self.form.ChangeValues.hide()
+        #                     self.form.ElementParameters.show()
+        #         else:
+        #             isNode = isinstance(item, NodeItem)
+        #             isRoller = isinstance(item, RollerItem)
+        #             isPinned = isinstance(item, PinnedItem)
+        #             isFixed = isinstance(item, FixedItem)
+        #             isMiddleRinge = isinstance(item, MiddleRingeItem)
+        #             isSemiFixed = isinstance(item, SemiFixedItem)
+        #             if isNode or isRoller or isPinned or isFixed or isMiddleRinge or isSemiFixed:
+        #                 item.setSelected(True)
+        #                 for node in self.nodes:
+        #                     if node.getItem() == item:
+        #                         self.form.fx.setText(str(node.getNodalForce().fx))
+        #                         self.form.fy.setText(str(node.getNodalForce().fy))
+        #                         self.form.m.setText(str(node.getNodalForce().m))
+        #                         self.form.p.setText(str(node.getP()))
+        #                         if node.getSupport() == Apoio.sem_suporte:
+        #                             self.form.semApoio.setChecked(True)
+        #                         elif node.getSupport() == Apoio.primeiro_genero:
+        #                             self.form.primeiroGenero.setChecked(True)
+        #                         elif node.getSupport() == Apoio.segundo_genero:
+        #                             self.form.segundoGenero.setChecked(True)
+        #                         elif node.getSupport() == Apoio.terceiro_genero:
+        #                             self.form.terceiroGenero.setChecked(True)
+        #                         elif node.getSupport() == Apoio.semi_rigido:
+        #                             self.form.semiRigido.setChecked(True)
+        #                         self.form.ElementParameters.hide()
+        #                         self.form.ChangeValues.show()
+        #     else:
+        #         item.setSelected(False)
+
+        if event.button() == Qt.MouseButton.MiddleButton:
+            self.form.GraphicsView.scale(1/self.form.totalScale, 1/self.form.totalScale)
+            self.form.totalScale /= self.form.totalScale
+            self.fitStructure()
 
     def mouseMoveEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         self.mousePoint.setX(event.scenePos().x())
