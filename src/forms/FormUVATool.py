@@ -306,7 +306,8 @@ class UVAGraphicsScene(QGraphicsScene):
         self.elements: list[ElementDraw] = []
         self.gridPoints = []
 
-        self.loadStructure(Structures.porticosSucessivos(n_pilares_por_andar=4, n_andares=3))
+        # self.loadStructure(Structures.porticosSucessivos(n_pilares_por_andar=2, n_andares=20))
+        self.loadStructure(Structures.vigaSemirrigida())
         # self.printStructure()
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:

@@ -317,10 +317,11 @@ class Structures:
         # Nos -----------------------------------------------------------------------------------------
         n1 = NodeDraw(0, 0)
         n2 = NodeDraw(0, 3)
-        n3 = NodeDraw(3, 3)
-        n4 = NodeDraw(5, 3)
-        n5 = NodeDraw(8, 3)
-        n6 = NodeDraw(8, 0)
+        n3 = NodeDraw(2, 3)
+        n4 = NodeDraw(4, 3)
+        n5 = NodeDraw(6, 3)
+        n6 = NodeDraw(6, 0)
+        
         # Elementos -----------------------------------------------------------------------------------
         e1 = ElementDraw(n1, n2, area_p, inercia_p, young)
         e2 = ElementDraw(n2, n3, area_v, inercia_v, young)
@@ -336,5 +337,154 @@ class Structures:
 
         nodes = [n1, n2, n3, n4, n5, n6]
         elements = [e1, e2, e3, e4, e5]
+
+        return nodes, elements
+
+
+    @staticmethod
+    def portico5pav() -> tuple[list[NodeDraw], list[ElementDraw]]:
+        """ PÓRTICO 5 PAVIMENTOS """
+        # Seções --------------------------------------------------------------------------------------
+        secao_p = Rectangle(0.2, 0.6)  # hy x hx
+        area_p = secao_p.area
+        inercia_p = secao_p.inertia
+        secao_v = Rectangle(0.15, 0.6)  # base x altura
+        area_v = secao_v.area
+        inercia_v = secao_v.inertia
+        # Materiais -----------------------------------------------------------------------------------
+        young = 27_000_000_000
+        # Nos -----------------------------------------------------------------------------------------
+        # pav1
+        n1 = NodeDraw(0, 0)
+        n2 = NodeDraw(0, 3)
+        n3 = NodeDraw(2, 3)
+        n4 = NodeDraw(4, 3)
+        n5 = NodeDraw(6, 3)
+        n6 = NodeDraw(6, 0)
+        
+        # pav2
+        n7 = NodeDraw(0, 6)
+        n8 = NodeDraw(2, 6)
+        n9 = NodeDraw(4, 6)
+        n10 = NodeDraw(6, 6)
+        
+        # pav3
+        n11 = NodeDraw(0, 9)
+        n12 = NodeDraw(2, 9)
+        n13 = NodeDraw(4, 9)
+        n14 = NodeDraw(6, 9)
+        
+        # pav4
+        n15 = NodeDraw(0, 12)
+        n16 = NodeDraw(2, 12)
+        n17 = NodeDraw(4, 12)
+        n18 = NodeDraw(6, 12)
+        
+        # pav5
+        n19 = NodeDraw(0, 15)
+        n20 = NodeDraw(2, 15)
+        n21 = NodeDraw(4, 15)
+        n22 = NodeDraw(6, 15)
+        
+        
+        # Elementos -----------------------------------------------------------------------------------
+        #pav 1
+        e1 = ElementDraw(n1, n2, area_p, inercia_p, young)
+        e2 = ElementDraw(n2, n3, area_v, inercia_v, young)
+        e3 = ElementDraw(n3, n4, area_v, inercia_v, young)
+        e4 = ElementDraw(n4, n5, area_v, inercia_v, young)
+        e5 = ElementDraw(n5, n6, area_p, inercia_p, young)
+        
+        #pav 2
+        e6 = ElementDraw(n2, n7, area_p, inercia_p, young)
+        e7 = ElementDraw(n7, n8, area_v, inercia_v, young)
+        e8 = ElementDraw(n8, n9, area_v, inercia_v, young)
+        e9 = ElementDraw(n9, n10, area_v, inercia_v, young)
+        e10 = ElementDraw(n5, n10, area_p, inercia_p, young)
+       
+        #pav 3
+        e11 = ElementDraw(n7, n11, area_p, inercia_p, young)
+        e12 = ElementDraw(n11, n12, area_v, inercia_v, young)
+        e13 = ElementDraw(n12, n13, area_v, inercia_v, young)
+        e14 = ElementDraw(n13, n14, area_v, inercia_v, young)
+        e15 = ElementDraw(n10, n14, area_p, inercia_p, young)
+        
+        #pav 4
+        e16 = ElementDraw(n11, n15, area_p, inercia_p, young)
+        e17 = ElementDraw(n15, n16, area_v, inercia_v, young)
+        e18 = ElementDraw(n16, n17, area_v, inercia_v, young)
+        e19 = ElementDraw(n17, n18, area_v, inercia_v, young)
+        e20 = ElementDraw(n14, n18, area_p, inercia_p, young)
+        
+        #pav 5
+        e21 = ElementDraw(n15, n19, area_p, inercia_p, young)
+        e22 = ElementDraw(n19, n20, area_v, inercia_v, young)
+        e23 = ElementDraw(n20, n21, area_v, inercia_v, young)
+        e24 = ElementDraw(n21, n22, area_v, inercia_v, young)
+        e25 = ElementDraw(n18, n22, area_p, inercia_p, young)
+       
+        # Apoios --------------------------------------------------------------------------------------
+        n1.setSupport(Apoio.terceiro_genero)
+        n6.setSupport(Apoio.terceiro_genero)
+        # Forças --------------------------------------------------------------------------------------
+        n3.setNodalForce(NodalForce(0, -10_000, 0))
+        n4.setNodalForce(NodalForce(0, -10_000, 0))
+        
+        n8.setNodalForce(NodalForce(0, -10_000, 0))
+        n9.setNodalForce(NodalForce(0, -10_000, 0))
+        
+        n12.setNodalForce(NodalForce(0, -10_000, 0))
+        n13.setNodalForce(NodalForce(0, -10_000, 0))
+        
+        n16.setNodalForce(NodalForce(0, -10_000, 0))
+        n17.setNodalForce(NodalForce(0, -10_000, 0))
+        
+        n20.setNodalForce(NodalForce(0, -10_000, 0))
+        n21.setNodalForce(NodalForce(0, -10_000, 0))
+
+        nodes = [n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14, n15, n16, n17,
+                 n18, n19, n20, n21, n22]
+        
+        
+        elements = [e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17,
+                    e18, e19, e20, e21, e22, e23, e24, e25]
+
+        return nodes, elements
+
+    @staticmethod
+    def vigaSemirrigida() -> tuple[list[NodeDraw], list[ElementDraw]]:
+        """ ESTRUTURA EXEMPLO APRESENTADA NA IC UVA 2022.2 """
+        # Seções --------------------------------------------------------------------------------------
+        secao_v = Rectangle(0.15, 0.6)  # base x altura
+        area_v = secao_v.area
+        inercia_v = secao_v.inertia
+        
+        # Materiais -----------------------------------------------------------------------------------
+        young = 27_000_000_000
+        
+        # Nos -----------------------------------------------------------------------------------------
+        n1 = NodeDraw(0, 0)
+        n2 = NodeDraw(2, 0)
+        n3 = NodeDraw(4, 0)
+        n4 = NodeDraw(6, 0)
+        
+        n1.setP(0.1)
+        n4.setP(0.1)
+        
+        # Elementos -----------------------------------------------------------------------------------
+        e1 = ElementDraw(n1, n2, area_v, inercia_v, young)
+        e2 = ElementDraw(n2, n3, area_v, inercia_v, young)
+        e3 = ElementDraw(n3, n4, area_v, inercia_v, young)
+
+        # Apoios --------------------------------------------------------------------------------------
+        n1.setSupport(Apoio.semi_rigido)
+        n4.setSupport(Apoio.semi_rigido)
+        
+        # Forças --------------------------------------------------------------------------------------
+        n2.setNodalForce(NodalForce(0, -10, 0))
+        n3.setNodalForce(NodalForce(0, -10, 0))
+
+        nodes = [n1, n2, n3, n4]
+        elements = [e1, e2, e3]
 
         return nodes, elements
