@@ -63,7 +63,7 @@ class Point2d:
         if isinstance(__o, Point2d):
             # divisão de um ponto por outro (verificar existencia na geomegria analítica para implementação)
             return NotImplemented
-        if isinstance(__o, float | int):
+        if isinstance(__o, float or int):
             return Point2d(self.x/__o, self.y/__o)
 
     def distTo(self, point: object):
@@ -280,6 +280,20 @@ class Element:
 
     def getP(self) -> list:
         return [self.__p1, self.__p2]
+
+
+class Structure:
+    structure_name: str
+    structure_description: str
+    nodes: list[Node]
+    elements: list[Element]
+
+    def __init__(self, structure_name: str, nodes: list[Node], elements: list[Element], structure_description: str = '') -> None:
+        # CLASSE FALTANDO UMA VERIFICAÇÃO SE A ESTRUTURA REALMENTE SE CONECTA, CASO CONTRÁRIO, RETORNAR UM STRUCTURE ERROR
+        self.structure_name = structure_name
+        self.structure_description = structure_description
+        self.nodes = nodes
+        self.elements = elements
 
 
 class Process:
