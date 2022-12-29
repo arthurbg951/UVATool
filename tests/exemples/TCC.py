@@ -241,6 +241,48 @@ elements = [e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15]
 # Resultados ---------------------------------------------------------------------------------
 calc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
 plot = Print(calc)
-plot.nodalDisplacement()
+# plot.nodalDisplacement()
 # plot.elementDeformations()
 # plot.internalForces()
+
+
+
+
+""" ESTRUTURA EXEMPLO APRESENTADA NA IC UVA 2022.2 """
+# Seções --------------------------------------------------------------------------------------
+secao_v = Rectangle(0.15, 0.6)  # base x altura
+area_v = secao_v.area
+inercia_v = secao_v.inertia
+
+# Materiais -----------------------------------------------------------------------------------
+young = 27_000_000_000
+
+# Nos -----------------------------------------------------------------------------------------
+n1 = Node(0, 0)
+n2 = Node(2, 0)
+n3 = Node(4, 0)
+n4 = Node(6, 0)
+        
+# Elementos -----------------------------------------------------------------------------------
+e1 = Element(n1, n2, area_v, inercia_v, young)
+e2 = Element(n2, n3, area_v, inercia_v, young)
+e3 = Element(n3, n4, area_v, inercia_v, young)
+
+# Apoios --------------------------------------------------------------------------------------
+n1.setSupport(Apoio.semi_rigido)
+n4.setSupport(Apoio.semi_rigido)
+
+n1.setP(0.042)
+n4.setP(0.042)
+        
+# Forças --------------------------------------------------------------------------------------
+n2.setNodalForce(NodalForce(0, -10_000, 0))
+n3.setNodalForce(NodalForce(0, -10_000, 0))
+
+nodes = [n1, n2, n3, n4]
+elements = [e1, e2, e3]
+
+calc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
+plot = Print(calc)
+plot.internalForces()
+    
