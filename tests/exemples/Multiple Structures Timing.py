@@ -237,7 +237,7 @@ def semi_rigido3():
 
 def porticosSucessivos(n_andares=20, n_pilares_por_andar=7, distancia_pilares=6, pe_direito=3):
     '''PORTICOS SUCESSIVOS'''
-    structure_name = 'PORTICOS SUCESSIVOS'
+    structure_name = f'PORTICOS SUCESSIVOS N_ANDARES={n_andares} PE_DIREITO={pe_direito} N_PILARES_POR_ANDAR={n_pilares_por_andar}'
     # CONDIÇÕES INICIAIS
     n_andares = n_andares + 1
     # n_pilares_por_andar = 7

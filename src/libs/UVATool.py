@@ -296,6 +296,27 @@ class Structure:
         self.elements = elements
 
 
+class StructFile:
+    def __init__(self, file_name: str) -> None:
+        self.file_name = file_name
+
+    def getStructure(self) -> Structure:
+        file_name = self.file_name
+        import sys
+        from os.path import isfile, basename, dirname, abspath
+        if not isfile(file_name):
+            raise Exception('File not Exist!')
+        path = abspath(dirname(file_name))
+        sys.path.append(path)
+        module_name = basename(file_name)[:-3]
+        struct = __import__(module_name)
+        for i in dir(struct):
+            item = getattr(struct, i)
+            if isinstance(item, Structure):
+                return item
+        raise Exception('This file not contains a Structure!')
+
+
 class Process:
     __nodes: list[Node]
     __elements: list[Element]
@@ -313,10 +334,6 @@ class Process:
     __process_time: datetime
 
     def __init__(self, nodes: list[Node], elements: list[Element], analisys: Analise) -> None:
-        # self.__nodes = []
-        # self.__nodes.append(elements[0].node1)
-        # for element in elements:
-        #     self.__nodes.append(element.node2)
         self.__nodes = nodes
         self.__elements = elements
         self.__analisys = analisys
@@ -604,20 +621,6 @@ class Process:
     def getCuts(self) -> list:
         return self.__cuts
 
-    # NÃO ESTÁ FUNCIONANDO CORRETAMENTE
-    # def matrixToCsv(self, file_name: str, matrix: numpy.array):
-    #     # criar função para criar matrizes no exel
-    #     file = open("{0}.csv".format(file_name), "w")
-    #     linhas = matrix.shape[0]
-    #     colunas = matrix.shape[1]
-    #     print(linhas, colunas)
-    #     linha = list()
-    #     for i in range(linhas):
-    #         for j in range(colunas):
-    #             linha.append("{0},".format(matrix[i, j]))
-    #         linha.append("\n")
-    #     file.writelines(linha)
-
 
 class Print:
     __process: Process
@@ -660,3 +663,20 @@ class Print:
             print("M2 = {0:.1f} kNm".format(self.__process.getInternalForces()[2 + i] * 1e-3))
             if i != nElement - 3:
                 print()
+
+
+class Export:
+    # NÃO ESTÁ FUNCIONANDO CORRETAMENTE
+    @staticmethod
+    def matrixToCsv(file_name: str, matrix: numpy.array):
+        # criar função para criar matrizes no exel
+        file = open("{0}.csv".format(file_name), "w")
+        linhas = matrix.shape[0]
+        colunas = matrix.shape[1]
+        print(linhas, colunas)
+        linha = list()
+        for i in range(linhas):
+            for j in range(colunas):
+                linha.append("{0},".format(matrix[i, j]))
+            linha.append("\n")
+        file.writelines(linha)
