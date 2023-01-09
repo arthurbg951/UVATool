@@ -87,9 +87,6 @@ class FormUVATool(QMainWindow):
     youngModulus: QLineEdit
     confirmButton_2: QPushButton
 
-    ERA: QRadioButton
-    MNE: QRadioButton
-
     XCoordinate: QLineEdit
     YCoordinate: QLineEdit
 
@@ -106,7 +103,6 @@ class FormUVATool(QMainWindow):
         """# DOCK WIDGETS AREA #"""
         self.ChangeValues.close()
         self.ElementParameters.close()
-        self.Options.close()
         # DOCK PARA ADICIONAR NOVO NODE
         self.nodePatameters = CreateNode(self.scene)
         self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, self.nodePatameters)
@@ -227,7 +223,7 @@ class FormUVATool(QMainWindow):
         print("----------------------------------------------")
         print("            Processando Cálculos              ")
         analise = 0
-        if self.MNE.isChecked():
+        if self.browser.radioButton_2.isChecked():
             analise = Analise.rigidoPlastica.viaMinimaNormaEuclidiana
             print("         Via Mínima Norma Euclidiana          ")
 
