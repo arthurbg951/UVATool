@@ -20,7 +20,6 @@ from PyQt5.QtWidgets import (
     QGraphicsSceneWheelEvent,
     QGraphicsSceneDragDropEvent,
     QMessageBox,
-
 )
 from PyQt5.QtCore import (
     Qt,
@@ -30,7 +29,6 @@ from PyQt5.QtCore import (
     QObject,
     QThread,
     pyqtSignal
-
 )
 from PyQt5.QtGui import (
     QPixmap,
@@ -42,9 +40,7 @@ from PyQt5.QtGui import (
     QColor,
     QShowEvent,
     QWheelEvent,
-    QPainter,
-
-
+    QPainter
 )
 from PyQt5 import uic
 from libs.UVATool import *
@@ -111,6 +107,7 @@ class FormUVATool(QMainWindow):
         self.browser = Browser(self.scene)
         self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.browser)
         self.actionBrowser.setChecked(True)
+        """# DOCK WIDGETS AREA #"""
 
         self.confirmButton.clicked.connect(self.confirmClicked)
         self.confirmButton_2.clicked.connect(self.confirmClicked_2)
@@ -282,6 +279,7 @@ class FormUVATool(QMainWindow):
             self.NodeAction.toggle()
 
     def browserActionClicked(self):
+        self.browser.updateStructureList()
         if self.actionBrowser.isChecked():
             self.browser.show()
             self.actionBrowser.setChecked(True)
@@ -320,7 +318,7 @@ class UVAGraphicsScene(QGraphicsScene):
         self.clickPoint.setX(event.scenePos().x())
         self.clickPoint.setY(event.scenePos().y())
         if event.button() == Qt.MouseButton.LeftButton:
-            pass
+            print('Qt.MouseButton.LeftButton CLICK NOT IMPLEMENTED')
 
         if event.button() == Qt.MouseButton.MiddleButton:
             self.canMoveScene = True
@@ -393,9 +391,11 @@ class UVAGraphicsScene(QGraphicsScene):
     def keyPressEvent(self, event: QKeyEvent) -> None:
         if not self.keyStack.__contains__(event.key()):
             self.keyStack.insert(0, event.key())
+        # CONTROL + Z BEHAVIOR
         if self.keyStack.__contains__(Qt.Key.Key_Control) and self.keyStack.__contains__(Qt.Key.Key_Z):
             if len(self.items()) > 0:
                 self.removeItem(self.items()[0])
+        # DEL BEHAVIOR
         if event.key() == Qt.Key.Key_Delete:
             for i in range(len(self.items())):
                 if self.items()[i].isSelected():
@@ -439,21 +439,27 @@ class UVAGraphicsScene(QGraphicsScene):
                 return e
 
     def fitStructure(self) -> None:
+        debug_nodes = self.nodes
         try:
             max = Point2d(0, 0)
             min = Point2d(0, 0)
-            for node in self.nodes:
-                if node.xDraw > max.x:
-                    max.x = node.xDraw
-                if node.yDraw > max.y:
-                    max.y = node.yDraw
-                if node.xDraw < min.x:
-                    min.x = node.xDraw
-                if node.yDraw < min.y:
-                    min.y = node.yDraw
+            if len(self.nodes) > 0:
+                for node in self.nodes:
+                    if node.xDraw > max.x:
+                        max.x = node.xDraw
+                    if node.yDraw > max.y:
+                        max.y = node.yDraw
+                    if node.xDraw < min.x:
+                        min.x = node.xDraw
+                    if node.yDraw < min.y:
+                        min.y = node.yDraw
             self.form.GraphicsView.setSceneRect((max/2).x, (min/2).y, 1, 1)
         except Exception as e:
             print(str(e))
+            print('################# DEBUG SECTION ERROR ##################')
+            for index in debug_nodes:
+                print(index)
+            print('########################################################')
             raise Exception("Ocurred an error while trying to fit structure")
 
     def loadStructure(self, structure: Structures):
@@ -466,12 +472,15 @@ class UVAGraphicsScene(QGraphicsScene):
                 self.drawElement(element)
             self.fitStructure()
         except Exception as e:
-            msg = "Ocurred an error whyle trying to load the writed structure.\nSkipping the load.\Error: " + str(e)
+            msg = "Ocurred an error whyle trying to load the writed structure.\nSkipping the load.\nError: " + str(e)
             QMessageBox.warning(self.form, "Warning", msg)
             print(msg)
 
     def printStructure(self):
+        print('##################### NODES ########################')
         for node in self.nodes:
             print(node)
+        print('#################### ELEMENTS ######################')
         for element in self.elements:
             print(element)
+        print('####################################################')

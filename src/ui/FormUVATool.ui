@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>UVATools</class>
- <widget class="QMainWindow" name="UVATools">
+ <class>UVATool</class>
+ <widget class="QMainWindow" name="UVATool">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1000</width>
-    <height>910</height>
+    <width>1026</width>
+    <height>800</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -596,6 +596,22 @@
      </item>
     </layout>
    </widget>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1026</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+   </widget>
+   <addaction name="menuFile"/>
   </widget>
   <action name="ElementAction">
    <property name="checkable">

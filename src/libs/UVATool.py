@@ -134,7 +134,7 @@ class Node:
         self.__nodal_force = NodalForce(0, 0, 0)
 
     def __str__(self) -> str:
-        return "{0},{1}".format(self.x, self.y)
+        return f"x={self.x}, y={self.y}, p={self.getP()}"
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Node):
@@ -212,7 +212,7 @@ class Element:
         self.__p2 = node2.getP()
 
     def __str__(self) -> str:
-        return "Node1={0};Node2={1}".format(self.node1, self.node2)
+        return f"NODE1={self.node1}; NODE2={self.node2}"
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Element):

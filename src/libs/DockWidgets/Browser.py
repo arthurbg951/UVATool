@@ -176,6 +176,9 @@ class Browser(QDockWidget):
         if not self.radioButton_2.isChecked():
             self.radioButton_2.setChecked(True)
 
+    def updateStructureList(self):
+        self.setItens()
+
 
 class Worker(QObject):
     finished = pyqtSignal()
