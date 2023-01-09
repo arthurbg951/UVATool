@@ -27,13 +27,19 @@ As dependências do projeto são:
 
 2 - <a href="https://pypi.org/project/numpy/">numpy</a>
 
-Para instalar basta utilizar o comando:
+Para instala-las basta utilizar o comando:
 
     pip install -r requirements.txt
 
 Utilizando o vscode, a tarefa ja está automatizada com a task SetupDevelopment.
 
+
 ## Execução do programa
+
+De forma simplificada, após a instalação das bibliotecas necessárias, basta entrar na pasta 'src' pelo terminal e utilizar o comando:
+
+    python UVAToolUi.py
+
 
 <a href="https://youtu.be/HX6RHFUiZRw">Tutorial</a>
 
