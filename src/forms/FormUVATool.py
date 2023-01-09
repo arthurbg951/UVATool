@@ -67,6 +67,7 @@ class FormUVATool(QMainWindow):
     ToolsToolBar: QToolBar
     ProcessCalculations: QAction
     actionTableResults: QAction
+    actionBrowser: QAction
 
     ChangeValues: QDockWidget
     fx: QLineEdit
@@ -113,6 +114,7 @@ class FormUVATool(QMainWindow):
         # DOCK BROWSER
         self.browser = Browser(self.scene)
         self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.browser)
+        self.actionBrowser.setChecked(True)
 
         self.confirmButton.clicked.connect(self.confirmClicked)
         self.confirmButton_2.clicked.connect(self.confirmClicked_2)
@@ -121,6 +123,7 @@ class FormUVATool(QMainWindow):
         self.ProcessCalculations.triggered.connect(self.ProcessCalculationsTriggered)
         self.actionTableResults.triggered.connect(self.showTableReultsForm)
         self.NodeAction.triggered.connect(self.nodeActionClicked)
+        self.actionBrowser.triggered.connect(self.browserActionClicked)
 
         self.p.textChanged.connect(self.pValueChanged)
 
@@ -281,6 +284,14 @@ class FormUVATool(QMainWindow):
     def elementActionClicked(self):
         if self.NodeAction.isChecked():
             self.NodeAction.toggle()
+
+    def browserActionClicked(self):
+        if self.actionBrowser.isChecked():
+            self.browser.show()
+            self.actionBrowser.setChecked(True)
+        else:
+            self.browser.hide()
+            self.actionBrowser.setChecked(False)
 
     def close(self) -> bool:
         self.formTableResults.close()

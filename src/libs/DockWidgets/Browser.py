@@ -113,6 +113,7 @@ class Browser(QDockWidget):
         self.radioButton = QtWidgets.QRadioButton(self.groupBox)
         self.radioButton.setText("Rigidez Analítica")
         self.radioButton.setChecked(True)
+        self.radioButton.clicked.connect(self.radioButtonClicked)
         self.groupBox.setTitle("Elástica")
         self.radioButton.setObjectName("radioButton")
         self.gridLayout_3.addWidget(self.radioButton, 0, 0, 1, 1)
@@ -125,6 +126,7 @@ class Browser(QDockWidget):
         self.radioButton_2 = QtWidgets.QRadioButton(self.groupBox_2)
         self.radioButton_2.setText("Mínima Norma Euclidiana")
         self.radioButton_2.setObjectName("radioButton_2")
+        self.radioButton_2.clicked.connect(self.radioButton_2Clicked)
         self.gridLayout_4.addWidget(self.radioButton_2, 0, 0, 1, 1)
         self.gridLayout_5.addWidget(self.groupBox_2, 1, 0, 1, 1)
         spacerItem5 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
@@ -161,6 +163,18 @@ class Browser(QDockWidget):
         self.thread.finished.connect(self.thread.deleteLater)
         # Step 6: Start the thread
         self.thread.start()
+
+    def radioButtonClicked(self):
+        if self.radioButton_2.isChecked():
+            self.radioButton_2.setChecked(False)
+        if not self.radioButton.isChecked():
+            self.radioButton.setChecked(True)
+
+    def radioButton_2Clicked(self):
+        if self.radioButton.isChecked():
+            self.radioButton.setChecked(False)
+        if not self.radioButton_2.isChecked():
+            self.radioButton_2.setChecked(True)
 
 
 class Worker(QObject):
