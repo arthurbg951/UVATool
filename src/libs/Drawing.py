@@ -1,4 +1,5 @@
-from libs.UVATool import *
+from UVATool import *
+from UVATool.Enums import *
 from PyQt5.QtWidgets import (
     QGraphicsSceneMouseEvent,
     QGraphicsItem,

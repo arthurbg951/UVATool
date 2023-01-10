@@ -1,4 +1,6 @@
-from libs.UVATool import *
+from UVATool import *
+from UVATool.Enums import *
+import math
 
 # SEÇÃO
 secao = Rectangle(0.012, 0.001)
@@ -24,7 +26,7 @@ def trelica():
     '''TRELIÇA'''
     structure_name = 'TRELIÇA'
     n1 = Node(0, 0)
-    n2 = Node(0.5, math.sin(60*math.pi/180))
+    n2 = Node(0.5, math.sin(60 * math.pi / 180))
     n3 = Node(1, 0)
     n1.setSupport(Support.pinned)
     n3.setSupport(Support.roller)
@@ -235,7 +237,10 @@ def semi_rigido3():
     return structure
 
 
-def porticosSucessivos(n_andares=20, n_pilares_por_andar=7, distancia_pilares=6, pe_direito=3):
+def porticosSucessivos(n_andares=20,
+                       n_pilares_por_andar=7,
+                       distancia_pilares=6,
+                       pe_direito=3):
     '''PORTICOS SUCESSIVOS'''
     structure_name = f'PORTICOS SUCESSIVOS N_ANDARES={n_andares} PE_DIREITO={pe_direito} N_PILARES_POR_ANDAR={n_pilares_por_andar}'
     # CONDIÇÕES INICIAIS
@@ -266,14 +271,19 @@ def porticosSucessivos(n_andares=20, n_pilares_por_andar=7, distancia_pilares=6,
 
     # PILARES
     for pilar in range(n_pilares_por_andar):
-        for i in range(n_andares-1):
+        for i in range(n_andares - 1):
             node_pos = i + pilar * n_andares
-            elements.append(Element(nodes[node_pos], nodes[node_pos + 1], area_p, inercia_p, young_modulus))
+            elements.append(
+                Element(nodes[node_pos], nodes[node_pos + 1], area_p,
+                        inercia_p, young_modulus))
 
     # VIGAS
     for qtpilares in range(1, n_pilares_por_andar, 1):
         for i in range(1, n_andares, 1):
-            elements.append(Element(nodes[i + (qtpilares - 1) * n_andares], nodes[i + qtpilares * n_andares], area_v, inercia_v, young_modulus))
+            elements.append(
+                Element(nodes[i + (qtpilares - 1) * n_andares],
+                        nodes[i + qtpilares * n_andares], area_v, inercia_v,
+                        young_modulus))
 
     # APOIOS DOS PILARES MAIS INFERIORES
     for i in range(n_pilares_por_andar):
@@ -300,16 +310,20 @@ def process_simulation(structure: Structure,
     try:
         erros: list[str] = []
         time = None
-        proc = Process(structure.nodes, structure.elements, Analise.elastica.viaRigidezAnalitica)
+        proc = Process(structure.nodes, structure.elements,
+                       Analise.elastica.viaRigidezAnalitica)
         time = proc.getProcessTime()
         plot = Print(proc)
 
         if show_equilibrium_matrix:
-            print("MATRIZ DE EQUILIBRIO - [L]\n", proc.getEquilibriumMatrix(), "\n")
+            print("MATRIZ DE EQUILIBRIO - [L]\n", proc.getEquilibriumMatrix(),
+                  "\n")
         if show_frame_stiffness_matrix:
-            print("MATRIZ DE RIGIDEZ (DO ELEMENTO) - [k]\n", proc.getFrameStiffness(), "\n")
+            print("MATRIZ DE RIGIDEZ (DO ELEMENTO) - [k]\n",
+                  proc.getFrameStiffness(), "\n")
         if show_global_frame_stiffness:
-            print("RIGIDEZ GLOBAL DO SISTEMA - [K]\n", proc.getGlobalFrameStiffness(), "\n")
+            print("RIGIDEZ GLOBAL DO SISTEMA - [K]\n",
+                  proc.getGlobalFrameStiffness(), "\n")
         if show_nodal_displacement:
             plot.nodalDisplacement()
         if show_deformations:
@@ -320,7 +334,8 @@ def process_simulation(structure: Structure,
     except ValueError and StructureError:
         erros.append(f" -> ESTRUTURA HIPOSTATICA '{structure.structure_name}'")
     except numpy.linalg.LinAlgError:
-        erros.append(f" -> ERRO NOS CÁLCULOS DA ESTRUTURA '{structure.structure_name}'")
+        erros.append(
+            f" -> ERRO NOS CÁLCULOS DA ESTRUTURA '{structure.structure_name}'")
     except TypeError as e:
         erros.append(f" -> ENTRADA DE DADOS INCORRETA\n{e.args[0]}")
     finally:
@@ -328,9 +343,13 @@ def process_simulation(structure: Structure,
             for erro in erros:
                 print(erro)
         if show_processed_time and time is not None:
-            print(f"UVATool DEMOROU {time} PARA PROCESSAR A ESTRUTURA '{structure.structure_name}'")
+            print(
+                f"UVATool DEMOROU {time} PARA PROCESSAR A ESTRUTURA '{structure.structure_name}'"
+            )
         else:
-            print(f'OCORREU UM ERRO INESPERADO NA ESTRUTURA {structure.structure_name}')
+            print(
+                f'OCORREU UM ERRO INESPERADO NA ESTRUTURA {structure.structure_name}'
+            )
 
 
 if __name__ == "__main__":

@@ -1,4 +1,5 @@
-from libs.UVATool import *
+from UVATool import *
+from UVATool.Enums import *
 from datetime import datetime
 
 print('Montando estrutura ...')
@@ -33,9 +34,9 @@ elements.append(e3)
 for i in range(2, 1000, 1):
     n2, n3 = Node(0, i), Node(1, i)
 
-    e1 = Element(nodes[len(nodes)-4], n2, area, inercia, 1)
+    e1 = Element(nodes[len(nodes) - 4], n2, area, inercia, 1)
     e2 = Element(n2, n3, area, inercia, 1)
-    e3 = Element(n3, nodes[len(nodes)-1], area, inercia, 1)
+    e3 = Element(n3, nodes[len(nodes) - 1], area, inercia, 1)
 
     nodes.append(n2)
     nodes.append(n3)
@@ -43,7 +44,7 @@ for i in range(2, 1000, 1):
     elements.append(e2)
     elements.append(e3)
 
-nodes[len(nodes)-2].setNodalForce(NodalForce(-100, 0, 0))
+nodes[len(nodes) - 2].setNodalForce(NodalForce(-100, 0, 0))
 est_fim = datetime.now()
 
 print('Processando cálculos ...')
@@ -58,7 +59,8 @@ results = Print(calc)
 results.internalForces()
 
 # PRINTA O TAMANHO DA MATRIZ DE DE RIGIDEZ GLOBAL
-print("TAMANHO DA MATRIZ DE RIGIDEZ GLOBAL CORTADA = " , calc.getGlobalFrameStiffness().shape)
+print("TAMANHO DA MATRIZ DE RIGIDEZ GLOBAL CORTADA = ",
+      calc.getGlobalFrameStiffness().shape)
 
 # PRINTA OS TEMPOS DECORRIDOS NA EXECUÇÃO DO CÓDIGO
 print("TEMPO PARA DEFINIR A ESTRUTURA = ", est_fim - est_inicio)

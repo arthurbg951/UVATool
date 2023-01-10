@@ -1,2 +1,4 @@
 PyQt5==5.15.7
 numpy==1.23.0
+wheel==0.38.4
+setuptools==62.6.0

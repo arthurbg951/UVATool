@@ -1,4 +1,5 @@
-from libs.UVATool import *
+from UVATool import *
+from UVATool.Enums import *
 
 rec = Rectangle(0.012, 0.001)
 area = rec.area
@@ -54,7 +55,6 @@ def isostatica():
 
 
 analise = Analise.elastica.viaRigidezAnalitica
-
 
 print("-----> HIPERESTÁTICA")
 nodes, elements = hiperestatica()

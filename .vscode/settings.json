@@ -5,5 +5,8 @@
         "200",
         "--experimental"
       ],
-      "python.analysis.extraPaths": ["$(workspaceFolder)/src/libs/"]
+      "python.analysis.extraPaths": [
+        "$(workspaceFolder)/src/libs/"
+      ],
+      "python.formatting.provider": "yapf"
 }

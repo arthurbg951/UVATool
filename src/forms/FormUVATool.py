@@ -43,7 +43,7 @@ from PyQt5.QtGui import (
     QPainter
 )
 from PyQt5 import uic
-from libs.UVATool import *
+from UVATool import *
 from libs.Drawing import *
 from libs.DockWidgets.CreateNode import CreateNode
 from libs.DockWidgets.Browser import Browser

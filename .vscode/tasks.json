@@ -2,7 +2,8 @@
   // See https://go.microsoft.com/fwlink/?LinkId=733558
   // for the documentation about the tasks.json format
   "version": "2.0.0",
-  "tasks": [{
+  "tasks": [
+    {
       "label": "UVATool",
       "type": "shell",
       "command": "cd ${workspaceFolder}/src && ${workspaceFolder}/venv/bin/python3.9 UVAToolUi.py",
@@ -19,19 +20,19 @@
       },
       "problemMatcher": []
     },
-    {
-      "label": "build",
-      "type": "shell",
-      "command": "echo 'não implementado'",
-      "windows": {
-        "command": "echo 'não implementado'"
-      },
-      "group": "build",
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      }
-    },
+    // {
+    //   "label": "build",
+    //   "type": "shell",
+    //   "command": "echo 'não implementado'",
+    //   "windows": {
+    //     "command": "echo 'não implementado'"
+    //   },
+    //   "group": "build",
+    //   "presentation": {
+    //     "reveal": "always",
+    //     "panel": "new"
+    //   }
+    // },
     {
       "label": "make venv",
       "type": "shell",
@@ -46,11 +47,11 @@
       }
     },
     {
-      "label": "Setup Development",
+      "label": "install dependencies",
       "type": "shell",
-      "command": "${workspaceFolder}/venv/bin/python -m pip install PyQt5 numpy autopep8",
+      "command": "${workspaceFolder}/venv/bin/python -m pip install -r requirements.txt",
       "windows": {
-        "command": "${workspaceFolder}\\venv\\Scripts\\pip.exe install PyQt5 numpy autopep8"
+        "command": "${workspaceFolder}\\venv\\Scripts\\python.exe -m pip install -r requirements.txt"
       },
       "group": "test",
       "presentation": {
@@ -59,6 +60,54 @@
       },
       "dependsOn": [
         "make venv"
+      ]
+    },
+    {
+      "label": "build pkg",
+      "type": "shell",
+      "command": "cd ${workspaceFolder}/src/pkg/ ; ${workspaceFolder}/venv/bin/python setup.py bdist_wheel --universal",
+      "windows": {
+        "command": "cd ${workspaceFolder}\\src\\pkg\\ ; ${workspaceFolder}\\venv\\Scripts\\python.exe setup.py bdist_wheel --universal"
+      },
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "dependsOn": [
+        "install dependencies"
+      ]
+    },
+    {
+      "label": "install pkg",
+      "type": "shell",
+      "command": "${workspaceFolder}/venv/bin/pip install src/pkg/dist/*.whl",
+      "windows": {
+        "command": "${workspaceFolder}\\venv\\Scripts\\python.exe src\\pkg\\dist\\*.whl"
+      },
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "dependsOn": [
+        "build pkg"
+      ]
+    },
+    {
+      "label": "Setup Development",
+      "type": "shell",
+      "command": "",
+      "windows": {
+        "command": ""
+      },
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "dependsOn": [
+        "install pkg"
       ]
     }
   ]

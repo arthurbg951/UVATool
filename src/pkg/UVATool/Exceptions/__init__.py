@@ -1,0 +1,1 @@
+from UVATool.Exceptions.StructureError import StructureError

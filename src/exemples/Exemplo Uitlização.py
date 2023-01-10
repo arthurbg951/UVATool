@@ -1,4 +1,5 @@
-from libs.UVATool import *
+from UVATool import *
+from UVATool.Enums import *
 
 # DEFINIR OS NOS
 n1 = Node(0, 0)

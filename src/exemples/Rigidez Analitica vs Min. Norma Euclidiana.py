@@ -1,4 +1,5 @@
-from libs.UVATool import *
+from UVATool import *
+from UVATool.Enums import *
 
 
 def biEngastada():
@@ -37,6 +38,7 @@ plot = Print(proc)
 plot.internalForces()
 
 print("ANALISE RIGIDO PLASTICA VIA MINIMA NORMA EUCLIDIANA")
-proc = Process(nodes, elements, Analise.rigidoPlastica.viaMinimaNormaEuclidiana)
+proc = Process(nodes, elements,
+               Analise.rigidoPlastica.viaMinimaNormaEuclidiana)
 plot = Print(proc)
 plot.internalForces()

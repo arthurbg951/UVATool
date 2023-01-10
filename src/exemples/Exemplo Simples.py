@@ -1,11 +1,12 @@
-from libs.UVATool import *
+from UVATool import *
+from UVATool.Enums import *
 
 # DEFININDO PONTOS (NODES)
 n1 = Node(0, 0)
 n2 = Node(5, 0)
 n3 = Node(8, 0)
 n4 = Node(3, 0)
-
+n1 = Node(0, 0)
 # DEFININDO FORÇAS
 n2.setNodalForce(NodalForce(0, -10_000, 0))
 n4.setNodalForce(NodalForce(0, -10_000, -10_000))

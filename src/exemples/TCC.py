@@ -1,11 +1,10 @@
-from libs.UVATool import *
-
+from UVATool import *
+from UVATool.Enums import *
 '''  
 ESTUDO DA LIGAÇÃO VIGA PILAR
 
 TRABALHO DE CONCLUSÃO DE CURSO
 '''
-
 
 # Materiais ----------------------------------------------------------------------------------
 secao_p = Rectangle(0.2, 0.8)  # hy x hx
@@ -15,8 +14,6 @@ secao_v = Rectangle(0.15, 0.6)  # base x altura
 area_v = secao_v.area
 inercia_v = secao_v.inertia
 young = 27e9
-
-
 '''
 ----------------------------------------------------------------------------------------------
 EXEMPLO (A)
@@ -56,8 +53,6 @@ plot = Print(calc)
 # plot.internalForces()
 # plot.nodalDisplacement()
 # plot.elementDeformations()
-
-
 '''
 ----------------------------------------------------------------------------------------------
 EXEMPLO (B)
@@ -108,9 +103,6 @@ plot = Print(calc)
 # plot.internalForces()
 # plot.nodalDisplacement()
 # plot.elementDeformations()
-
-
-
 '''
 ----------------------------------------------------------------------------------------------
 EXEMPLO (C)
@@ -158,10 +150,6 @@ plot = Print(calc)
 # plot.internalForces()
 # plot.nodalDisplacement()
 # plot.elementDeformations()
-
-
-
-
 '''
 ----------------------------------------------------------------------------------------------
 EXEMPLO (D)
@@ -190,7 +178,6 @@ n11 = Node(0, 9)
 n12 = Node(2, 9)
 n13 = Node(4, 9)
 n14 = Node(6, 9)
-
 
 # Apoios -------------------------------------------------------------------------------------
 n1.setSupport(Apoio.terceiro_genero)
@@ -244,10 +231,6 @@ plot = Print(calc)
 # plot.nodalDisplacement()
 # plot.elementDeformations()
 # plot.internalForces()
-
-
-
-
 """ ESTRUTURA EXEMPLO APRESENTADA NA IC UVA 2022.2 """
 # Seções --------------------------------------------------------------------------------------
 secao_v = Rectangle(0.15, 0.6)  # base x altura
@@ -262,7 +245,7 @@ n1 = Node(0, 0)
 n2 = Node(2, 0)
 n3 = Node(4, 0)
 n4 = Node(6, 0)
-        
+
 # Elementos -----------------------------------------------------------------------------------
 e1 = Element(n1, n2, area_v, inercia_v, young)
 e2 = Element(n2, n3, area_v, inercia_v, young)
@@ -274,7 +257,7 @@ n4.setSupport(Apoio.semi_rigido)
 
 n1.setP(0.042)
 n4.setP(0.042)
-        
+
 # Forças --------------------------------------------------------------------------------------
 n2.setNodalForce(NodalForce(0, -10_000, 0))
 n3.setNodalForce(NodalForce(0, -10_000, 0))
@@ -285,4 +268,3 @@ elements = [e1, e2, e3]
 calc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
 plot = Print(calc)
 plot.internalForces()
-    

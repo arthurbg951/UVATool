@@ -1,4 +1,5 @@
-from libs.UVATool import *
+from UVATool import *
+from UVATool.Enums import *
 
 try:
     n1 = Node(0, 0)
@@ -24,6 +25,6 @@ try:
 
 except numpy.linalg.LinAlgError as e:
     print(e.args[0])
-    print("O ERRO ESTÁ DEVE SER INVESTIGADO PARA DEMONSTRAR QUE A ESTRUTRURA É HIPOSTÁTICA ...")
-
-
+    print(
+        "O ERRO ESTÁ DEVE SER INVESTIGADO PARA DEMONSTRAR QUE A ESTRUTRURA É HIPOSTÁTICA ..."
+    )

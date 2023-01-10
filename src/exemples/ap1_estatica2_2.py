@@ -1,4 +1,5 @@
-from libs.UVATool import *
+from UVATool import *
+from UVATool.Enums import *
 
 n1 = Node(0, 0)
 n2 = Node(8, 0)

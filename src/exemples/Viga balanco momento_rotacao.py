@@ -1,4 +1,5 @@
-from libs.UVATool import *
+from UVATool import *
+from UVATool.Enums import *
 '''
 ATENÇÃO: Inserir todos os valores no sistema internacional de unidades (SI)
 '''
@@ -15,31 +16,22 @@ young = 27e9
 n1 = Node(0, 0)
 n2 = Node(0, 3)
 n3 = Node(2, 3)
-n4 = Node(4, 3)
-n5 = Node(6, 3)
-n6 = Node(6, 0)
 
 # Apoios -------------------------------------------------------------------------------------
 n1.setSupport(Apoio.terceiro_genero)
-n6.setSupport(Apoio.terceiro_genero)
 
 # Fator Pi -----------------------------------------------------------------------------------
-n2.setP(1e-32)
-n5.setP(1e-32)
+n2.setP(1)
 
 # Cargas -------------------------------------------------------------------------------------
 n3.setNodalForce(NodalForce(0, -10e3, 0))
-n4.setNodalForce(NodalForce(0, -10e3, 0))
 
 # --------------------------------------------------------------------------------------------
 e1 = Element(n1, n2, area_p, inercia_p, young)
 e2 = Element(n2, n3, area_v, inercia_v, young)
-e3 = Element(n3, n4, area_v, inercia_v, young)
-e4 = Element(n4, n5, area_v, inercia_v, young)
-e5 = Element(n5, n6, area_p, inercia_p, young)
 
-nodes = [n1, n2, n3, n4, n5, n6]
-elements = [e1, e2, e3, e4, e5]
+nodes = [n1, n2, n3]
+elements = [e1, e2]
 
 calc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
 plot = Print(calc)

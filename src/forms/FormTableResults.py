@@ -24,7 +24,7 @@ from PyQt5.QtGui import (
     QShowEvent,
     QWheelEvent
 )
-from libs.UVATool import *
+from UVATool import *
 from PyQt5 import uic
 
 
