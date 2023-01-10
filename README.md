@@ -13,7 +13,7 @@ Recomenda-se que estudem um pouco sobre o <a href="https://pt.wikipedia.org/wiki
 
 Recomenda-se instalar o <a href="https://git-scm.com/downloads">git</a> no pc.
 
-Editor de código utilizado: <a href="https://code.visualstudio.com/download">Visual Studio Code</a>.
+Recomenda-se utilizar o <a href="https://code.visualstudio.com/download">Visual Studio Code</a> devido task Setup Development que prepara o ambiente para desenvolvimento.
 
 ## Instruções para utilização do UVATool pelo código fonte
 
