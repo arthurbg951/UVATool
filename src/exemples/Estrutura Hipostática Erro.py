@@ -1,5 +1,6 @@
 from UVATool import *
 from UVATool.Enums import *
+import numpy
 
 try:
     n1 = Node(0, 0)

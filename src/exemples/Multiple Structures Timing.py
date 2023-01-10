@@ -1,6 +1,8 @@
 from UVATool import *
 from UVATool.Enums import *
-import math
+from UVATool.Exceptions import *
+from datetime import datetime
+import math, numpy
 
 # SEÇÃO
 secao = Rectangle(0.012, 0.001)
