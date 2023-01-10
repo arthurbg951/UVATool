@@ -27,11 +27,25 @@ As dependências do projeto são:
 
 2 - <a href="https://pypi.org/project/numpy/">numpy</a>
 
+3 - <a href="https://pypi.org/project/wheel/">wheel</a>
+
+4 - <a href="https://pypi.org/project/setuptools/">setuptools</a>
+
 Para instala-las basta utilizar o comando:
 
     pip install -r requirements.txt
 
-Utilizando o vscode, a tarefa ja está automatizada com a task SetupDevelopment.
+Utilizando o vscode, a tarefa ja está automatizada com a task SetupDevelopment e recomenda-se utiliza-la para facilitar a instalação do UVATool pkg enquanto o mesmo não foi publicado no pypi.
+
+As dependencias wheel e setuptools são para gerar o pacote UVATool que atua no backend do UVAToolUi para processar os cálculos.
+
+### Execução manual sem Visual Studio Code
+
+1° instalar requirements.txt
+
+2° gerar o pkg UVATool e instalar o seu wheel no interpretador utilizado
+
+Após essas etapas, o arquivo UVAToolUi.py poderá ser executado corretamente
 
 
 ## Execução do programa
