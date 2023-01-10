@@ -300,6 +300,30 @@ def porticosSucessivos(n_andares=20,
     return structure
 
 
+# ANSI code colors python
+reset_color_text = '\u001b[0m'
+
+
+def to_red(text: str) -> str:
+    change_to_red_color = '\u001b[31m'
+    return change_to_red_color + text + reset_color_text
+
+
+def to_green(text: str) -> str:
+    change_to_green_color = '\u001b[32m'
+    return change_to_green_color + text + reset_color_text
+
+
+def to_yellow(text: str) -> str:
+    change_to_yellow_color = '\u001b[33m'
+    return change_to_yellow_color + text + reset_color_text
+
+
+def to_blue(text: str) -> str:
+    change_to_blue_color = '\u001b[34m'
+    return change_to_blue_color + text + reset_color_text
+
+
 def process_simulation(structure: Structure,
                        show_equilibrium_matrix=False,
                        show_frame_stiffness_matrix=False,
@@ -309,6 +333,8 @@ def process_simulation(structure: Structure,
                        show_internal_forces=False,
                        show_processed_time=True,
                        show_errors=True):
+
+    error_msg = to_red('ERRO')
     try:
         erros: list[str] = []
         time = None
@@ -334,23 +360,26 @@ def process_simulation(structure: Structure,
             plot.internalForces()
 
     except ValueError and StructureError:
-        erros.append(f" -> ESTRUTURA HIPOSTATICA '{structure.structure_name}'")
+        erros.append(
+            f"{to_yellow('ESTRUTURA HIPOSTATICA')} '{to_blue(structure.structure_name)}'"
+        )
     except numpy.linalg.LinAlgError:
         erros.append(
-            f" -> ERRO NOS CÁLCULOS DA ESTRUTURA '{structure.structure_name}'")
+            f"{error_msg} NOS CÁLCULOS DA ESTRUTURA '{to_blue(structure.structure_name)}'"
+        )
     except TypeError as e:
-        erros.append(f" -> ENTRADA DE DADOS INCORRETA\n{e.args[0]}")
+        erros.append(f"ENTRADA DE DADOS INCORRETA\n{e.args[0]}")
     finally:
         if show_errors:
             for erro in erros:
                 print(erro)
         if show_processed_time and time is not None:
             print(
-                f"UVATool DEMOROU {time} PARA PROCESSAR A ESTRUTURA '{structure.structure_name}'"
+                f"UVATool DEMOROU {to_green(str(time))} PARA PROCESSAR A ESTRUTURA '{to_blue(structure.structure_name)}'"
             )
         else:
             print(
-                f'OCORREU UM ERRO INESPERADO NA ESTRUTURA {structure.structure_name}'
+                f"OCORREU UM {error_msg} INESPERADO NA ESTRUTURA '{to_blue(structure.structure_name)}'"
             )
 
 
@@ -368,6 +397,14 @@ if __name__ == "__main__":
     process_simulation(portico_com_vao_de_10m_pe_direito_3m())
     process_simulation(portico_maluco())
     process_simulation(semi_rigido3())
-    process_simulation(porticosSucessivos(n_andares=53, n_pilares_por_andar=2))
+    process_simulation(porticosSucessivos(n_andares=53, n_pilares_por_andar=20))
 
-    print(f"TOTAL TIME = {(datetime.now() - inicial_time).seconds}s")
+    total_time = (datetime.now() - inicial_time).seconds
+    if total_time <= 10:
+        total_time = to_green(str(total_time))
+    elif total_time > 10:
+        total_time = to_yellow(str(total_time))
+    elif total_time > 60:
+        total_time = to_red(str(total_time))
+
+    print(f"TOTAL TIME = {total_time} seconds")
