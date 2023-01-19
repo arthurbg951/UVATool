@@ -43,7 +43,7 @@
       "group": "test",
       "presentation": {
         "reveal": "always",
-        "panel": "new"
+        "panel": "shared"
       }
     },
     {
@@ -56,7 +56,7 @@
       "group": "test",
       "presentation": {
         "reveal": "always",
-        "panel": "new"
+        "panel": "shared"
       },
       "dependsOn": [
         "make venv"
@@ -72,7 +72,7 @@
       "group": "test",
       "presentation": {
         "reveal": "always",
-        "panel": "new"
+        "panel": "shared"
       },
       "dependsOn": [
         "install dependencies"
@@ -88,7 +88,7 @@
       "group": "test",
       "presentation": {
         "reveal": "always",
-        "panel": "new"
+        "panel": "shared"
       },
       "dependsOn": [
         "build pkg"
@@ -104,7 +104,7 @@
       "group": "test",
       "presentation": {
         "reveal": "always",
-        "panel": "new"
+        "panel": "shared"
       },
       "dependsOn": [
         "install pkg"

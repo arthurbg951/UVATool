@@ -44,6 +44,7 @@ from PyQt5.QtGui import (
 )
 from PyQt5 import uic
 from UVATool import *
+from UVATool.Exceptions import *
 from libs.Drawing import *
 from libs.DockWidgets.CreateNode import CreateNode
 from libs.DockWidgets.Browser import Browser
@@ -440,9 +441,9 @@ class UVAGraphicsScene(QGraphicsScene):
 
     def fitStructure(self) -> None:
         debug_nodes = self.nodes
+        max = Point2d(0, 0)
+        min = Point2d(0, 0)
         try:
-            max = Point2d(0, 0)
-            min = Point2d(0, 0)
             if len(self.nodes) > 0:
                 for node in self.nodes:
                     if node.xDraw > max.x:
@@ -453,10 +454,12 @@ class UVAGraphicsScene(QGraphicsScene):
                         min.x = node.xDraw
                     if node.yDraw < min.y:
                         min.y = node.yDraw
-            self.form.GraphicsView.setSceneRect((max/2).x, (min/2).y, 1, 1)
+            self.form.GraphicsView.setSceneRect((max / 2).x, (min / 2).y, 1, 1)
         except Exception as e:
             print(str(e))
             print('################# DEBUG SECTION ERROR ##################')
+            print(f'max={max}')
+            print(f'min={min}')
             for index in debug_nodes:
                 print(index)
             print('########################################################')

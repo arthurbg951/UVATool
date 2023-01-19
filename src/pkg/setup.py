@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='UVATool',
-    version='1.0',
+    version='1.0.0',
     author='Arthur Brito',
     author_email='arthurbg951@hotmail.com',
     description='Simula estruturas reticuladas utilizando MNE ou MRA',

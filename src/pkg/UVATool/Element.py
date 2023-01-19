@@ -56,38 +56,32 @@ class Element:
         sinalQuadrante = 1
         u = Point2d(1, 0)
         v = Point2d(self.node2.x - self.node1.x, self.node2.y - self.node1.y)
-        if v.x > 0 and v.y > 0:
-            sinalQuadrante = 1
-        elif v.x < 0 and v.y > 0:
-            sinalQuadrante = 1
-        elif v.x < 0 and v.y < 0:
+        if v.x < 0 and v.y < 0 or v.x > 0 and v.y < 0 or v.x <= 0 and v.y == 0 or v.x == 0 and v.y < 0:
             sinalQuadrante = -1
-        elif v.x > 0 and v.y < 0:
-            sinalQuadrante = -1
-        elif v.x > 0 and v.y == 0:
-            sinalQuadrante = 1
-        elif v.x == 0 and v.y > 0:
-            sinalQuadrante = 1
-        elif v.x <= 0 and v.y == 0:
-            sinalQuadrante = -1
-        elif v.x == 0 and v.y < 0:
-            sinalQuadrante = -1
-        # print("u=", u, "v=", v)
+        # ALL POSSIBLE ANGLES
+        # if v.x > 0 and v.y > 0:
+        #     sinalQuadrante = 1
+        # elif v.x < 0 and v.y > 0:
+        #     sinalQuadrante = 1
+        # elif v.x < 0 and v.y < 0:
+        #     sinalQuadrante = -1
+        # elif v.x > 0 and v.y < 0:
+        #     sinalQuadrante = -1
+        # elif v.x > 0 and v.y == 0:
+        #     sinalQuadrante = 1
+        # elif v.x == 0 and v.y > 0:
+        #     sinalQuadrante = 1
+        # elif v.x <= 0 and v.y == 0:
+        #     sinalQuadrante = -1
+        # elif v.x == 0 and v.y < 0:
+        #     sinalQuadrante = -1
         uv = u.x * v.x + u.y * v.y
         modu = math.sqrt(math.pow(u.x, 2) + math.pow(u.y, 2))
         modv = math.sqrt(math.pow(v.x, 2) + math.pow(v.y, 2))
-        # print("uv=", uv, "|u|=", modu, "|v|=", modv)
         return sinalQuadrante * math.acos(uv/(modu * modv))
 
-        # u = Point2d(0, 0)
-        # v = Point2d(self.node2.x - self.node1.x, self.node2.y - self.node1.y)
-        # sinal = 1
-        # if (v.x <= 0 and v.y >= 0) or (v.x <= 0 and v.y <= 0):
-        #     sinal = -1
-
-        # return sinal * math.acos(v.y/math.sqrt(math.pow(v.y, 2) + math.pow(v.x, 2)))
-
     def setP(self, p1: float, p2: float) -> None:
+        # possivel erro: implementar com verificações do node self.node1.setP(p1)
         self.__p1 = p1
         self.__p2 = p2
 
