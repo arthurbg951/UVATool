@@ -8,8 +8,7 @@ class Print:
         self.__process = process
 
     def nodalDisplacement(self) -> None:
-        print('\n----------------------------------------------\n'
-              'NODAL DISPLACEMENTS - {δ}\n')
+        print('--------------------NODAL DISPLACEMENTS - {δ}--------------------')
         nNode = len(self.__process.getNodalDisplacement())
         for i in range(0, nNode, 3):
             print('Node: {0}'.format(int(i/3+1)))
@@ -18,10 +17,10 @@ class Print:
             print("δm = {0:.3e} rad".format(self.__process.getNodalDisplacement()[2 + i]))
             if i != nNode - 3:
                 print()
+        print('-----------------------------------------------------------------')
 
     def elementDeformations(self) -> None:
-        print('\n----------------------------------------------\n'
-              'ELEMENT DEFORMATIONS - {θ}\n')
+        print('--------------------ELEMENT DEFORMATIONS - {θ}--------------------')
         nElement = len(self.__process.getInternalForces())
         for i in range(0, nElement, 3):
             print('ELEMENT: {0}'.format(int(i/3+1)))
@@ -30,10 +29,10 @@ class Print:
             print("θ2 = {0:.3e} rad".format(self.__process.getDeformations()[2 + i]))
             if i != nElement - 3:
                 print()
+        print('-----------------------------------------------------------------')
 
     def internalForces(self) -> None:
-        print('\n----------------------------------------------\n'
-              'INTERNAL FORCES - {m}\n')
+        print('----------------------INTERNAL FORCES - {m}----------------------')
         nElement = len(self.__process.getInternalForces())
         for i in range(0, nElement, 3):
             print('ELEMENT: {0}'.format(int(i/3+1)))
@@ -42,3 +41,4 @@ class Print:
             print("M2 = {0:.1f} kNm".format(self.__process.getInternalForces()[2 + i] * 1e-3))
             if i != nElement - 3:
                 print()
+        print('-----------------------------------------------------------------')
