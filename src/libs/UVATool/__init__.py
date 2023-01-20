@@ -6,5 +6,5 @@ from UVATool.Point2d import Point2d
 from UVATool.Print import Print
 from UVATool.Process import Process
 from UVATool.Rectangle import Rectangle
-from UVATool.StructFile import StructFile
+from UVATool.StructureFile import StructureFile
 from UVATool.Structure import Structure

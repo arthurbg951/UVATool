@@ -10,7 +10,7 @@ class Point2d:
         self.y = y
 
     def __str__(self) -> str:
-        return "({0}, {1})".format(self.x, self.y)
+        return "({0},{1})".format(self.x, self.y)
 
     def __eq__(self, __o: object) -> bool:
         if not isinstance(__o, Point2d):

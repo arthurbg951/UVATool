@@ -1,4 +1,4 @@
-from libs.UVATool import *
+from UVATool import *
 
 
 def some_magic():

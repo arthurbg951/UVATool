@@ -8,6 +8,15 @@ from UVATool.Exceptions.StructureError import StructureError
 
 
 class Process:
+    '''
+    analisys={0,1} default=0
+
+    0 = Analytical Rigidity Method
+
+    1 = Minimum Euclidean Norm
+
+    verbose param shows the steps being performed default=False
+    '''
     __nodes: list[Node]
     __elements: list[Element]
     __analisys: Analise
@@ -23,7 +32,7 @@ class Process:
     __elementSemiFixedCuts: list
     __process_time: datetime
 
-    def __init__(self, nodes: list[Node], elements: list[Element], analisys: Analise) -> None:
+    def __init__(self, nodes: list[Node], elements: list[Element], analisys: Analise=Analise.elastica.viaRigidezAnalitica, verbose=False) -> None:
         self.__nodes = nodes
         self.__elements = elements
         self.__analisys = analisys
@@ -70,9 +79,6 @@ class Process:
             equilibrium_matrix[2+node_index, 1+element_index] = 0
             equilibrium_matrix[2+node_index, 2+element_index] = -1
 
-        '''
-        # RESULTADO DA MATRIZ DE EQUILIBRIO - [L]
-        '''
         return equilibrium_matrix
 
     def __getFrameStiffnessMatrix(self) -> numpy.array:
@@ -104,9 +110,7 @@ class Process:
             stifiness_matrix[2 + (3 * i), 1 + (3 * i)] = (3 * p1 * p2 / (4 - p1 * p2)) * (-2 * young_module * moment_inertia / length)
             stifiness_matrix[2 + (3 * i), 2 + (3 * i)] = (3 * p2 / (4 - p1 * p2)) * (4 * young_module * moment_inertia / length)
 
-        '''
-        # RESULTADO DA MATRIZ DE RIGIDEZ (DO ELEMENTO) - [k]
-        '''
+        
         return stifiness_matrix
 
     def __getCuts(self) -> list:
@@ -151,22 +155,14 @@ class Process:
         equilibrium_matrix_transpose = equilibrium_matrix_transpose.transpose()  # Transpose
         equilibrium_matrix_transpose = numpy.delete(equilibrium_matrix_transpose, self.__cuts, 1)  # Cut
         self.__equilibrium_cut_transpose = equilibrium_matrix_transpose
-        """
-        # MATRIZ DE RIGIDEZ GLOBAL DO SISTEMA - [K]
-
-        [K] = [l] * [k] * [L.T]
-        """
+        
         aux1 = numpy.dot(equilibrium_matrix_restriction, self.__frame_stiffness)
         global_frame_stiffnes = numpy.dot(aux1, equilibrium_matrix_transpose)
         return global_frame_stiffnes
 
     def __getNodalForcesVector(self) -> numpy.array:
         self.__getCuts()
-        """
-        # VETOR DOS DESLOCAMENTOS NODAIS - {δ}
-
-        Utilizando a resolução de matriz inversa -> {δ} = [L k LT] ^ -1 * {λ}
-        """
+        
         # Criando o vetor das forças nodais
         nodal_forces = numpy.array([])
         for node in self.__nodes:
@@ -185,20 +181,10 @@ class Process:
         return displacement
 
     def __getDeformations(self) -> numpy.array:
-        """
-        # VETOR DAS DEFORMAÇÕES CORRESPONDENTES - {θ}
-
-            {θ} = [L.T] * {δ}
-        """
         deformations = self.__equilibrium_cut_transpose @ self.__displacement
         return deformations
 
     def __getInternalForces(self) -> numpy.array:
-        """
-        Esforços Seccionais Internos - {m}
-
-            {m} = [k] * {θ}
-        """
         stress_resultants = self.__frame_stiffness @ self.__deformations
         return stress_resultants
 
@@ -266,9 +252,6 @@ class Process:
                 if self.__elementSemiFixedCuts.__contains__(i):
                     self.__internal_forces = numpy.delete(self.__internal_forces, [[0 + i], [1 + i], [2 + i]])
 
-        # self.__nodes = nodes
-        # self.__elements = elements
-
     def __processCalculations(self):
         inicio = datetime.now()
         self.__equilibrium = self.__getEquilibriumMatrix()
@@ -285,28 +268,62 @@ class Process:
         self.__process_time = fim - inicio
 
     def getEquilibriumMatrix(self) -> numpy.array:
+        '''
+        Return [L] Matrix
+
+        # RESULTADO DA MATRIZ DE EQUILIBRIO
+        '''
         return self.__equilibrium
 
     def getFrameStiffness(self) -> numpy.array:
+        '''
+        # RESULTADO DA MATRIZ DE RIGIDEZ (DO ELEMENTO) - [k]
+        '''
         return self.__frame_stiffness
 
     def getGlobalFrameStiffness(self) -> numpy.array:
+        """
+        # MATRIZ DE RIGIDEZ GLOBAL DO SISTEMA - [K]
+
+        [K] = [l] * [k] * [L.T]
+        """
         return self.__global_frame_stiffness
 
     def getNodalDisplacement(self) -> numpy.array:
+        """
+        # VETOR DOS DESLOCAMENTOS NODAIS - {δ}
+
+        Utilizando a resolução de matriz inversa -> {δ} = [L k LT] ^ -1 * {λ}
+        """
         return self.__displacement
 
     def getDeformations(self) -> numpy.array:
+        """
+        # VETOR DAS DEFORMAÇÕES CORRESPONDENTES - {θ}
+
+            {θ} = [L.T] * {δ}
+        """
         return self.__deformations
 
     def getNodalForces(self) -> numpy.array:
         return self.__nodal_force
 
     def getInternalForces(self) -> numpy.array:
+        """
+        Esforços Seccionais Internos - {m}
+
+            {m} = [k] * {θ}
+        """
         return self.__internal_forces
 
     def getProcessTime(self) -> datetime:
+        """
+        Return the time processing calculations
+        """
         return self.__process_time
 
     def getCuts(self) -> list:
+        """
+        Return positions removed in Equilibrium Matrix
+        """
         return self.__cuts

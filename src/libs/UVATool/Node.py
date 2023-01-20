@@ -18,7 +18,7 @@ class Node:
         self.__nodal_force = NodalForce(0, 0, 0)
 
     def __str__(self) -> str:
-        return f"x={self.x}, y={self.y}, p={self.getP()}"
+        return f"x={self.x},y={self.y},p={self.getP()}"
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Node):

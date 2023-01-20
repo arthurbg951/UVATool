@@ -2,6 +2,15 @@ import numpy
 
 
 class NodalForce:
+    '''
+    Positive values considered:
+
+    fx -> right
+
+    fy -> up
+    
+    m -> counterclockwise
+    '''
     fx: float
     fy: float
     m: float
@@ -15,7 +24,7 @@ class NodalForce:
         return numpy.array([self.fx, self.fy, self.m])
 
     def __str__(self) -> str:
-        return "{0};{1};{2}".format(self.fx, self.fy, self.m)
+        return "fx={0};fy={1};m={2}".format(self.fx, self.fy, self.m)
 
     def __eq__(self, __o: object) -> bool:
         if not isinstance(__o, NodalForce):

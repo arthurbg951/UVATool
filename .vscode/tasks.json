@@ -81,9 +81,9 @@
     {
       "label": "install pkg",
       "type": "shell",
-      "command": "${workspaceFolder}/venv/bin/pip install src/pkg/dist/*.whl",
+      "command": "${workspaceFolder}/venv/bin/pip install src/pkg/dist/*.whl --force-reinstall",
       "windows": {
-        "command": "${workspaceFolder}\\venv\\Scripts\\python.exe src\\pkg\\dist\\*.whl"
+        "command": "${workspaceFolder}\\venv\\Scripts\\pip.exe src\\pkg\\dist\\*.whl --force-reinstall"
       },
       "group": "test",
       "presentation": {

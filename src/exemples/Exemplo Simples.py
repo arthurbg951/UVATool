@@ -30,9 +30,11 @@ e3 = Element(n2, n3, area, momento_inercia, young)
 nodes = [n1, n4, n2, n3]
 elements = [e1, e2, e3]
 
-# DEFININDO ESTRUTURA
+# DEFININDO ESTRUTURA (UTILIZADO PARA ABRIR UM ARQUIVO E PROCESSA-LO)
 struct = Structure('Exemplo de utilização', nodes, elements)
 
+# ESTE IF PREVINE O ARQUIVO DE SER CHAMADO DUAS VEZES AO CARREGAR O ARQUIVO
+# EXEMPLO DE UTILIZAÇÃO: 'Process a File.py'
 if __name__ == "__main__":
     # REALIZANDO CÁLCULOS
     proc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
