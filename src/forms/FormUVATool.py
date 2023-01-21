@@ -20,6 +20,7 @@ from PyQt5.QtWidgets import (
     QGraphicsSceneWheelEvent,
     QGraphicsSceneDragDropEvent,
     QMessageBox,
+    QFileDialog
 )
 from PyQt5.QtCore import (
     Qt,
@@ -51,6 +52,7 @@ from libs.DockWidgets.Browser import Browser
 from libs.Structures import Structures
 from forms.FormTableResults import FormTableResults
 from time import sleep
+import os
 
 
 class FormUVATool(QMainWindow):
@@ -89,6 +91,8 @@ class FormUVATool(QMainWindow):
 
     formTableResults: FormTableResults
 
+    actionStructureFile_py: QAction
+
     def __init__(self):
         super().__init__()
         uic.loadUi("ui/FormUVATool.ui", self)
@@ -118,6 +122,7 @@ class FormUVATool(QMainWindow):
         self.actionTableResults.triggered.connect(self.showTableReultsForm)
         self.NodeAction.triggered.connect(self.nodeActionClicked)
         self.actionBrowser.triggered.connect(self.browserActionClicked)
+        self.actionStructureFile_py.triggered.connect(self.loadStructureFile)
 
         self.p.textChanged.connect(self.pValueChanged)
 
@@ -291,6 +296,30 @@ class FormUVATool(QMainWindow):
     def close(self) -> bool:
         self.formTableResults.close()
         super().close()
+    
+    def loadStructureFile(self) -> None:
+        file_filter = 'Python File (*.py)'
+        response = QFileDialog.getOpenFileName(
+            parent=self,
+            caption='Select a python file with a StructureFile defined',
+            directory=os.getcwd(),
+            filter=file_filter,
+            initialFilter=file_filter
+        )
+        file_name = response[0]
+        print(f"File loaded {file_name}")
+        try:
+            file = StructureFile(file_name)
+            self.scene.loadStructure(file.getStructure())
+        except Exception as e:
+            msg = (
+                "Ocurred an error whyle trying to load the StructureFile.\n"+
+                "Skipping the load.\n"+
+                "Verify terminal for more informations\n"+
+                "Error: " + str(e)
+            )
+            QMessageBox.warning(self, "Warning", msg)
+            print(msg)
 
 
 class UVAGraphicsScene(QGraphicsScene):
@@ -311,9 +340,6 @@ class UVAGraphicsScene(QGraphicsScene):
         self.nodes: list[NodeDraw] = []
         self.elements: list[ElementDraw] = []
         self.gridPoints = []
-
-        self.loadStructure(Structures.porticosSucessivos(n_pilares_por_andar=2, n_andares=20))
-        # self.printStructure()
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         self.clickPoint.setX(event.scenePos().x())
@@ -465,15 +491,15 @@ class UVAGraphicsScene(QGraphicsScene):
             print('########################################################')
             raise Exception("Ocurred an error while trying to fit structure")
 
-    def loadStructure(self, structure: Structures):
+    def loadStructure(self, structure: Structure):
         try:
-            nodes = structure[0]
-            elements = structure[1]
+            nodes = structure.nodes
+            elements = structure.elements
             for node in nodes:
-                self.drawNode(node)
+                self.drawNode(NodeDraw(node))
             for element in elements:
-                self.drawElement(element)
-            self.fitStructure()
+                self.drawElement(ElementDraw(element))
+            # self.fitStructure()
         except Exception as e:
             msg = "Ocurred an error whyle trying to load the writed structure.\nSkipping the load.\nError: " + str(e)
             QMessageBox.warning(self.form, "Warning", msg)

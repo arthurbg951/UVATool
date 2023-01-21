@@ -610,6 +610,13 @@
     <property name="title">
      <string>File</string>
     </property>
+    <widget class="QMenu" name="menuOpen">
+     <property name="title">
+      <string>Open</string>
+     </property>
+     <addaction name="actionStructureFile_py"/>
+    </widget>
+    <addaction name="menuOpen"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -680,6 +687,11 @@
    </property>
    <property name="toolTip">
     <string>Browser Navigator</string>
+   </property>
+  </action>
+  <action name="actionStructureFile_py">
+   <property name="text">
+    <string>StructureFile (.py)</string>
    </property>
   </action>
   <zorder>ChangeValues</zorder>

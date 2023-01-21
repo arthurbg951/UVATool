@@ -19,10 +19,13 @@ try:
     nodes = [n1, n2, n3]
     elements = [e1, e2]
 
-    calc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
+    structure = Structure('ESTRUTURA HIPOSTÁTICA COM ERRO PARA CORREÇÃO', nodes, elements)
 
-    plot = Print(calc)
-    plot.internalForces()
+    if __name__ == "__main__":
+        calc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
+
+        plot = Print(calc)
+        plot.internalForces()
 
 except numpy.linalg.LinAlgError as e:
     print(e.args[0])

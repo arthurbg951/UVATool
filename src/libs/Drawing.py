@@ -523,7 +523,10 @@ class NodeDraw(Node):
     __item: QGraphicsItem
     __nodalForceItems: list[NodalForceItem]
 
-    def __init__(self, x: float, y: float) -> None:
+    def __init__(self,node: Node) -> None:
+        x = node.x
+        y = node.y
+        self.setP(node.getP())
         super().__init__(x, y)
         self.scaleFactor = 100
         self.xDraw = x * self.scaleFactor
@@ -642,10 +645,9 @@ class ElementItem(QGraphicsLineItem):
 
 class ElementDraw(Element):
     __item: ElementItem
-
-    def __init__(self, node1: NodeDraw, node2: NodeDraw, area: float, moment_inertia: float, young_modulus: float) -> None:
-        super().__init__(node1, node2, area, moment_inertia, young_modulus)
-        line = QGraphicsLineItem(QLineF(node1.getPoint(), node2.getPoint()))
+    def __init__(self, element: Element) -> None:
+        super().__init__(element.node1, element.node2, element.area, element.moment_inertia, element.young_modulus)
+        line = QGraphicsLineItem(QLineF(NodeDraw(element.node1).getPoint(), NodeDraw(element.node2).getPoint()))
         line.setPen(QPen(Qt.GlobalColor.gray, 2, Qt.PenStyle.SolidLine))
         self.__item = ElementItem(line)
 

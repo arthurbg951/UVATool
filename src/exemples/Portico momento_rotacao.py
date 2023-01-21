@@ -42,7 +42,10 @@ e5 = Element(n5, n6, area_p, inercia_p, young)
 nodes = [n1, n2, n3, n4, n5, n6]
 elements = [e1, e2, e3, e4, e5]
 
-calc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
-plot = Print(calc)
-plot.internalForces()
-plot.nodalDisplacement()
+structure = Structure('PORTICO MOMENTO ROTAÇÃO', nodes, elements)
+
+if __name__ == "__main__":
+    calc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
+    plot = Print(calc)
+    plot.internalForces()
+    plot.nodalDisplacement()

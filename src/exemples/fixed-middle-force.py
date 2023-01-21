@@ -12,9 +12,12 @@ e1 = Element(n1, n2, 1, 1, 1)
 e2 = Element(n2, n3, 1, 1, 1)
 
 nodes = [n1, n2, n3]
-elemets = [e1, e2]
+elements = [e1, e2]
 
-calc = Process(nodes, elemets, Analise.elastica.viaRigidezAnalitica)
+structure = Structure('EXEMPLO DE UTILIZAÇÃO', nodes, elements)
 
-results = Print(calc)
-results.nodalDisplacement()
+if __name__ == "__main__":
+    calc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
+
+    results = Print(calc)
+    results.nodalDisplacement()

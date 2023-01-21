@@ -33,9 +33,12 @@ e4 = Element(n4, n5, area, inercia, young)
 nodes = [n1, n2, n3, n4, n5]
 elements = [e1, e2, e3, e4]
 
-# CALCULOS
-calc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
+structure = Structure('EXEMPLO DE UTILIZAÇÃO', nodes, elements)
 
-# MOSTRANDO RESPOSTAS
-plot = Print(calc)
-plot.internalForces()
+if __name__ == "__main__":
+    # CALCULOS
+    calc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
+
+    # MOSTRANDO RESPOSTAS
+    plot = Print(calc)
+    plot.internalForces()

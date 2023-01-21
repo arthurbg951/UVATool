@@ -21,8 +21,11 @@ e3 = Element(n1, n3, area, inercia, young)
 nodes = [n1, n2, n3]
 elements = [e1, e2]
 
-calc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
-deslocamentos = calc.getNodalDisplacement()
+structure = Structure('AP1 ESTÁTICA II - 2ª QUESTÃO', nodes, elements)
 
-plot = Print(calc)
-plot.internalForces()
+if __name__ == "__main__":
+    calc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
+    deslocamentos = calc.getNodalDisplacement()
+
+    plot = Print(calc)
+    plot.internalForces()
