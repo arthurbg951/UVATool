@@ -3,6 +3,11 @@ from UVATool.Element import Element
 
 
 class Structure:
+    """
+    
+    """
+    # This class define a structure
+    # It deserve to load files with a script (.py file)
     structure_name: str
     structure_description: str
     nodes: list[Node]
