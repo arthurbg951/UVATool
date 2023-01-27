@@ -4,7 +4,8 @@ from UVATool.Element import Element
 
 class Structure:
     """
-    
+    ## structure_name - insert a name to structure
+    ## structure_description - insert a description to structure
     """
     # This class define a structure
     # It deserve to load files with a script (.py file)

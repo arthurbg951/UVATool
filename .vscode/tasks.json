@@ -20,6 +20,7 @@
       },
       "problemMatcher": []
     },
+    // build task to make UVAToolUi executable
     // {
     //   "label": "build",
     //   "type": "shell",
@@ -78,12 +79,29 @@
         "install dependencies"
       ]
     },
+    // install pkg task to make UVATool backend library
+    // {
+    //   "label": "install pkg",
+    //   "type": "shell",
+    //   "command": "${workspaceFolder}/venv/bin/pip install src/pkg/dist/*.whl --force-reinstall",
+    //   "windows": {
+    //     "command": "${workspaceFolder}\\venv\\Scripts\\pip.exe src\\pkg\\dist\\*.whl --force-reinstall"
+    //   },
+    //   "group": "test",
+    //   "presentation": {
+    //     "reveal": "always",
+    //     "panel": "shared"
+    //   },
+    //   "dependsOn": [
+    //     "build pkg"
+    //   ]
+    // },
     {
-      "label": "install pkg",
+      "label": "install development pkg",
       "type": "shell",
-      "command": "${workspaceFolder}/venv/bin/pip install src/pkg/dist/*.whl --force-reinstall",
+      "command": "${workspaceFolder}/venv/bin/pip install -e src/pkg/ --force-reinstall",
       "windows": {
-        "command": "${workspaceFolder}\\venv\\Scripts\\pip.exe src\\pkg\\dist\\*.whl --force-reinstall"
+        "command": "${workspaceFolder}\\venv\\Scripts\\pip.exe src\\pkg\\ --force-reinstall"
       },
       "group": "test",
       "presentation": {
@@ -91,7 +109,7 @@
         "panel": "shared"
       },
       "dependsOn": [
-        "build pkg"
+        "install dependencies"
       ]
     },
     {
@@ -107,7 +125,7 @@
         "panel": "shared"
       },
       "dependsOn": [
-        "install pkg"
+        "install development pkg"
       ]
     }
   ]

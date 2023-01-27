@@ -1,5 +1,5 @@
 from UVATool.Process import Process
-
+import numpy as np
 
 class Print:
     __process: Process
@@ -9,12 +9,18 @@ class Print:
 
     def nodalDisplacement(self) -> None:
         print('--------------------NODAL DISPLACEMENTS - {δ}--------------------')
-        nNode = len(self.__process.getNodalDisplacement())
+        # preprocessing to fix node count with cuts while processing
+        cuts = self.__process.getCuts()
+        processed_displacement = self.__process.getNodalDisplacement()
+        # None values are used because in this positions, have an reaction value, but it was not calculled at this moment by UVATool
+        for cut in cuts:
+            processed_displacement = np.insert(processed_displacement, cut, None)
+        nNode = len(processed_displacement)
         for i in range(0, nNode, 3):
             print('Node: {0}'.format(int(i/3+1)))
-            print("δx = {0:.3e} mm".format(self.__process.getNodalDisplacement()[0 + i] * 1e3))
-            print("δy = {0:.3e} mm".format(self.__process.getNodalDisplacement()[1 + i] * 1e3))
-            print("δm = {0:.3e} rad".format(self.__process.getNodalDisplacement()[2 + i]))
+            print("δx = {0:.3e} mm".format(processed_displacement[0 + i] * 1e3))
+            print("δy = {0:.3e} mm".format(processed_displacement[1 + i] * 1e3))
+            print("δm = {0:.3e} rad".format(processed_displacement[2 + i]))
             if i != nNode - 3:
                 print()
         print('-----------------------------------------------------------------')

@@ -32,15 +32,15 @@ from PyQt5.QtCore import (
     pyqtSignal
 )
 from PyQt5.QtGui import (
-    QPixmap,
-    QPen,
-    QPolygonF,
-    QBrush,
-    QMouseEvent,
-    QKeyEvent,
-    QColor,
-    QShowEvent,
-    QWheelEvent,
+    QPixmap, 
+    QPen, 
+    QPolygonF, 
+    QBrush, 
+    QMouseEvent, 
+    QKeyEvent, 
+    QColor, 
+    QShowEvent, 
+    QWheelEvent, 
     QPainter
 )
 from PyQt5 import uic
@@ -100,7 +100,6 @@ class FormUVATool(QMainWindow):
         self.scene = UVAGraphicsScene(self)
         self.scene.setSceneRect(0, 0, 1, 1)
         self.GraphicsView.setScene(self.scene)
-
         """# DOCK WIDGETS AREA #"""
         self.ChangeValues.close()
         self.ElementParameters.close()
@@ -296,28 +295,17 @@ class FormUVATool(QMainWindow):
     def close(self) -> bool:
         self.formTableResults.close()
         super().close()
-    
+
     def loadStructureFile(self) -> None:
         file_filter = 'Python File (*.py)'
-        response = QFileDialog.getOpenFileName(
-            parent=self,
-            caption='Select a python file with a StructureFile defined',
-            directory=os.getcwd(),
-            filter=file_filter,
-            initialFilter=file_filter
-        )
+        response = QFileDialog.getOpenFileName(parent=self, caption='Select a python file with a StructureFile defined', directory=os.getcwd(), filter=file_filter, initialFilter=file_filter)
         file_name = response[0]
         print(f"File loaded {file_name}")
         try:
             file = StructureFile(file_name)
             self.scene.loadStructure(file.getStructure())
         except Exception as e:
-            msg = (
-                "Ocurred an error whyle trying to load the StructureFile.\n"+
-                "Skipping the load.\n"+
-                "Verify terminal for more informations\n"+
-                "Error: " + str(e)
-            )
+            msg = ("Ocurred an error whyle trying to load the StructureFile.\n" + "Skipping the load.\n" + "Verify terminal for more informations\n" + "Error: " + str(e))
             QMessageBox.warning(self, "Warning", msg)
             print(msg)
 
@@ -393,7 +381,7 @@ class UVAGraphicsScene(QGraphicsScene):
         #         item.setSelected(False)
 
         if event.button() == Qt.MouseButton.MiddleButton:
-            self.form.GraphicsView.scale(1/self.form.totalScale, 1/self.form.totalScale)
+            self.form.GraphicsView.scale(1 / self.form.totalScale, 1 / self.form.totalScale)
             self.form.totalScale /= self.form.totalScale
             self.fitStructure()
 
@@ -480,7 +468,7 @@ class UVAGraphicsScene(QGraphicsScene):
                         min.x = node.xDraw
                     if node.yDraw < min.y:
                         min.y = node.yDraw
-            self.form.GraphicsView.setSceneRect((max / 2).x, (min / 2).y, 1, 1)
+                self.form.GraphicsView.setSceneRect((max / 2).x, (min / 2).y, 1, 1)
         except Exception as e:
             print(str(e))
             print('################# DEBUG SECTION ERROR ##################')
@@ -499,7 +487,7 @@ class UVAGraphicsScene(QGraphicsScene):
                 self.drawNode(NodeDraw(node))
             for element in elements:
                 self.drawElement(ElementDraw(element))
-            # self.fitStructure()
+            self.fitStructure()
         except Exception as e:
             msg = "Ocurred an error whyle trying to load the writed structure.\nSkipping the load.\nError: " + str(e)
             QMessageBox.warning(self.form, "Warning", msg)

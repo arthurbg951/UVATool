@@ -1,12 +1,12 @@
 {
-    "python.terminal.executeInFileDir": true,
-    "python.formatting.autopep8Args": [
-        "--max-line-length",
-        "200",
-        "--experimental"
-      ],
-      "python.analysis.extraPaths": [
-        "$(workspaceFolder)/src/libs/"
-      ],
-      "python.formatting.provider": "yapf"
+  "python.terminal.executeInFileDir": true,
+  "python.formatting.autopep8Args": [
+    "--max-line-length",
+    "200",
+    "--experimental"
+  ],
+  "python.analysis.extraPaths": [
+    "$(workspaceFolder)/src/**",
+  ],
+  "python.formatting.provider": "autopep8",
 }

@@ -9,7 +9,8 @@ from UVATool.Exceptions.StructureError import StructureError
 
 class Process:
     '''
-    analisys={0,1} default=0
+    ## Class who implement Displacement Method
+    ### analisys={0,1} default=0
 
     0 = Analytical Rigidity Method
 
@@ -41,6 +42,8 @@ class Process:
         self.__verifySemiFixedSupport()
         self.__processCalculations()
         self.__removeSemiFixedParts()
+        if verbose:
+            print("WARNING!! Verbose method not working yet.")
 
     def __getEquilibriumMatrix(self) -> numpy.array:
         # CÁLCULANDO GRAUS DE LIBERDADE
@@ -269,21 +272,19 @@ class Process:
 
     def getEquilibriumMatrix(self) -> numpy.array:
         '''
-        Return [L] Matrix
-
-        # RESULTADO DA MATRIZ DE EQUILIBRIO
+        ## MATRIZ DE EQUILIBRIO - [L]
         '''
         return self.__equilibrium
 
     def getFrameStiffness(self) -> numpy.array:
         '''
-        # RESULTADO DA MATRIZ DE RIGIDEZ (DO ELEMENTO) - [k]
+        ## MATRIZ DE RIGIDEZ (DO ELEMENTO) - [k]
         '''
         return self.__frame_stiffness
 
     def getGlobalFrameStiffness(self) -> numpy.array:
         """
-        # MATRIZ DE RIGIDEZ GLOBAL DO SISTEMA - [K]
+        ## MATRIZ DE RIGIDEZ GLOBAL DO SISTEMA - [K]
 
         [K] = [l] * [k] * [L.T]
         """
@@ -291,7 +292,7 @@ class Process:
 
     def getNodalDisplacement(self) -> numpy.array:
         """
-        # VETOR DOS DESLOCAMENTOS NODAIS - {δ}
+        ## VETOR DOS DESLOCAMENTOS NODAIS - {δ}
 
         Utilizando a resolução de matriz inversa -> {δ} = [L k LT] ^ -1 * {λ}
         """
@@ -299,7 +300,7 @@ class Process:
 
     def getDeformations(self) -> numpy.array:
         """
-        # VETOR DAS DEFORMAÇÕES CORRESPONDENTES - {θ}
+        ## VETOR DAS DEFORMAÇÕES CORRESPONDENTES - {θ}
 
             {θ} = [L.T] * {δ}
         """
@@ -310,7 +311,7 @@ class Process:
 
     def getInternalForces(self) -> numpy.array:
         """
-        Esforços Seccionais Internos - {m}
+        ## Esforços Seccionais Internos - {m}
 
             {m} = [k] * {θ}
         """
@@ -318,12 +319,12 @@ class Process:
 
     def getProcessTime(self) -> datetime:
         """
-        Return the time processing calculations
+        ## Return the time processing calculations
         """
         return self.__process_time
 
     def getCuts(self) -> list:
         """
-        Return positions removed in Equilibrium Matrix
+        ## Return positions removed in Equilibrium Matrix
         """
         return self.__cuts
