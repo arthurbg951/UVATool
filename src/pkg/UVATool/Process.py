@@ -306,7 +306,7 @@ class Process:
         """
         return self.__deformations
 
-    def getNodalForces(self) -> numpy.array:
+    def _getNodalForces(self) -> numpy.array:
         return self.__nodal_force
 
     def getInternalForces(self) -> numpy.array:

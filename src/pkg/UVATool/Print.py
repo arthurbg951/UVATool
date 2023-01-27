@@ -12,7 +12,7 @@ class Print:
         # preprocessing to fix node count with cuts while processing
         cuts = self.__process.getCuts()
         processed_displacement = self.__process.getNodalDisplacement()
-        # None values are used because in this positions, have an reaction value, but it was not calculled at this moment by UVATool
+        # None values are used because in this positions, have an reaction and Support condition are undeslocable
         for cut in cuts:
             processed_displacement = np.insert(processed_displacement, cut, None)
         nNode = len(processed_displacement)
@@ -25,7 +25,7 @@ class Print:
                 print()
         print('-----------------------------------------------------------------')
 
-    def elementDeformations(self) -> None:
+    def elementsDeformations(self) -> None:
         print('--------------------ELEMENT DEFORMATIONS - {θ}--------------------')
         nElement = len(self.__process.getInternalForces())
         for i in range(0, nElement, 3):

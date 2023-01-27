@@ -6,7 +6,7 @@
     "--experimental"
   ],
   "python.analysis.extraPaths": [
-    "$(workspaceFolder)/src/**",
+    "$(workspaceFolder)/src/",
   ],
   "python.formatting.provider": "autopep8",
 }

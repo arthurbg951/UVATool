@@ -7,5 +7,5 @@ class Apoio:
     semi_rigido = 4
     sem_suporte = 5
 
-    # SUGESTÃO PARA SOLUCIONAR APOIO SEMI RIGIDO
+    # SUGESTÃO PARA SOLUCIONAR APOIO SEMI RIGIDO - NOT IMPLEMENTED
     sem_suporte_semi_rigido = 6

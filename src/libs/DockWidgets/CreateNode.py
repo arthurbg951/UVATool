@@ -14,7 +14,7 @@ from PyQt5.QtWidgets import (
 )
 
 from PyQt5.QtCore import Qt
-from libs.Drawing import *
+from libs.Drawing.NodeDraw import NodeDraw
 
 
 class CreateNode(QDockWidget):

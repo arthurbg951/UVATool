@@ -85,7 +85,7 @@ class FormTableResults(QWidget):
             QMessageBox.warning(self, "Global Frame Stiffness Warning", str(e))
 
         # Nodal Forces
-        nodalForcesVector = process.getNodalForces()
+        nodalForcesVector = process._getNodalForces()
         self.nodalForcesVector.setRowCount(nodalForcesVector.shape[0])
         self.nodalForcesVector.setColumnCount(1)
         try:

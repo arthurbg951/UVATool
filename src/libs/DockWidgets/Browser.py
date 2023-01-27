@@ -14,7 +14,8 @@ from PyQt5.QtWidgets import (
 )
 
 from PyQt5.QtCore import QObject, QThread, pyqtSignal
-from libs.Drawing import *
+from libs.Drawing.NodeDraw import NodeDraw
+from libs.Drawing.ElementDraw import ElementDraw
 from PyQt5 import QtCore, QtGui, QtWidgets
 from time import sleep
 
@@ -178,7 +179,7 @@ class Browser(QDockWidget):
 
     def updateStructureList(self):
         self.setItens()
-
+    
 
 class Worker(QObject):
     finished = pyqtSignal()
