@@ -115,9 +115,9 @@
     {
       "label": "Setup Development",
       "type": "shell",
-      "command": "",
+      "command": "echo Complete",
       "windows": {
-        "command": ""
+        "command": "echo \"Complete\""
       },
       "group": "test",
       "presentation": {

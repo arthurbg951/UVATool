@@ -20,4 +20,4 @@ if __name__ == "__main__":
     plot = Print(proc)
     plot.nodalDisplacement()
     plot.internalForces()
-    plot.elementDeformations()
+    plot.elementsDeformations()
