@@ -39,7 +39,7 @@
       "type": "shell",
       "command": "python3.9 -m venv venv ; source ${workspaceFolder}/venv/bin/activate ; ${workspaceFolder}/venv/bin/python -m pip install --upgrade pip",
       "windows": {
-        "command": "py -3.9 -m venv venv ; Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned ; ${workspaceFolder}\\venv\\Scripts\\Activate.ps1 ; ${workspaceFolder}\\venv\\Scripts\\python.exe -m pip install --upgrade pip"
+        "command": "py -3.9 -m venv venv ; Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned ; \"${workspaceFolder}\\venv\\Scripts\\Activate.ps1\" ; \"${workspaceFolder}\\venv\\Scripts\\python.exe\" -m pip install --upgrade pip"
       },
       "group": "test",
       "presentation": {
@@ -101,7 +101,7 @@
       "type": "shell",
       "command": "${workspaceFolder}/venv/bin/pip install -e src/pkg/ --force-reinstall",
       "windows": {
-        "command": "${workspaceFolder}\\venv\\Scripts\\pip.exe src\\pkg\\ --force-reinstall"
+        "command": "${workspaceFolder}\\venv\\Scripts\\pip.exe install -e ${workspaceFolder}\\src\\pkg\\ --force-reinstall"
       },
       "group": "test",
       "presentation": {
@@ -115,9 +115,9 @@
     {
       "label": "Setup Development",
       "type": "shell",
-      "command": "",
+      "command": "echo Complete",
       "windows": {
-        "command": ""
+        "command": "echo \"Complete\""
       },
       "group": "test",
       "presentation": {
