@@ -136,7 +136,6 @@ class FormUVATool(QMainWindow):
         self.calc = None
         self.totalScale: float = 1
 
-        # self.resize(900, 650)
         self.showMaximized()
         # self.show()
 
@@ -238,6 +237,7 @@ class FormUVATool(QMainWindow):
             print("            Via Rigidez Analítica             ")
 
         print("----------------------------------------------")
+        has_error = False
         try:
             nodes = []
             elements = []
@@ -257,12 +257,13 @@ class FormUVATool(QMainWindow):
             plot = Print(calc)
             plot.internalForces()
         except Exception as e:
+            has_error = True
             QMessageBox.warning(self, "Warning", str(e))
             print("Error: " + str(e))
 
         print("----------------------------------------------")
         print()
-        QMessageBox.warning(self, "Success", "A solution was founded.")
+        if not has_error: QMessageBox.warning(self, "Success", "A solution was founded.")
 
     def showTableReultsForm(self):
         try:
@@ -302,7 +303,8 @@ class FormUVATool(QMainWindow):
 
     def loadStructureFile(self) -> None:
         file_filter = 'Python File (*.py)'
-        response = QFileDialog.getOpenFileName(parent=self, caption='Select a python file with a StructureFile defined', directory=os.getcwd(), filter=file_filter, initialFilter=file_filter)
+        response = QFileDialog.getOpenFileName(parent=self, caption='Select a python file with a StructureFile defined',
+                                               directory=f"{os.getcwd()}/exemples", filter=file_filter, initialFilter=file_filter)
         file_name = response[0]
         print(f"File loaded {file_name}")
         try:
@@ -310,11 +312,12 @@ class FormUVATool(QMainWindow):
                 file = StructureFile(file_name)
                 self.scene.loadStructure(file.getStructure())
                 self.update()
+                self.scene.printStructure()
         except Exception as e:
             msg = ("Ocurred an error whyle trying to load the StructureFile.\n" + "Skipping the load.\n" + "Verify terminal for more informations\n" + "Error: " + str(e))
             QMessageBox.warning(self, "Warning", msg)
             print(msg)
-        
+
     def update(self) -> None:
         super().update()
         # UPDATE STRUCTURE LIST

@@ -29,7 +29,7 @@ class ElementDraw(Element):
         return self.__item
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, Element):
+        if isinstance(other, ElementDraw):
             normalDirection = self.node1 == other.node1 and self.node2 == other.node2
             reverseDirection = self.node1 == other.node2 and self.node2 == other.node1
             return normalDirection or reverseDirection

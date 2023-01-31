@@ -147,6 +147,10 @@ class UVAGraphicsScene(QGraphicsScene):
     def drawElement(self, element: ElementDraw) -> None:
         self.addItem(element.getItem())
         self.elements.insert(0, element)
+    
+    def removeElement(self, element: ElementDraw) -> None:
+        self.removeItem(element.getItem())
+        self.elements.remove(element)
 
     def verifyExistingNode(self, x: float, y: float) -> NodeDraw:
         for node in self.nodes:
@@ -195,7 +199,7 @@ class UVAGraphicsScene(QGraphicsScene):
                 self.drawNode(NodeDraw(node))
             for element in elements:
                 self.drawElement(ElementDraw(element))
-            self.fitStructure()
+            # self.fitStructure()
         except Exception as e:
             msg = "Ocurred an error whyle trying to load the writed structure.\nSkipping the load.\nError: " + str(e)
             QMessageBox.warning(self.form, "Warning", msg)

@@ -67,4 +67,5 @@ structure = porticosSucessivos()
 if __name__ == "__main__":
     proc = Process(structure.nodes, structure.elements)
     plot = Print(proc)
-    plot.nodalDisplacement()
+    # plot.nodalDisplacement()
+    plot.internalForces()
