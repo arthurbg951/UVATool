@@ -45,6 +45,7 @@ from PyQt5.QtGui import (
 )
 from PyQt5 import uic
 from UVATool import *
+from UVATool.Colors import to_red
 from UVATool.Enums import *
 from UVATool.Exceptions import *
 from libs.Drawing import *
@@ -52,6 +53,7 @@ from libs.DockWidgets.CreateNode import CreateNode
 from libs.DockWidgets.Browser import Browser
 from libs.UVAGraphicsScene import UVAGraphicsScene
 from forms.FormTableResults import FormTableResults
+import traceback
 from time import sleep
 import os
 
@@ -195,9 +197,7 @@ class FormUVATool(QMainWindow):
             except StructureError as se:
                 QMessageBox.warning(self, "Warning", str(se))
                 self.p.setText("")
-                import traceback
-                print(traceback.format_exc())
-                
+                print(to_red(traceback.format_exc()))
 
     def confirmClicked_2(self):
         for item in self.scene.items():
@@ -230,11 +230,11 @@ class FormUVATool(QMainWindow):
         print("            Processando Cálculos              ")
         analise = 0
         if self.browser.radioButton_2.isChecked():
-            analise = Analise.rigidoPlastica.viaMinimaNormaEuclidiana
+            analise = Analise.viaMinimaNormaEuclidiana
             print("         Via Mínima Norma Euclidiana          ")
 
         else:
-            analise = Analise.elastica.viaRigidezAnalitica
+            analise = Analise.viaRigidezAnalitica
             print("            Via Rigidez Analítica             ")
 
         print("----------------------------------------------")
@@ -260,8 +260,7 @@ class FormUVATool(QMainWindow):
         except Exception as e:
             has_error = True
             QMessageBox.warning(self, "Warning", str(e))
-            import traceback
-            print(traceback.format_exc())
+            print(to_red(traceback.format_exc()))
 
         print("----------------------------------------------")
         print()
@@ -274,8 +273,7 @@ class FormUVATool(QMainWindow):
             self.formTableResults.showMaximized()
         except Exception as e:
             QMessageBox.warning(self, "Form Table Results Error", str(e))
-            import traceback
-            print(traceback.format_exc())
+            print(to_red(traceback.format_exc()))
 
     def nodeActionClicked(self):
         if self.ElementAction.isChecked():
@@ -321,12 +319,10 @@ class FormUVATool(QMainWindow):
                     raise Exception("This file contains multiple structures.\nTry another file or edit source code.")
                 self.scene.loadStructure(structure)
                 self.update()
-                # self.scene.printStructure()
         except Exception as e:
             msg = ("Ocurred an error whyle trying to load the StructureFile.\n" + "Skipping the load.\n" + "Verify terminal for more informations\n" + "Error: " + str(e))
             QMessageBox.warning(self, "Warning", msg)
-            import traceback
-            print(traceback.format_exc())
+            print(to_red(traceback.format_exc()))
 
     def update(self) -> None:
         super().update()

@@ -54,10 +54,18 @@ class StructureFile:
 
             # CHECK IF IS A FUNCTION
             if isinstance(item, FunctionType):
-                self.__writeOutput(f"item()={item()}, type={type(item())}")
+                try:
+                    self.__writeOutput(f"item()={item()}, type={type(item())}")
+                except Exception:
+                    import traceback
+                    print(to_red(traceback.format_exc()))
                 # CHECK IF IS A FUNCTION WITH A STRUCTURE
-                if isinstance(item(), Structure):
-                    self.__addStructure(item())
+                try:
+                    if isinstance(item(), Structure):
+                        self.__addStructure(item())
+                except Exception:
+                    import traceback
+                    print(to_red(traceback.format_exc()))
 
             # CHECK IF IS A STANDALONE STRUCTURE
             if isinstance(item, Structure):

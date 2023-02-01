@@ -145,7 +145,7 @@ nodes = [n1, n2, n3, n4, n5, n6]
 elements = [e1, e2, e3, e4, e5]
 
 # Resultados ---------------------------------------------------------------------------------
-calc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
+calc = Process(nodes, elements)
 plot = Print(calc)
 # plot.internalForces()
 # plot.nodalDisplacement()
@@ -226,7 +226,7 @@ nodes = [n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11, n12, n13, n14]
 elements = [e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15]
 
 # Resultados ---------------------------------------------------------------------------------
-calc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
+calc = Process(nodes, elements)
 plot = Print(calc)
 # plot.nodalDisplacement()
 # plot.elementDeformations()
@@ -265,6 +265,6 @@ n3.setNodalForce(NodalForce(0, -10_000, 0))
 nodes = [n1, n2, n3, n4]
 elements = [e1, e2, e3]
 
-calc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
+calc = Process(nodes, elements)
 plot = Print(calc)
 plot.internalForces()

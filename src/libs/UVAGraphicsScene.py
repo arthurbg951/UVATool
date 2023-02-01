@@ -12,9 +12,11 @@ from PyQt5.QtGui import (
     QKeyEvent,
 )
 from UVATool import *
+from UVATool.Colors import to_red
 from UVATool.Enums import *
 from UVATool.Exceptions import *
 from libs.Drawing import *
+import traceback
 
 
 class UVAGraphicsScene(QGraphicsScene):
@@ -36,7 +38,6 @@ class UVAGraphicsScene(QGraphicsScene):
         self.elements: list[ElementDraw] = []
         self.gridPoints = []
 
-
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         self.clickPoint.setX(event.scenePos().x())
         self.clickPoint.setY(event.scenePos().y())
@@ -47,47 +48,6 @@ class UVAGraphicsScene(QGraphicsScene):
             self.canMoveScene = True
 
     def mouseDoubleClickEvent(self, event: QGraphicsSceneMouseEvent) -> None:
-        # for item in self.items():
-        #     if item.hasFocus():
-        #         if isinstance(item, ElementItem):
-        #             item.setSelected(True)
-        #             for element in self.elements:
-        #                 if element.getItem() == item:
-        #                     self.form.area.setText(str(element.area))
-        #                     self.form.momentInertia.setText(str(element.moment_inertia))
-        #                     self.form.youngModulus.setText(str(element.young_modulus))
-        #                     self.form.ChangeValues.hide()
-        #                     self.form.ElementParameters.show()
-        #         else:
-        #             isNode = isinstance(item, NodeItem)
-        #             isRoller = isinstance(item, RollerItem)
-        #             isPinned = isinstance(item, PinnedItem)
-        #             isFixed = isinstance(item, FixedItem)
-        #             isMiddleRinge = isinstance(item, MiddleRingeItem)
-        #             isSemiFixed = isinstance(item, SemiFixedItem)
-        #             if isNode or isRoller or isPinned or isFixed or isMiddleRinge or isSemiFixed:
-        #                 item.setSelected(True)
-        #                 for node in self.nodes:
-        #                     if node.getItem() == item:
-        #                         self.form.fx.setText(str(node.getNodalForce().fx))
-        #                         self.form.fy.setText(str(node.getNodalForce().fy))
-        #                         self.form.m.setText(str(node.getNodalForce().m))
-        #                         self.form.p.setText(str(node.getP()))
-        #                         if node.getSupport() == Apoio.sem_suporte:
-        #                             self.form.semApoio.setChecked(True)
-        #                         elif node.getSupport() == Apoio.primeiro_genero:
-        #                             self.form.primeiroGenero.setChecked(True)
-        #                         elif node.getSupport() == Apoio.segundo_genero:
-        #                             self.form.segundoGenero.setChecked(True)
-        #                         elif node.getSupport() == Apoio.terceiro_genero:
-        #                             self.form.terceiroGenero.setChecked(True)
-        #                         elif node.getSupport() == Apoio.semi_rigido:
-        #                             self.form.semiRigido.setChecked(True)
-        #                         self.form.ElementParameters.hide()
-        #                         self.form.ChangeValues.show()
-        #     else:
-        #         item.setSelected(False)
-
         if event.button() == Qt.MouseButton.MiddleButton:
             self.form.GraphicsView.scale(1 / self.form.totalScale, 1 / self.form.totalScale)
             self.form.totalScale /= self.form.totalScale
@@ -168,48 +128,34 @@ class UVAGraphicsScene(QGraphicsScene):
                 return e
 
     def fitStructure(self) -> None:
-        debug_nodes = self.nodes
-        max = Point2d(0, 0)
-        min = Point2d(0, 0)
         try:
             if len(self.nodes) > 0:
+                x_max = 0
+                y_min = 0
                 for node in self.nodes:
-                    if node.xDraw > max.x:
-                        max.x = node.xDraw
-                    if node.yDraw > max.y:
-                        max.y = node.yDraw
-                    if node.xDraw < min.x:
-                        min.x = node.xDraw
-                    if node.yDraw < min.y:
-                        min.y = node.yDraw
-                self.form.GraphicsView.setSceneRect((max / 2).x, (min / 2).y, 1, 1)
+                    if node.xDraw > x_max:
+                        x_max = node.xDraw
+                    if node.yDraw < y_min:
+                        y_min = node.yDraw
+                self.form.GraphicsView.setSceneRect(x_max / 2, y_min / 2, 1, 1)
         except Exception as e:
-            print(str(e))
-            print('################# DEBUG SECTION ERROR ##################')
-            print(f'max={max}')
-            print(f'min={min}')
-            for index in debug_nodes:
-                print(index)
-            print('########################################################')
-            raise Exception("Ocurred an error while trying to fit structure")
+            msg = "Ocurred an error while trying to fit structure"
+            QMessageBox.warning(self.form, "Warning", msg)
+            print(to_red(traceback.format_exc()))
 
     def loadStructure(self, structure: Structure):
         try:
             nodes = structure.nodes
             elements = structure.elements
             for node in nodes:
-                print(node)
                 self.drawNode(node)
             for element in elements:
-                print(element)
                 self.drawElement(element)
-            # self.fitStructure()
+            self.fitStructure()
         except Exception as e:
             msg = "Ocurred an error whyle trying to load the Structure.\nSkipping the load.\nError: " + str(e)
             QMessageBox.warning(self.form, "Warning", msg)
-            import traceback
-            print(traceback.format_exc())
-            # print(str(e))
+            print(to_red(traceback.format_exc()))
 
     def printStructure(self):
         print('##################### NODES ########################')

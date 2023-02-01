@@ -45,7 +45,7 @@ elements = [e1, e2, e3, e4, e5]
 structure = Structure('PORTICO MOMENTO ROTAÇÃO', nodes, elements)
 
 if __name__ == "__main__":
-    calc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
+    calc = Process(nodes, elements)
     plot = Print(calc)
     plot.internalForces()
     plot.nodalDisplacement()

@@ -1,6 +1,7 @@
 from UVATool import *
 from UVATool.Enums import *
 from UVATool.Exceptions import *
+from UVATool.Colors import *
 from datetime import datetime
 import math, numpy
 
@@ -298,31 +299,6 @@ def porticosSucessivos(n_andares=20,
     structure = Structure(structure_name, nodes, elements)
 
     return structure
-
-
-# ANSI code colors python
-reset_color_text = '\u001b[0m'
-
-
-def to_red(text: str) -> str:
-    change_to_red_color = '\u001b[31m'
-    return change_to_red_color + text + reset_color_text
-
-
-def to_green(text: str) -> str:
-    change_to_green_color = '\u001b[32m'
-    return change_to_green_color + text + reset_color_text
-
-
-def to_yellow(text: str) -> str:
-    change_to_yellow_color = '\u001b[33m'
-    return change_to_yellow_color + text + reset_color_text
-
-
-def to_blue(text: str) -> str:
-    change_to_blue_color = '\u001b[34m'
-    return change_to_blue_color + text + reset_color_text
-
 
 def process_simulation(structure: Structure,
                        show_equilibrium_matrix=False,

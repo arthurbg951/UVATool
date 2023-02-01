@@ -54,22 +54,21 @@ def isostatica():
     return nodes, elements
 
 
-analise = Analise.elastica.viaRigidezAnalitica
 
 print("-----> HIPERESTÁTICA")
 nodes, elements = hiperestatica()
-proc = Process(nodes, elements, analise)
+proc = Process(nodes, elements)
 plot = Print(proc)
 plot.internalForces()
 
 print("-----> SEMIRIGIDA")
 nodes, elements = semiRigida()
-proc = Process(nodes, elements, analise)
+proc = Process(nodes, elements)
 plot = Print(proc)
 plot.internalForces()
 
 print("-----> ISOSTÁTICA")
 nodes, elements = isostatica()
-proc = Process(nodes, elements, analise)
+proc = Process(nodes, elements)
 plot = Print(proc)
 plot.internalForces()

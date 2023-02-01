@@ -40,7 +40,7 @@ elements = [e1, e2, e3, e4]
 struct = Structure('Exemplo de utilização', nodes, elements)
 
 # REALIZANDO CÁLCULOS
-proc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
+proc = Process(nodes, elements)
 
 # PRINTANDO RESULTADOS
 plot = Print(proc)

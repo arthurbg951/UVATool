@@ -33,7 +33,7 @@ class Process:
     __elementSemiFixedCuts: list
     __process_time: datetime
 
-    def __init__(self, nodes: list[Node], elements: list[Element], analisys: Analise = Analise.elastica.viaRigidezAnalitica, verbose=False) -> None:
+    def __init__(self, nodes: list[Node], elements: list[Element], analisys: Analise = Analise.viaRigidezAnalitica, verbose=False) -> None:
         self.__nodes = nodes
         self.__elements = elements
         self.__analisys = analisys
@@ -257,7 +257,7 @@ class Process:
     def __processCalculations(self):
         inicio = datetime.now()
         self.__equilibrium = self.__getEquilibriumMatrix()
-        if self.__analisys == Analise.rigidoPlastica.viaMinimaNormaEuclidiana:
+        if self.__analisys == Analise.viaMinimaNormaEuclidiana:
             self.__frame_stiffness = self.__getIdentity()
         else:
             self.__frame_stiffness = self.__getFrameStiffnessMatrix()
@@ -269,19 +269,19 @@ class Process:
         fim = datetime.now()
         self.__process_time = fim - inicio
 
-    def getEquilibriumMatrix(self) -> numpy.array:
+    def getEquilibriumMatrix(self) -> numpy.ndarray:
         '''
         ## MATRIZ DE EQUILIBRIO - [L]
         '''
         return self.__equilibrium
 
-    def getFrameStiffness(self) -> numpy.array:
+    def getFrameStiffness(self) -> numpy.ndarray:
         '''
         ## MATRIZ DE RIGIDEZ (DO ELEMENTO) - [k]
         '''
         return self.__frame_stiffness
 
-    def getGlobalFrameStiffness(self) -> numpy.array:
+    def getGlobalFrameStiffness(self) -> numpy.ndarray:
         """
         ## MATRIZ DE RIGIDEZ GLOBAL DO SISTEMA - [K]
 
@@ -289,23 +289,22 @@ class Process:
         """
         return self.__global_frame_stiffness
 
-    def getNodalDisplacement(self) -> numpy.array:
+    def getNodalDisplacement(self) -> numpy.ndarray:
         """
         ## VETOR DOS DESLOCAMENTOS NODAIS - {δ}
 
         Utilizando a resolução de matriz inversa -> {δ} = [L k LT] ^ -1 * {λ}
         """
         # preprocessing to fix node count with cuts while processing
-        cuts = self.getCuts()
         processed_displacement = self.__displacement
         # None values are used because in this positions, have an reaction and Support condition are undeslocable
-        for cut in cuts:
+        for cut in self.getCuts():
             processed_displacement = numpy.insert(processed_displacement, cut, None)
         # OLD RETURN (WITHOUT None VALUES)
         # return self.__displacement
         return processed_displacement
 
-    def getDeformations(self) -> numpy.array:
+    def getDeformations(self) -> numpy.ndarray:
         """
         ## VETOR DAS DEFORMAÇÕES CORRESPONDENTES - {θ}
 
@@ -313,10 +312,10 @@ class Process:
         """
         return self.__deformations
 
-    def _getNodalForces(self) -> numpy.array:
+    def _getNodalForces(self) -> numpy.ndarray:
         return self.__nodal_force
 
-    def getInternalForces(self) -> numpy.array:
+    def getInternalForces(self) -> numpy.ndarray:
         """
         ## Esforços Seccionais Internos - {m}
 

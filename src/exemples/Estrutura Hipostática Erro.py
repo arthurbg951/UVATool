@@ -22,7 +22,7 @@ try:
     structure = Structure('ESTRUTURA HIPOSTÁTICA COM ERRO PARA CORREÇÃO', nodes, elements)
 
     if __name__ == "__main__":
-        calc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
+        calc = Process(nodes, elements)
 
         plot = Print(calc)
         plot.internalForces()

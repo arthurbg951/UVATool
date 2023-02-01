@@ -1,6 +1,3 @@
 class Analise:
-    class elastica:
-        viaRigidezAnalitica = 0
-
-    class rigidoPlastica:
-        viaMinimaNormaEuclidiana = 1
+    viaRigidezAnalitica = 0       # elastica
+    viaMinimaNormaEuclidiana = 1  # rígido plastica

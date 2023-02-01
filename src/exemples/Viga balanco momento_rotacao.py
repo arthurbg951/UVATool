@@ -33,7 +33,7 @@ e2 = Element(n2, n3, area_v, inercia_v, young)
 nodes = [n1, n2, n3]
 elements = [e1, e2]
 
-calc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
+calc = Process(nodes, elements)
 plot = Print(calc)
 plot.internalForces()
 plot.nodalDisplacement()

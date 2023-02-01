@@ -24,7 +24,7 @@ elements = [e1, e2]
 structure = Structure('AP1 ESTÁTICA II - 2ª QUESTÃO', nodes, elements)
 
 if __name__ == "__main__":
-    calc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
+    calc = Process(nodes, elements)
     deslocamentos = calc.getNodalDisplacement()
 
     plot = Print(calc)

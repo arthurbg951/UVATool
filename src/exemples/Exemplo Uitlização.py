@@ -37,7 +37,7 @@ structure = Structure('EXEMPLO DE UTILIZAÇÃO', nodes, elements)
 
 if __name__ == "__main__":
     # CALCULOS
-    calc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
+    calc = Process(nodes, elements)
 
     # MOSTRANDO RESPOSTAS
     plot = Print(calc)

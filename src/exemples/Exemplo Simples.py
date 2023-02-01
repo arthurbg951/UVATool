@@ -37,7 +37,7 @@ struct = Structure('Exemplo de utilização', nodes, elements)
 # EXEMPLO DE UTILIZAÇÃO: 'Process a File.py'
 if __name__ == "__main__":
     # REALIZANDO CÁLCULOS
-    proc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
+    proc = Process(nodes, elements)
 
     # PRINTANDO RESULTADOS
     plot = Print(proc)

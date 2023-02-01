@@ -17,7 +17,7 @@ elements = [e1, e2]
 structure = Structure('EXEMPLO DE UTILIZAÇÃO', nodes, elements)
 
 if __name__ == "__main__":
-    calc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
+    calc = Process(nodes, elements)
 
     results = Print(calc)
     results.nodalDisplacement()

@@ -36,11 +36,11 @@ structure = Structure('Rigidez Analítica vs Min. Norma Euclidiana', nodes, elem
 
 if __name__ == "__main__":
     print("--------------ANALISE ELASTICA VIA RIGIDEZ ANALITICA-------------")
-    proc = Process(nodes, elements, Analise.elastica.viaRigidezAnalitica)
+    proc = Process(nodes, elements, analisys=Analise.viaRigidezAnalitica)
     plot = Print(proc)
     plot.internalForces()
 
     print("-------ANALISE RIGIDO PLASTICA VIA MINIMA NORMA EUCLIDIANA-------")
-    proc = Process(nodes, elements, Analise.rigidoPlastica.viaMinimaNormaEuclidiana)
+    proc = Process(nodes, elements, analisys=Analise.viaMinimaNormaEuclidiana)
     plot = Print(proc)
     plot.internalForces()
