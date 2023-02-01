@@ -12,25 +12,25 @@ from PyQt5.QtGui import (
     QColor,
 )
 from libs.Drawing.NodalForceItem import NodalForceItem
-from libs.Drawing.NodeItem import NodeItem
 from libs.Drawing.RollerItem import RollerItem
 from libs.Drawing.PinnedItem import PinnedItem
 from libs.Drawing.FixedItem import FixedItem
 from libs.Drawing.MiddleRingeItem import MiddleRingeItem
 from libs.Drawing.SemiFixedItem import SemiFixedItem
+from libs.Drawing.NodeItem import NodeItem
 from libs.Drawing.SemiFixedNodeItem import SemiFixedNodeItem
 from libs.Drawing.Enums import *
 
 from UVATool.Enums import Support
 
+
 class NodeDraw(Node):
-    __item: QGraphicsItem
-    __nodalForceItems: list[NodalForceItem]
+    __item: QGraphicsItem = None
+    __nodalForceItems: list[NodalForceItem] = [None, None, None]
 
     def __init__(self, node: Node) -> None:
         x = node.x
         y = node.y
-        self.setP(node.getP())
         super().__init__(x, y)
         self.scaleFactor = 100
         self.xDraw = x * self.scaleFactor
@@ -38,7 +38,8 @@ class NodeDraw(Node):
         self.__diameter = 10
         self.__rect = QRectF(x * self.scaleFactor - self.__diameter/2, -y*self.scaleFactor - self.__diameter/2, self.__diameter, self.__diameter)
         self.setSupport(node.getSupport())
-        self.__nodalForceItems = [None, None, None]
+        self.setP(node.getP())
+        self.setNodalForce(node.getNodalForce())
 
     def getRect(self) -> QRectF:
         return self.__rect
@@ -69,6 +70,8 @@ class NodeDraw(Node):
             self.__item = SemiFixedItem(self.xDraw, self.yDraw)
         elif support == Support.no_support:
             self.__item = NodeItem(self.getRect())
+        else:
+            raise Exception("Not Found a Support for this node.")
 
     def setP(self, p: float) -> None:
         super().setP(p)

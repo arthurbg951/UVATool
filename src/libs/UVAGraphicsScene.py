@@ -12,15 +12,14 @@ from PyQt5.QtGui import (
     QKeyEvent,
 )
 from UVATool import *
+from UVATool.Enums import *
 from UVATool.Exceptions import *
 from libs.Drawing import *
-from libs.Drawing.NodeDraw import NodeDraw
-from libs.Drawing.ElementDraw import ElementDraw
 
 
 class UVAGraphicsScene(QGraphicsScene):
-    nodes: list[NodeDraw]
-    elements: list[ElementDraw]
+    nodes: list[Node]
+    elements: list[Element]
 
     def __init__(self, form: QMainWindow):
         super().__init__()
@@ -36,6 +35,7 @@ class UVAGraphicsScene(QGraphicsScene):
         self.nodes: list[NodeDraw] = []
         self.elements: list[ElementDraw] = []
         self.gridPoints = []
+
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         self.clickPoint.setX(event.scenePos().x())
@@ -129,11 +129,12 @@ class UVAGraphicsScene(QGraphicsScene):
         if self.keyStack.__contains__(event.key()):
             self.keyStack.remove(event.key())
 
-    def drawNode(self, node: NodeDraw) -> None:
-        self.addItem(node.getItem())
-        self.nodes.insert(0, node)
+    def drawNode(self, node: Node) -> None:
+        nodeDraw = NodeDraw(node)
+        self.addItem(nodeDraw.getItem())
+        self.nodes.insert(0, nodeDraw)
         forcesItens = []
-        forces = node.getNodalForceItems()
+        forces = nodeDraw.getNodalForceItems()
         for i in range(len(forces)):
             if forces[i] is not None:
                 self.addItem(forces[i])
@@ -144,10 +145,11 @@ class UVAGraphicsScene(QGraphicsScene):
         self.removeItem(node.getItem())
         self.nodes.remove(node)
 
-    def drawElement(self, element: ElementDraw) -> None:
-        self.addItem(element.getItem())
-        self.elements.insert(0, element)
-    
+    def drawElement(self, element: Element) -> None:
+        elementDraw = ElementDraw(element)
+        self.addItem(elementDraw.getItem())
+        self.elements.insert(0, elementDraw)
+
     def removeElement(self, element: ElementDraw) -> None:
         self.removeItem(element.getItem())
         self.elements.remove(element)
@@ -196,14 +198,18 @@ class UVAGraphicsScene(QGraphicsScene):
             nodes = structure.nodes
             elements = structure.elements
             for node in nodes:
-                self.drawNode(NodeDraw(node))
+                print(node)
+                self.drawNode(node)
             for element in elements:
-                self.drawElement(ElementDraw(element))
+                print(element)
+                self.drawElement(element)
             # self.fitStructure()
         except Exception as e:
-            msg = "Ocurred an error whyle trying to load the writed structure.\nSkipping the load.\nError: " + str(e)
+            msg = "Ocurred an error whyle trying to load the Structure.\nSkipping the load.\nError: " + str(e)
             QMessageBox.warning(self.form, "Warning", msg)
-            print(msg)
+            import traceback
+            print(traceback.format_exc())
+            # print(str(e))
 
     def printStructure(self):
         print('##################### NODES ########################')

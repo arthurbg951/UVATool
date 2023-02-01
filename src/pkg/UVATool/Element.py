@@ -25,7 +25,7 @@ class Element:
         self.__p2 = node2.getP()
 
     def __str__(self) -> str:
-        return f"node1={self.node1};node2={self.node2}"
+        return f"node1:{self.node1};node2:{self.node2}"
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Element):

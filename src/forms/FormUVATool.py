@@ -48,9 +48,6 @@ from UVATool import *
 from UVATool.Enums import *
 from UVATool.Exceptions import *
 from libs.Drawing import *
-from libs.Drawing.NodeItem import NodeItem
-from libs.Drawing.NodeDraw import NodeDraw
-from libs.Drawing.ElementDraw import ElementDraw
 from libs.DockWidgets.CreateNode import CreateNode
 from libs.DockWidgets.Browser import Browser
 from libs.UVAGraphicsScene import UVAGraphicsScene
@@ -62,6 +59,7 @@ import os
 class FormUVATool(QMainWindow):
 
     GraphicsView: QGraphicsView
+    scene: UVAGraphicsScene
 
     DrawingsToolBar: QToolBar
     NodeAction: QAction
@@ -263,7 +261,8 @@ class FormUVATool(QMainWindow):
 
         print("----------------------------------------------")
         print()
-        if not has_error: QMessageBox.warning(self, "Success", "A solution was founded.")
+        if not has_error:
+            QMessageBox.warning(self, "Success", "A solution was founded.")
 
     def showTableReultsForm(self):
         try:
@@ -310,13 +309,17 @@ class FormUVATool(QMainWindow):
         try:
             if file_name != "":
                 file = StructureFile(file_name)
-                self.scene.loadStructure(file.getStructure())
+                # ONLY GET THE FRIST STRUCTURE IN THE FILE
+                structure = file.getStructure()[0]
+                self.scene.loadStructure(structure)
                 self.update()
-                self.scene.printStructure()
+                # self.scene.printStructure()
         except Exception as e:
             msg = ("Ocurred an error whyle trying to load the StructureFile.\n" + "Skipping the load.\n" + "Verify terminal for more informations\n" + "Error: " + str(e))
             QMessageBox.warning(self, "Warning", msg)
-            print(msg)
+            import traceback
+            print(traceback.format_exc())
+            # print(str(e))
 
     def update(self) -> None:
         super().update()

@@ -10,9 +10,7 @@ from PyQt5.QtGui import (
     QPen,
     QColor,
 )
-
 from UVATool import Element
-
 
 class ElementItem(QGraphicsLineItem):
     def __init__(self, line: QGraphicsLineItem) -> None:
@@ -27,12 +25,14 @@ class ElementItem(QGraphicsLineItem):
         return self.element == __o.element
 
     def hoverEnterEvent(self, event: QGraphicsSceneHoverEvent) -> None:
-        self.setPen(QPen(self.pen().color(), 4, self.pen().style()))
-        self.setFocus()
+        # self.setPen(QPen(self.pen().color(), 4, self.pen().style()))
+        # self.setFocus()
+        pass
 
     def hoverLeaveEvent(self, event: QGraphicsSceneHoverEvent) -> None:
-        self.setPen(QPen(self.pen().color(), 2, self.pen().style()))
-        self.clearFocus()
+        # self.setPen(QPen(self.pen().color(), 2, self.pen().style()))
+        # self.clearFocus()
+        pass
 
     def hasFocus(self) -> bool:
         if self.pen().width() == 4:

@@ -11,7 +11,6 @@ from PyQt5.QtCore import (
 from PyQt5.QtGui import (
     QPen,
 )
-
 from libs.Drawing.ElementItem import ElementItem
 from libs.Drawing.NodeDraw import NodeDraw
 

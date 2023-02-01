@@ -1,1 +1,1 @@
-from UVAGraphicsScene import UVAGraphicsScene
+from libs.UVAGraphicsScene import UVAGraphicsScene
