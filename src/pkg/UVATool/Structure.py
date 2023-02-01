@@ -20,3 +20,21 @@ class Structure:
         self.structure_description = structure_description
         self.nodes = nodes
         self.elements = elements
+
+    def __eq__(self, __o: object) -> bool:
+        node_count = len(self.nodes)
+        element_count = len(self.elements)
+        node_sum = 0
+        element_sum = 0
+        if isinstance(__o, Structure):
+            for i in range(node_count):
+                if self.nodes[i] == __o.nodes[i]:
+                    node_sum += 1
+            for i in range(element_count):
+                if self.elements[i] == __o.elements[i]:
+                    element_sum += 1
+            equal_nodes = node_count == node_sum
+            equal_elements = element_count == element_sum
+            return equal_nodes and equal_elements
+        else:
+            raise Exception("This operation is invalid!")

@@ -27,7 +27,8 @@ class StructureFile:
             print(msg)
 
     def __addStructure(self, item: Structure) -> None:
-        self.__structure.append(item)
+        if not self.__structure.__contains__(item):
+            self.__structure.append(item)
 
     def __findStructure(self) -> list[Structure]:
         path = abspath(dirname(self.file_name))
@@ -62,7 +63,7 @@ class StructureFile:
             if isinstance(item, Structure):
                 self.__addStructure(item)
 
-        self.__writeOutput(f"Founded {len(self.__structure)} structures in this File.")
+        self.__writeOutput(to_green(f"Founded {len(self.__structure)} structures in this File."))
 
         if len(self.__structure) == 0:
             raise Exception('This file not contains a Structure!')
