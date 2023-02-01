@@ -33,7 +33,7 @@ class Process:
     __elementSemiFixedCuts: list
     __process_time: datetime
 
-    def __init__(self, nodes: list[Node], elements: list[Element], analisys: Analise=Analise.elastica.viaRigidezAnalitica, verbose=False) -> None:
+    def __init__(self, nodes: list[Node], elements: list[Element], analisys: Analise = Analise.elastica.viaRigidezAnalitica, verbose=False) -> None:
         self.__nodes = nodes
         self.__elements = elements
         self.__analisys = analisys
@@ -113,7 +113,6 @@ class Process:
             stifiness_matrix[2 + (3 * i), 1 + (3 * i)] = (3 * p1 * p2 / (4 - p1 * p2)) * (-2 * young_module * moment_inertia / length)
             stifiness_matrix[2 + (3 * i), 2 + (3 * i)] = (3 * p2 / (4 - p1 * p2)) * (4 * young_module * moment_inertia / length)
 
-        
         return stifiness_matrix
 
     def __getCuts(self) -> list:
@@ -158,14 +157,14 @@ class Process:
         equilibrium_matrix_transpose = equilibrium_matrix_transpose.transpose()  # Transpose
         equilibrium_matrix_transpose = numpy.delete(equilibrium_matrix_transpose, self.__cuts, 1)  # Cut
         self.__equilibrium_cut_transpose = equilibrium_matrix_transpose
-        
+
         aux1 = numpy.dot(equilibrium_matrix_restriction, self.__frame_stiffness)
         global_frame_stiffnes = numpy.dot(aux1, equilibrium_matrix_transpose)
         return global_frame_stiffnes
 
     def __getNodalForcesVector(self) -> numpy.array:
         self.__getCuts()
-        
+
         # Criando o vetor das forças nodais
         nodal_forces = numpy.array([])
         for node in self.__nodes:
@@ -296,7 +295,15 @@ class Process:
 
         Utilizando a resolução de matriz inversa -> {δ} = [L k LT] ^ -1 * {λ}
         """
-        return self.__displacement
+        # preprocessing to fix node count with cuts while processing
+        cuts = self.getCuts()
+        processed_displacement = self.__displacement
+        # None values are used because in this positions, have an reaction and Support condition are undeslocable
+        for cut in cuts:
+            processed_displacement = numpy.insert(processed_displacement, cut, None)
+        # OLD RETURN (WITHOUT None VALUES)
+        # return self.__displacement
+        return processed_displacement
 
     def getDeformations(self) -> numpy.array:
         """

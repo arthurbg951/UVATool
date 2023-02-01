@@ -1,6 +1,7 @@
 from UVATool.Structure import Structure, Node, Element
 import sys
 from os.path import isfile, basename, dirname, abspath
+from UVATool.Colors import *
 
 
 class StructureFile:
@@ -10,7 +11,7 @@ class StructureFile:
     # for now, it just load a script file with a Structure defined
     # possible improovements: verify if the file contains some var with list[Nodes] and list[Elements] and try to load it
 
-    def __init__(self, file_name: str, verbose: bool = True) -> None:
+    def __init__(self, file_name: str, verbose: bool = False) -> None:
         self.file_name = file_name
         self.__checkFile(file_name)
         self.verbose = verbose
@@ -43,7 +44,8 @@ class StructureFile:
             item = getattr(struct, i)
 
             # PRINT ALL ITEM VALUE AND TYPE
-            # self.__writeOutput(f"item={item}, type={type(item)}")
+            if sys.gettrace() is not None:
+                self.__writeOutput(to_blue(f'item={item}, type={type(item)}'))
 
             # CHECK IF IS NODE OR ELEMENT
             if isinstance(item, Node) or isinstance(item, Element):
@@ -59,7 +61,9 @@ class StructureFile:
             # CHECK IF IS A STANDALONE STRUCTURE
             if isinstance(item, Structure):
                 self.__addStructure(item)
+
         self.__writeOutput(f"Founded {len(self.__structure)} structures in this File.")
+
         if len(self.__structure) == 0:
             raise Exception('This file not contains a Structure!')
 

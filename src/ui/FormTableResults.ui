@@ -33,7 +33,13 @@
       </size>
      </property>
      <property name="toolTip">
-      <string>Nodal Displacement</string>
+      <string/>
+     </property>
+     <property name="statusTip">
+      <string/>
+     </property>
+     <property name="whatsThis">
+      <string/>
      </property>
      <property name="currentIndex">
       <number>0</number>
@@ -41,6 +47,9 @@
      <widget class="QWidget" name="tab">
       <attribute name="title">
        <string>[L]</string>
+      </attribute>
+      <attribute name="toolTip">
+       <string>Equilibrium Matrix</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
@@ -59,6 +68,9 @@
       <attribute name="title">
        <string>[k]</string>
       </attribute>
+      <attribute name="toolTip">
+       <string>Frame Stiffness Matrix</string>
+      </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
        <item row="0" column="0">
         <widget class="QTableWidget" name="frameStiffnessTable">
@@ -75,6 +87,9 @@
      <widget class="QWidget" name="tab_3">
       <attribute name="title">
        <string>[L][K][LT]</string>
+      </attribute>
+      <attribute name="toolTip">
+       <string>Global Frame Stiffness Matrix</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_4">
        <item row="0" column="0">
@@ -93,6 +108,9 @@
       <attribute name="title">
        <string>{λ}</string>
       </attribute>
+      <attribute name="toolTip">
+       <string>Nodal Forces Vector</string>
+      </attribute>
       <layout class="QGridLayout" name="gridLayout_5">
        <item row="0" column="0">
         <widget class="QTableWidget" name="nodalForcesVector">
@@ -110,6 +128,9 @@
       <attribute name="title">
        <string>{δ}</string>
       </attribute>
+      <attribute name="toolTip">
+       <string>Nodal Displacement Vector</string>
+      </attribute>
       <layout class="QGridLayout" name="gridLayout_6">
        <item row="0" column="0">
         <widget class="QTableWidget" name="nodalDisplacementVector">
@@ -123,6 +144,9 @@
      <widget class="QWidget" name="tab_6">
       <attribute name="title">
        <string>{θ}</string>
+      </attribute>
+      <attribute name="toolTip">
+       <string>Deformations Vector</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_7">
        <item row="0" column="0">
@@ -140,6 +164,9 @@
      <widget class="QWidget" name="tab_7">
       <attribute name="title">
        <string>{m}</string>
+      </attribute>
+      <attribute name="toolTip">
+       <string>Internal Forces Vector</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_8">
        <item row="0" column="0">

@@ -195,6 +195,9 @@ class FormUVATool(QMainWindow):
             except StructureError as se:
                 QMessageBox.warning(self, "Warning", str(se))
                 self.p.setText("")
+                import traceback
+                print(traceback.format_exc())
+                
 
     def confirmClicked_2(self):
         for item in self.scene.items():
@@ -257,7 +260,8 @@ class FormUVATool(QMainWindow):
         except Exception as e:
             has_error = True
             QMessageBox.warning(self, "Warning", str(e))
-            print("Error: " + str(e))
+            import traceback
+            print(traceback.format_exc())
 
         print("----------------------------------------------")
         print()
@@ -270,6 +274,8 @@ class FormUVATool(QMainWindow):
             self.formTableResults.showMaximized()
         except Exception as e:
             QMessageBox.warning(self, "Form Table Results Error", str(e))
+            import traceback
+            print(traceback.format_exc())
 
     def nodeActionClicked(self):
         if self.ElementAction.isChecked():
@@ -308,9 +314,11 @@ class FormUVATool(QMainWindow):
         print(f"File loaded {file_name}")
         try:
             if file_name != "":
-                file = StructureFile(file_name)
+                file = StructureFile(file_name, verbose=True)
                 # ONLY GET THE FRIST STRUCTURE IN THE FILE
                 structure = file.getStructure()[0]
+                if len(file.getStructure()) > 1:
+                    raise Exception("This file contains multiple structures.\nTry another file or edit source code.")
                 self.scene.loadStructure(structure)
                 self.update()
                 # self.scene.printStructure()
@@ -319,7 +327,6 @@ class FormUVATool(QMainWindow):
             QMessageBox.warning(self, "Warning", msg)
             import traceback
             print(traceback.format_exc())
-            # print(str(e))
 
     def update(self) -> None:
         super().update()

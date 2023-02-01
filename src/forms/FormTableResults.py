@@ -55,6 +55,8 @@ class FormTableResults(QWidget):
             self.equilibriumTable.resizeColumnsToContents()
         except Exception as e:
             QMessageBox.warning(self, "Equilibrium Warning", str(e))
+            import traceback
+            print(traceback.format_exc())
 
         # Frame Stiffness
         frameStiffness = process.getFrameStiffness()
@@ -69,6 +71,8 @@ class FormTableResults(QWidget):
             self.frameStiffnessTable.resizeColumnsToContents()
         except Exception as e:
             QMessageBox.warning(self, "Frame Stiffness Warning", str(e))
+            import traceback
+            print(traceback.format_exc())
 
         # Global Frame Stiffness
         globalFrameStiffnessTable = process.getGlobalFrameStiffness()
@@ -83,6 +87,8 @@ class FormTableResults(QWidget):
             self.globalFrameStiffnessTable.resizeColumnsToContents()
         except Exception as e:
             QMessageBox.warning(self, "Global Frame Stiffness Warning", str(e))
+            import traceback
+            print(traceback.format_exc())
 
         # Nodal Forces
         nodalForcesVector = process._getNodalForces()
@@ -96,6 +102,8 @@ class FormTableResults(QWidget):
             self.nodalForcesVector.resizeColumnsToContents()
         except Exception as e:
             QMessageBox.warning(self, "Nodal Forces Warning", str(e))
+            import traceback
+            print(traceback.format_exc())
 
         # Nodal Displacement
         nodalDisplacementVector = process.getNodalDisplacement()
@@ -109,6 +117,8 @@ class FormTableResults(QWidget):
             self.nodalDisplacementVector.resizeColumnsToContents()
         except Exception as e:
             QMessageBox.warning(self, "Nodal Displacement Warning", str(e))
+            import traceback
+            print(traceback.format_exc())
 
         # Element Deformations
         nodalDeformationsVector = process.getDeformations()
@@ -122,6 +132,8 @@ class FormTableResults(QWidget):
             self.nodalDeformationsVector.resizeColumnsToContents()
         except Exception as e:
             QMessageBox.warning(self, "Nodal Deformations Warning", str(e))
+            import traceback
+            print(traceback.format_exc())
 
         # Internal Forces
         InternalForcesVector = process.getInternalForces()
@@ -135,5 +147,7 @@ class FormTableResults(QWidget):
             self.InternalForcesVector.resizeColumnsToContents()
         except Exception as e:
             QMessageBox.warning(self, "Internal Forces Warning", str(e))
+            import traceback
+            print(traceback.format_exc())
 
         # self.resize(equilibriumTable.width(), equilibriumTable.height())
