@@ -101,7 +101,7 @@
       "type": "shell",
       "command": "${workspaceFolder}/venv/bin/pip install -e src/pkg/ --force-reinstall",
       "windows": {
-        "command": "${workspaceFolder}\\venv\\Scripts\\pip.exe install -e ${workspaceFolder}\\src\\pkg\\ --force-reinstall"
+        "command": "& '${workspaceFolder}\\venv\\Scripts\\pip.exe' install -e '${workspaceFolder}\\src\\pkg' --force-reinstall"
       },
       "group": "test",
       "presentation": {
