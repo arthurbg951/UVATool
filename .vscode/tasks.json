@@ -8,7 +8,7 @@
       "type": "shell",
       "command": "cd ${workspaceFolder}/src && ${workspaceFolder}/venv/bin/python3.9 UVAToolUi.py",
       "windows": {
-        "command": "cd ${workspaceFolder}\\src ; ${workspaceFolder}\\venv\\Scripts\\python.exe UVAToolUi.py"
+        "command": "cd ${workspaceFolder}\\src ; & '${workspaceFolder}\\venv\\Scripts\\python.exe' UVAToolUi.py"
       },
       "group": {
         "kind": "test",
@@ -39,7 +39,7 @@
       "type": "shell",
       "command": "python3.9 -m venv venv ; source ${workspaceFolder}/venv/bin/activate ; ${workspaceFolder}/venv/bin/python -m pip install --upgrade pip",
       "windows": {
-        "command": "py -3.9 -m venv venv ; Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned ; \"${workspaceFolder}\\venv\\Scripts\\Activate.ps1\" ; \"${workspaceFolder}\\venv\\Scripts\\python.exe\" -m pip install --upgrade pip"
+        "command": "python3.9 -m venv venv ; Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned ; & '${workspaceFolder}\\venv\\Scripts\\Activate.ps1' ; & '${workspaceFolder}\\venv\\Scripts\\python.exe' -m pip install --upgrade pip"
       },
       "group": "test",
       "presentation": {
@@ -52,7 +52,7 @@
       "type": "shell",
       "command": "${workspaceFolder}/venv/bin/python -m pip install -r requirements.txt",
       "windows": {
-        "command": "${workspaceFolder}\\venv\\Scripts\\python.exe -m pip install -r requirements.txt"
+        "command": "& '${workspaceFolder}\\venv\\Scripts\\python.exe' -m pip install -r requirements.txt"
       },
       "group": "test",
       "presentation": {
@@ -68,7 +68,7 @@
       "type": "shell",
       "command": "cd ${workspaceFolder}/src/pkg/ ; ${workspaceFolder}/venv/bin/python setup.py bdist_wheel --universal",
       "windows": {
-        "command": "cd ${workspaceFolder}\\src\\pkg\\ ; ${workspaceFolder}\\venv\\Scripts\\python.exe setup.py bdist_wheel --universal"
+        "command": "cd ${workspaceFolder}\\src\\pkg\\ ; & '${workspaceFolder}\\venv\\Scripts\\python.exe' setup.py bdist_wheel --universal"
       },
       "group": "test",
       "presentation": {
