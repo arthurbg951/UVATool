@@ -1,7 +1,12 @@
 from UVATool import Process, StructureFile, Print
 from UVATool.Colors import to_red
 
-struct_file = StructureFile("Multiple Structures Timing.py")
+'''
+ESTE ARQUIVO MOSTRA COMO UTILIZAR A CLASSE StructureFile PARA ABRIR UMA
+ESTRUTURA CONTIDA EM UM SCRIPT PYTHON
+'''
+
+struct_file = StructureFile("Estrutura Desconexa.py")
 structures = struct_file.getStructure()
 
 if __name__ == '__main__':
