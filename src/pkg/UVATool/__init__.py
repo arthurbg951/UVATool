@@ -8,3 +8,17 @@ from UVATool.Process import Process
 from UVATool.Rectangle import Rectangle
 from UVATool.StructureFile import StructureFile
 from UVATool.Structure import Structure
+
+
+__all__ = [
+    'Node',
+    'Element',
+    'Export',
+    'NodalForce',
+    'Point2d',
+    'Print',
+    'Process',
+    'Rectangle',
+    'StructureFile',
+    'Structure'
+]
