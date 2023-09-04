@@ -1,8 +1,8 @@
 from UVATool import *
 from UVATool.Enums import *
 
-def porticosSucessivos(n_andares=20,
-                       n_pilares_por_andar=7,
+def porticosSucessivos(n_andares=53,
+                       n_pilares_por_andar=2,
                        distancia_pilares=6,
                        pe_direito=3):
     '''PORTICOS SUCESSIVOS'''
