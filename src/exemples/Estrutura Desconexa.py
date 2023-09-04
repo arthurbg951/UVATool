@@ -33,15 +33,17 @@ e2 = Element(n4, n2, area, momento_inercia, young)
 e3 = Element(n2, n3, area, momento_inercia, young)
 e4 = Element(n5, n6, area, momento_inercia, young)
 
+# ARMAZENANDO ESTRUTURA EM LISTAS
 nodes = [n1, n4, n2, n3, n5, n6]
 elements = [e1, e2, e3, e4]
 
 # DEFININDO ESTRUTURA
 struct = Structure('Exemplo de utilização', nodes, elements)
 
-# REALIZANDO CÁLCULOS
-proc = Process(nodes, elements)
+if __name__ == "__main__":
+    # REALIZANDO CÁLCULOS
+    proc = Process(nodes, elements)
 
-# PRINTANDO RESULTADOS
-plot = Print(proc)
-plot.internalForces()
+    # PRINTANDO RESULTADOS
+    plot = Print(proc)
+    plot.internalForces()
