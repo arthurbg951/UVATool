@@ -7,6 +7,7 @@ n2 = Node(5, 0)
 n3 = Node(8, 0)
 n4 = Node(3, 0)
 n1 = Node(0, 0)
+
 # DEFININDO FORÇAS
 n2.setNodalForce(NodalForce(0, -10_000, 0))
 n4.setNodalForce(NodalForce(0, -10_000, -10_000))
@@ -30,15 +31,16 @@ e3 = Element(n2, n3, area, momento_inercia, young)
 nodes = [n1, n4, n2, n3]
 elements = [e1, e2, e3]
 
-# DEFININDO ESTRUTURA (UTILIZADO PARA ABRIR UM ARQUIVO E PROCESSA-LO)
-struct = Structure('Exemplo de utilização', nodes, elements)
 
-# ESTE IF PREVINE O ARQUIVO DE SER CHAMADO DUAS VEZES AO CARREGAR O ARQUIVO
+# ESTE IF PREVINE O ARQUIVO DE PROCESSAR A ESTRUTURA AO CHAMAR O ARQUIVO
 # EXEMPLO DE UTILIZAÇÃO: 'Process a File.py'
 if __name__ == "__main__":
     # REALIZANDO CÁLCULOS
     proc = Process(nodes, elements)
 
-    # PRINTANDO RESULTADOS
+    # MOSTRANDO RESULTADOS DE INTERESSE
     plot = Print(proc)
     plot.internalForces()
+else:
+    # DEFININDO ESTRUTURA (UTILIZADO PARA ABRIR UM ARQUIVO E PROCESSA-LO)
+    struct = Structure('Exemplo de utilização', nodes, elements)
