@@ -19,7 +19,7 @@ e2 = Element(n2, n3, area, inercia, young)
 e3 = Element(n1, n3, area, inercia, young)
 
 nodes = [n1, n2, n3]
-elements = [e1, e2]
+elements = [e1, e2, e3]
 
 structure = Structure('AP1 ESTÁTICA II - 2ª QUESTÃO', nodes, elements)
 
