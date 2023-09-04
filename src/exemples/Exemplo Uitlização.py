@@ -33,7 +33,6 @@ e4 = Element(n4, n5, area, inercia, young)
 nodes = [n1, n2, n3, n4, n5]
 elements = [e1, e2, e3, e4]
 
-structure = Structure('EXEMPLO DE UTILIZAÇÃO', nodes, elements)
 
 if __name__ == "__main__":
     # CALCULOS
@@ -42,3 +41,6 @@ if __name__ == "__main__":
     # MOSTRANDO RESPOSTAS
     plot = Print(calc)
     plot.internalForces()
+else:
+    # ESTRUTURA DE RETORNO PARA ABRIR NA INTERFACE GŔAFICA
+    structure = Structure('EXEMPLO DE UTILIZAÇÃO', nodes, elements)
