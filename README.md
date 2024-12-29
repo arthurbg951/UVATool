@@ -19,50 +19,27 @@ Recomenda-se utilizar o <a href="https://code.visualstudio.com/download">Visual 
 
 Para utilização do UVATool é necessário:
 
-Baixar e instalar o <a href="https://www.python.org/downloads/">python3.9</a>.
+Baixar e instalar alguma versão do <a href="https://www.python.org/downloads/">python</a>.
 
 As dependências do projeto são:
 
-1 - <a href="https://pypi.org/project/pyqt5-tools/">pyqt5-tools</a>
+1 - <a href="https://pypi.org/project/PyQt5/">PyQt5</a>
 
 2 - <a href="https://pypi.org/project/numpy/">numpy</a>
-
-3 - <a href="https://pypi.org/project/wheel/">wheel</a>
-
-4 - <a href="https://pypi.org/project/setuptools/">setuptools</a>
 
 Para instala-las basta utilizar o comando:
 
     pip install -r requirements.txt
 
-Utilizando o vscode, a tarefa ja está automatizada com a task SetupDevelopment e recomenda-se utiliza-la para facilitar a instalação do UVATool pkg enquanto o mesmo não foi publicado no pypi.
+## Execução da biblioteca
 
-As dependencias wheel e setuptools são para gerar o pacote UVATool que atua no backend do UVAToolUi para processar os cálculos.
+Alguns exemplos estão disponíveis na pasta `exemples`.
 
-### Execução manual sem Visual Studio Code
+## Execução da interface
 
-1° instalar requirements.txt
+De forma simplificada, após a instalação das bibliotecas necessárias, basta utilizar o comando:
 
-2° gerar o pkg UVATool e instalar o seu wheel no interpretador utilizado
-
-Após essas etapas, o arquivo UVAToolUi.py poderá ser executado corretamente
-
-
-## Execução do programa
-
-De forma simplificada, após a instalação das bibliotecas necessárias, basta entrar na pasta 'src' pelo terminal e utilizar o comando:
-
-    python UVAToolUi.py
+    python uvatool_gui\main.py
 
 
 <a href="https://youtu.be/HX6RHFUiZRw">Tutorial</a>
-
-<!-- ### Windows:
- Basta executar o arquivo setup.bat dentro da pasta src ou executar a task "UVATool" (test) pelo vscode
-
-### MacOS: 
- Entre na pasta src/UVATool_UI pelo terminal e digite: python3.9 form_uvatool.py ou executar a task "UVATool" (test) pelo vscode
-
-### Linux: 
- Entre na pasta src/UVATool_UI pelo terminal e digite: python3.9 form_uvatool.py ou executar a task "UVATool" (test) pelo vscode -->
-
