@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/arthurbg951/UVATool/uvatool_gui/icons/GEM.jpeg" style="height: 120px;"><img src="https://raw.githubusercontent.com/arthurbg951/UVATool/uvatool_gui/icons/CNPQ.jpeg" style="height: 100px;">
+  <img src="https://github.com/arthurbg951/UVATool/blob/main/uvatool_gui/icons/CNPQ.jpeg" style="height: 120px;"><img src="https://github.com/arthurbg951/UVATool/blob/main/uvatool_gui/icons/GEM.jpeg" style="height: 100px;">
 </p>
 
 <p align="center">
