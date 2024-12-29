@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>618</width>
+    <height>418</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Matrix Calculations</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../icons/matrix.png</normaloff>../icons/matrix.png</iconset>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QTabWidget" name="InternalForcesVector_2">
+     <property name="minimumSize">
+      <size>
+       <width>600</width>
+       <height>400</height>
+      </size>
+     </property>
+     <property name="baseSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="statusTip">
+      <string/>
+     </property>
+     <property name="whatsThis">
+      <string/>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>[L]</string>
+      </attribute>
+      <attribute name="toolTip">
+       <string>Equilibrium Matrix</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
+        <widget class="QTableWidget" name="equilibriumTable">
+         <property name="toolTip">
+          <string>Equilibrium Matrix</string>
+         </property>
+         <property name="toolTipDuration">
+          <number>2</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>[k]</string>
+      </attribute>
+      <attribute name="toolTip">
+       <string>Frame Stiffness Matrix</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="0">
+        <widget class="QTableWidget" name="frameStiffnessTable">
+         <property name="toolTip">
+          <string>Frame Stiffness Matrix</string>
+         </property>
+         <property name="toolTipDuration">
+          <number>2</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_3">
+      <attribute name="title">
+       <string>[L][K][LT]</string>
+      </attribute>
+      <attribute name="toolTip">
+       <string>Global Frame Stiffness Matrix</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_4">
+       <item row="0" column="0">
+        <widget class="QTableWidget" name="globalFrameStiffnessTable">
+         <property name="toolTip">
+          <string>Global Frame Stiffness Matrix</string>
+         </property>
+         <property name="toolTipDuration">
+          <number>2</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_4">
+      <attribute name="title">
+       <string>{λ}</string>
+      </attribute>
+      <attribute name="toolTip">
+       <string>Nodal Forces Vector</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="0" column="0">
+        <widget class="QTableWidget" name="nodalForcesVector">
+         <property name="toolTip">
+          <string>Nodal Forces Vector</string>
+         </property>
+         <property name="toolTipDuration">
+          <number>2</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_5">
+      <attribute name="title">
+       <string>{δ}</string>
+      </attribute>
+      <attribute name="toolTip">
+       <string>Nodal Displacement Vector</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_6">
+       <item row="0" column="0">
+        <widget class="QTableWidget" name="nodalDisplacementVector">
+         <property name="toolTipDuration">
+          <number>2</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_6">
+      <attribute name="title">
+       <string>{θ}</string>
+      </attribute>
+      <attribute name="toolTip">
+       <string>Deformations Vector</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_7">
+       <item row="0" column="0">
+        <widget class="QTableWidget" name="nodalDeformationsVector">
+         <property name="toolTip">
+          <string>Nodal Deformations</string>
+         </property>
+         <property name="toolTipDuration">
+          <number>2</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_7">
+      <attribute name="title">
+       <string>{m}</string>
+      </attribute>
+      <attribute name="toolTip">
+       <string>Internal Forces Vector</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_8">
+       <item row="0" column="0">
+        <widget class="QTableWidget" name="InternalForcesVector">
+         <property name="toolTip">
+          <string>Internal Forces</string>
+         </property>
+         <property name="toolTipDuration">
+          <number>2</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
